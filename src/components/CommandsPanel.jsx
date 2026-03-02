@@ -1,4 +1,4 @@
-import {SPACE, BLOCK, DIRECTION, OPPOSITE_DIRECTION, MOVES, nextLevel, previousLevel, restartLevel, moveBlocks, undo} from '../assets/Logic.jsx';
+import {SPACE, BLOCK, DIRECTION, OPPOSITE_DIRECTION, MOVES, nextLevel, previousLevel, restartLevel, moveBlocks, undo, getBlockTypes, setCurrentBlockType, getCurrentBlockType} from '../assets/Logic.jsx';
 import {rawLevels} from '../assets/LevelBook.jsx';
 
 
@@ -20,6 +20,8 @@ function CommandsPanel({gridF, updateGridF, levelInfos, updateLevelInfos, gridM,
 		updateLevelState : updateLevelState, 
 		gridM : gridM,
 		updateGridM : updateGridM,
+	
+		levelInfos : levelInfos,
 		gridF : gridF
 	}
 
@@ -29,10 +31,15 @@ function CommandsPanel({gridF, updateGridF, levelInfos, updateLevelInfos, gridM,
 			<button onClick={() => moveBlocks(DIRECTION.U, pLuggage)}>Haut</button>
 			<button onClick={() => moveBlocks(DIRECTION.R, pLuggage)}>Droite</button>
 			<button onClick={() => moveBlocks(DIRECTION.D, pLuggage)}>Bas</button>
-			<button onClick={() => undo(pLuggage)}>Annuler</button>
+			<button onClick={() => undo(pLuggage)}>Annuler</button><br/>
+			Couleur active = {getCurrentBlockType(levelInfos, levelState)}
+			{getBlockTypes(levelInfos).map(blockType => 
+				<button key={blockType} onClick={() => setCurrentBlockType(blockType, levelInfos, updateLevelState)}>Sélectionner {blockType}</button>
+			)}<br/>
 			<button onClick={() => previousLevel(pStartLuggage)}>Niv. précédent</button>
 			<button onClick={() => restartLevel(pStartLuggage)}>Redémarrer</button>
-			<button onClick={() => nextLevel(pStartLuggage)}>Niv. suivant</button>	
+			<button onClick={() => nextLevel(pStartLuggage)}>Niv. suivant</button>
+			
 		</div>
 	);
 }

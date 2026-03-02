@@ -2,14 +2,14 @@ import logo from './logo.svg';
 import './App.css';
 import PlayField from './components/PlayField.jsx';
 import CommandsPanel  from './components/CommandsPanel.jsx';
-import {startLevel} from './assets/Logic.jsx';
+import {startLevel, dummyLevelInfos} from './assets/Logic.jsx';
 
 import { useState, useEffect } from 'react'
 
 function App() {
 
 	const [gridF, updateGridF] = useState([[]]);
-	const [levelInfos, updateLevelInfos] = useState({currentLevelID : 0});
+	const [levelInfos, updateLevelInfos] = useState(dummyLevelInfos());
 	const [gridM, updateGridM] = useState([[]]);	
 	const [levelState, updateLevelState] = useState({moves : [], itemsInGrid : []});
 

@@ -47,7 +47,7 @@ export function startLevel(pCurrentLevelID, pUpdaters) {
 				blockType = gridF[y-1][x];
 				gridF[y-1][x] = SPACE.EMPTY;
 				id = itemsInGrid.length;
-				itemsInGrid.push({blockType : blockType, x : x, y : y-1, id : itemsInGrid.length});
+				itemsInGrid.push({blockType : blockType, x : x, y : y-1, id : itemsInGrid.length, movedThisTime : false});
 				gridM[y-1][x] = id;
 				let i = 0;
 				for (i = 0 ; i < blockTypes.length ; i++) {
@@ -65,6 +65,10 @@ export function startLevel(pCurrentLevelID, pUpdaters) {
 	pUpdaters.updateLevelInfos({blockTypes : blockTypes, currentLevelID : pCurrentLevelID});
 	pUpdaters.updateGridF(gridF);
 	pUpdaters.updateGridM(gridM);
+}
+
+export function dummyLevelInfos() { // Note : if not for this, this would block at initialization of the page
+	return {blockTypes : [], currentLevelID : 0}
 }
 
 export function previousLevel(pLuggage) {
@@ -88,39 +92,75 @@ export function nextLevel(pLuggage) {
 
 export function moveBlocks(pDirection, pLuggage) {
 	let levelState = pLuggage.levelState;
+	let levelInfos = pLuggage.levelInfos;
 	let gridM = pLuggage.gridM;
 	let gridF = pLuggage.gridF;
 	
 	let itemsInGrid = levelState.itemsInGrid;
 	let moves = levelState.moves;
+	let currentBlockType = levelInfos.blockTypes[levelState.currentBlockTypeID];
 	
-	let x, y, dx, dy, x2, y2;
-	let prevID;
+	let x, y, dx, dy, x2, y2, x3, y3;
+	let item;
 	
-	// WARNING ! We are sorting blocks according to their coordinates. This works only if we are sure that blocks are moved only by our moves, and not by teleporters, conveyor belts, etc...
-	itemsInGrid.sort(function(pItem1, pItem2) {return pItem1.x - pItem2.x}); 
-	
+	let noSameBlockBehind, xBeh, yBeh;
 	
 	moves.push({direction : pDirection, newPosBlocks : []});
 		
 	itemsInGrid.forEach(itemInGrid => {
-		x = itemInGrid.x;
-		y = itemInGrid.y;
-		x2 = x+MOVES[pDirection].dx;
-		y2 = y+MOVES[pDirection].dy;
-		prevID = gridM[y2][x2];
-		if (gridF[y2][x2] != SPACE.WALL && gridM[y2][x2] == -1) {
-			gridM[y2][x2] = itemInGrid.id;
-			gridM[y][x] = -1;
-			itemInGrid.x = x2;
-			itemInGrid.y = y2;
-			moves[moves.length-1].newPosBlocks.push({x : x2, y : y2, id : itemInGrid.id, previousID : prevID});
+		if (itemInGrid.blockType == currentBlockType) {
+			x = itemInGrid.x;
+			y = itemInGrid.y;
+			x2 = x+MOVES[pDirection].dx;
+			y2 = y+MOVES[pDirection].dy;
+			while (gridF[y2][x2] != SPACE.WALL && gridM[y2][x2] != -1) {
+				x2 += MOVES[pDirection].dx;
+				y2 += MOVES[pDirection].dy;
+			}
+			// Right now, either gridF[y2][x2] is uncrossable or gridM[y2][x2] has no blocks. Let's assume it's the second.
+			if (gridF[y2][x2] != SPACE.WALL) {
+				// We need an extra check to make sure there is no block of the same type behind that is ready to push !
+				noSameBlockBehind = true;
+				xBeh = x-MOVES[pDirection].dx;
+				yBeh = y-MOVES[pDirection].dy;
+				while (noSameBlockBehind && gridM[yBeh][xBeh] != -1) {
+					noSameBlockBehind = (levelState.itemsInGrid[ gridM[yBeh][xBeh] ].blockType != currentBlockType);
+					xBeh -= MOVES[pDirection].dx;
+					yBeh -= MOVES[pDirection].dy;
+				}
+				if (noSameBlockBehind) {
+					// Great ! The last block of that colour in the queue is being pushed.
+					// So... backtrack (spaces are moved from x3,y3 to x2,y2) until (x3,y3) == (x,y) included
+					x3 = x2;
+					y3 = y2;
+					do {
+						x3-=MOVES[pDirection].dx;
+						y3-=MOVES[pDirection].dy;
+						/*gridM[y2][x2] = gridM[y3][x3];
+						gridM[y3][x3] = -1;*/ // BUG SPOTTED ! If these moves are performed too early, with the 'last block of that colour in the queue', here's what happens : o.o. (moving right) : .oo. (and the second o is considered "not the last block of the queue". This is why we need to perform all moves simultaneously at the end... 
+						item = itemsInGrid[gridM[y3][x3]];
+						item.x = x2;
+						item.y = y2;
+						moves[moves.length-1].newPosBlocks.push({xLeft : x3, yLeft : y3, xDest : x2, yDest : y2, id : item.id});
+						levelState.itemsInGrid[item.id].x = x2;
+						levelState.itemsInGrid[item.id].y = y2;
+						x2 = x3;
+						y2 = y3;					
+					} while(x3 != x || y3 != y); 
+				}
+			}		
 		}
 	});
 	if (moves[moves.length-1].newPosBlocks.length == 0) {
 		moves.pop();
+	} else {
+		// NOW we apply the moves (and not at the "bug spotted" place above) ! And in the correct order (start of queues first : 1234. 123.4 12.34 etc...)
+		moves[moves.length-1].newPosBlocks.forEach(npb => {
+			gridM[npb.yLeft][npb.xLeft] = -1;
+			gridM[npb.yDest][npb.xDest] = npb.id;
+		});
 	}
-	pLuggage.updateLevelState({moves : levelState.moves, itemsInGrid : itemsInGrid});
+	pLuggage.updateLevelState(prev => ({...prev, moves : levelState.moves, itemsInGrid : itemsInGrid}));
 	pLuggage.updateGridM(gridM);
 }
 	
@@ -133,27 +173,31 @@ export function undo(pLuggage) {
 		let moves = levelState.moves;
 		itemsInGrid.sort(function(pItem1, pItem2) {return pItem1.id - pItem2.id}); 
 		let moveToUndo = moves.pop();
-		let od = OPPOSITE_DIRECTION(moveToUndo.direction);
-		let x, y, x2, y2, id;
-		moveToUndo.newPosBlocks.forEach(newPos => {
-			id = newPos.id;
-			x = newPos.x;
-			y = newPos.y;
-			x2 = x + MOVES[od].dx;
-			y2 = y + MOVES[od].dy;	
-			gridM[y2][x2] = id;
-			gridM[y][x] = newPos.previousID;
-		});
-		pLuggage.updateLevelState({moves : levelState.moves, itemsInGrid : itemsInGrid});
+		let posToUndo;
+		while (moveToUndo.newPosBlocks.length > 0) {
+			posToUndo = moveToUndo.newPosBlocks.pop();
+			gridM[posToUndo.yLeft][posToUndo.xLeft] = posToUndo.id;
+			gridM[posToUndo.yDest][posToUndo.xDest] = -1;
+			levelState.itemsInGrid[posToUndo.id].x = posToUndo.xLeft;
+			levelState.itemsInGrid[posToUndo.id].y = posToUndo.yLeft;
+		}
+
+		pLuggage.updateLevelState(prev => ({...prev, moves : levelState.moves, itemsInGrid : itemsInGrid}));
 		pLuggage.updateGridM(gridM);
 	}
 }
 
-export function setNewBlockType(pBlockType, pLevelInfos, pUpdateLevelState) {
-	let pIndex = pLevelInfos.blockTypes[pBlockType];
-	pLevelInfos.currentBlockTypeID = pIndex;
-}
+// TODO : I think there is a way to use way fewer components !
 
 export function getBlockTypes(pLevelInfos) {
 	return pLevelInfos.blockTypes;
+}
+
+export function setCurrentBlockType(pBlockType, pLevelInfos, pUpdateLevelState) {
+	let pIndex = pLevelInfos.blockTypes.indexOf(pBlockType);
+	pUpdateLevelState(prev => ({...prev, currentBlockTypeID : pIndex}));
+}
+
+export function getCurrentBlockType(pLevelInfos, pLevelState) {
+	return pLevelInfos.blockTypes[pLevelState.currentBlockTypeID];
 }
