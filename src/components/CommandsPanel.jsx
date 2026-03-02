@@ -1,6 +1,48 @@
 import {SPACE, DIRECTION, OPPOSITE_DIRECTION, MOVES} from '../assets/Logic.jsx';
+import {rawLevels} from '../assets/LevelBook.jsx';
 
-function CommandsPanel({grid, updateGrid, levelState, updateLevelState}) {
+export function startLevel(pCurrentLevelID, pUpdaters) {
+	const grid = [];
+	const itemsInGrid = [];
+	const rawLevel = rawLevels[pCurrentLevelID];
+	for (let y = 1 ; y < rawLevel.length ; y++) {
+		grid.push([]);
+		for (let x = 0 ; x < rawLevel[y].length ; x++) {
+			grid[y-1].push(rawLevel[y].charAt(x));
+			 
+			if (grid[y-1][x] == SPACE.BLOCK) {
+				itemsInGrid.push({item : SPACE.BLOCK, x : x, y : y-1, id : itemsInGrid.length});
+			}
+		}
+	}
+	pUpdaters.updateLevelState({moves : [], itemsInGrid : itemsInGrid});
+	pUpdaters.updateGrid(grid);
+	pUpdaters.updateCurrentLevelID(pCurrentLevelID);
+}
+
+
+function CommandsPanel({currentLevelID, updateCurrentLevelID, grid, updateGrid, levelState, updateLevelState}) {
+
+	let pUpdaters = {
+		updateCurrentLevelID : updateCurrentLevelID, 
+		updateGrid : updateGrid, 
+		updateLevelState : updateLevelState 
+	}
+	
+	function restartLevel() {
+		startLevel(currentLevelID, pUpdaters);
+	}
+
+	function prevLevel() {
+		if (currentLevelID > 0) { //updateCurrentLevelID, updateGrid, updateLevelState
+			startLevel(currentLevelID-1, pUpdaters);
+		}
+	}
+	function nextLevel() {
+		if (currentLevelID < rawLevels.length-1) {
+			startLevel(currentLevelID+1, pUpdaters);
+		}
+	}
 
 	function moveBlocks(pDirection) {
 		let x, y, dx, dy, x2, y2;
@@ -65,6 +107,9 @@ function CommandsPanel({grid, updateGrid, levelState, updateLevelState}) {
 			<button onClick={() => moveBlocks(DIRECTION.R)}>Droite</button>
 			<button onClick={() => moveBlocks(DIRECTION.D)}>Bas</button>
 			<button onClick={() => undo()}>Annuler</button>
+			<button onClick={() => prevLevel()}>Niv. précédent</button>
+			<button onClick={() => restartLevel()}>Redémarrer</button>
+			<button onClick={() => nextLevel()}>Niv. suivant</button>	
 		</div>
 	);
 }
