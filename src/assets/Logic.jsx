@@ -23,6 +23,7 @@ export function OPPOSITE_DIRECTION(pDir) {return (pDir+2) % 4;}
 export const MOVES = [{dx : -1, dy : 0}, {dx : 0, dy : -1}, {dx : 1, dy : 0}, {dx : 0, dy : 1}];
 
 // ===================
+// Logic to charge a level
 
 function isBlock(pChar) {
 	return pChar == BLOCK.A || pChar == BLOCK.B || pChar == BLOCK.C;
@@ -34,6 +35,7 @@ export function startLevel(pCurrentLevelID, pUpdaters) {
 	const itemsInGrid = [];
 	let id, blockType;
 	const rawLevel = rawLevels[pCurrentLevelID];
+	const blockTypes = [];
 	for (let y = 1 ; y < rawLevel.length ; y++) {
 		gridF.push([]);
 		gridM.push([]);
@@ -47,14 +49,42 @@ export function startLevel(pCurrentLevelID, pUpdaters) {
 				id = itemsInGrid.length;
 				itemsInGrid.push({blockType : blockType, x : x, y : y-1, id : itemsInGrid.length});
 				gridM[y-1][x] = id;
+				let i = 0;
+				for (i = 0 ; i < blockTypes.length ; i++) {
+					if (blockTypes[i] == blockType) {
+						break;
+					}
+				}
+				if (i == blockTypes.length) {
+					blockTypes.push(blockType);
+				}
 			}
 		}
 	}
-	pUpdaters.updateLevelState({moves : [], itemsInGrid : itemsInGrid});
+	pUpdaters.updateLevelState({moves : [], itemsInGrid : itemsInGrid, currentBlockTypeID : 0});
+	pUpdaters.updateLevelInfos({blockTypes : blockTypes, currentLevelID : pCurrentLevelID});
 	pUpdaters.updateGridF(gridF);
 	pUpdaters.updateGridM(gridM);
-	pUpdaters.updateCurrentLevelID(pCurrentLevelID);
 }
+
+export function previousLevel(pLuggage) {
+	if (pLuggage.levelInfos.currentLevelID > 0) {
+		startLevel(pLuggage.levelInfos.currentLevelID-1, pLuggage);
+	}
+}
+
+export function restartLevel(pLuggage) {
+	startLevel(pLuggage.levelInfos.currentLevelID, pLuggage);
+}
+
+export function nextLevel(pLuggage) {
+	if (pLuggage.levelInfos.currentLevelID < rawLevels.length-1) {
+		startLevel(pLuggage.levelInfos.currentLevelID+1, pLuggage);
+	}
+}
+
+// ===================
+// Logic WITHIN the level
 
 export function moveBlocks(pDirection, pLuggage) {
 	let levelState = pLuggage.levelState;
@@ -117,5 +147,13 @@ export function undo(pLuggage) {
 		pLuggage.updateLevelState({moves : levelState.moves, itemsInGrid : itemsInGrid});
 		pLuggage.updateGridM(gridM);
 	}
-	
+}
+
+export function setNewBlockType(pBlockType, pLevelInfos, pUpdateLevelState) {
+	let pIndex = pLevelInfos.blockTypes[pBlockType];
+	pLevelInfos.currentBlockTypeID = pIndex;
+}
+
+export function getBlockTypes(pLevelInfos) {
+	return pLevelInfos.blockTypes;
 }

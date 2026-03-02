@@ -1,31 +1,18 @@
-import {SPACE, BLOCK, DIRECTION, OPPOSITE_DIRECTION, MOVES, startLevel, moveBlocks, undo} from '../assets/Logic.jsx';
+import {SPACE, BLOCK, DIRECTION, OPPOSITE_DIRECTION, MOVES, nextLevel, previousLevel, restartLevel, moveBlocks, undo} from '../assets/Logic.jsx';
 import {rawLevels} from '../assets/LevelBook.jsx';
 
 
 
 
-function CommandsPanel({currentLevelID, updateCurrentLevelID, gridF, updateGridF, gridM, updateGridM, levelState, updateLevelState}) {
+function CommandsPanel({gridF, updateGridF, levelInfos, updateLevelInfos, gridM, updateGridM, levelState, updateLevelState}) {
 
 	let pStartLuggage = {
-		updateCurrentLevelID : updateCurrentLevelID, 
+
 		updateGridF : updateGridF,
 		updateGridM : updateGridM, 
-		updateLevelState : updateLevelState 
-	}
-	
-	function restartLevel() {
-		startLevel(currentLevelID, pStartLuggage);
-	}
-
-	function prevLevel() {
-		if (currentLevelID > 0) { //updateCurrentLevelID, updateGrid, updateLevelState
-			startLevel(currentLevelID-1, pStartLuggage);
-		}
-	}
-	function nextLevel() {
-		if (currentLevelID < rawLevels.length-1) {
-			startLevel(currentLevelID+1, pStartLuggage);
-		}
+		updateLevelState : updateLevelState,
+		updateLevelInfos : updateLevelInfos,
+		levelInfos : levelInfos
 	}
 	
 	let pLuggage = {
@@ -43,9 +30,9 @@ function CommandsPanel({currentLevelID, updateCurrentLevelID, gridF, updateGridF
 			<button onClick={() => moveBlocks(DIRECTION.R, pLuggage)}>Droite</button>
 			<button onClick={() => moveBlocks(DIRECTION.D, pLuggage)}>Bas</button>
 			<button onClick={() => undo(pLuggage)}>Annuler</button>
-			<button onClick={() => prevLevel()}>Niv. précédent</button>
-			<button onClick={() => restartLevel()}>Redémarrer</button>
-			<button onClick={() => nextLevel()}>Niv. suivant</button>	
+			<button onClick={() => previousLevel(pStartLuggage)}>Niv. précédent</button>
+			<button onClick={() => restartLevel(pStartLuggage)}>Redémarrer</button>
+			<button onClick={() => nextLevel(pStartLuggage)}>Niv. suivant</button>	
 		</div>
 	);
 }

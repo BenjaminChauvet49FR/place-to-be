@@ -9,26 +9,26 @@ import { useState, useEffect } from 'react'
 function App() {
 
 	const [gridF, updateGridF] = useState([[]]);
+	const [levelInfos, updateLevelInfos] = useState({currentLevelID : 0});
 	const [gridM, updateGridM] = useState([[]]);	
 	const [levelState, updateLevelState] = useState({moves : [], itemsInGrid : []});
-	const [currentLevelID, updateCurrentLevelID] = useState(0);
-	
+
 	useEffect(() => {
 	  startLevel(
-		currentLevelID,
+		levelInfos.currentLevelID,
 		{
-			updateCurrentLevelID : updateCurrentLevelID, 
 			updateGridF : updateGridF, 
+			updateLevelInfos : updateLevelInfos,
 			updateGridM : updateGridM, 
 			updateLevelState : updateLevelState 
 		}
 	  );
-	}, [currentLevelID]);
+	}, [levelInfos.currentLevelID]);
 	
 	return (
 		<div className="App">
 			<PlayField gridF={gridF} gridM={gridM} levelState={levelState}></PlayField>
-			<CommandsPanel currentLevelID={currentLevelID} updateCurrentLevelID={updateCurrentLevelID} 
+			<CommandsPanel levelInfos={levelInfos} updateLevelInfos={updateLevelInfos} 
 					gridF={gridF} updateGridF={updateGridF} 
 					gridM={gridM} updateGridM={updateGridM}
 					levelState={levelState} updateLevelState={updateLevelState}>
