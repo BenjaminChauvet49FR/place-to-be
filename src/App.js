@@ -2,8 +2,7 @@ import logo from './logo.svg';
 import './App.css';
 import PlayField from './components/PlayField.jsx';
 import CommandsPanel  from './components/CommandsPanel.jsx';
-import {startLevel} from './components/CommandsPanel.jsx';
-import {SPACE} from './assets/Logic.jsx';
+import {startLevel} from './assets/Logic.jsx';
 
 import { useState, useEffect } from 'react'
 
