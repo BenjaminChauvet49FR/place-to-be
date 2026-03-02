@@ -11,8 +11,16 @@
 	background-color:white;
 }
 
-.space_block {
+.blockA {
 	background-color:yellow;
+}
+
+.blockB {
+	background-color:#FF8844;
+}
+
+.blockC {
+	background-color:#CC88FF;
 }
 
 .space_wall {

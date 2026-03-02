@@ -1,7 +1,12 @@
 export const SPACE = {
 	EMPTY : '0',
-	WALL : '1',
-	BLOCK : '2'
+	WALL : '1'
+}
+
+export const BLOCK = {
+	A : 'A',
+	B : 'B',	
+	C : 'C'	
 }
 
 export const DIRECTION = {

@@ -9,7 +9,8 @@ import { useState, useEffect } from 'react'
 
 function App() {
 
-	const [grid, updateGrid] = useState([[]]);
+	const [gridF, updateGridF] = useState([[]]);
+	const [gridM, updateGridM] = useState([[]]);	
 	const [levelState, updateLevelState] = useState({moves : [], itemsInGrid : []});
 	const [currentLevelID, updateCurrentLevelID] = useState(0);
 	
@@ -18,7 +19,8 @@ function App() {
 		currentLevelID,
 		{
 			updateCurrentLevelID : updateCurrentLevelID, 
-			updateGrid : updateGrid, 
+			updateGridF : updateGridF, 
+			updateGridM : updateGridM, 
 			updateLevelState : updateLevelState 
 		}
 	  );
@@ -26,9 +28,10 @@ function App() {
 	
 	return (
 		<div className="App">
-			<PlayField grid={grid} levelState={levelState}></PlayField>
+			<PlayField gridF={gridF} gridM={gridM} levelState={levelState}></PlayField>
 			<CommandsPanel currentLevelID={currentLevelID} updateCurrentLevelID={updateCurrentLevelID} 
-					grid={grid} updateGrid={updateGrid} 
+					gridF={gridF} updateGridF={updateGridF} 
+					gridM={gridM} updateGridM={updateGridM}
 					levelState={levelState} updateLevelState={updateLevelState}>
 			</CommandsPanel>
 		</div>

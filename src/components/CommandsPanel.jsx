@@ -1,31 +1,45 @@
-import {SPACE, DIRECTION, OPPOSITE_DIRECTION, MOVES} from '../assets/Logic.jsx';
+import {SPACE, BLOCK, DIRECTION, OPPOSITE_DIRECTION, MOVES} from '../assets/Logic.jsx';
 import {rawLevels} from '../assets/LevelBook.jsx';
 
+function isBlock(pChar) {
+	return pChar == BLOCK.A || pChar == BLOCK.B || pChar == BLOCK.C;
+}
+
 export function startLevel(pCurrentLevelID, pUpdaters) {
-	const grid = [];
+	const gridF = [];
+	const gridM = [];
 	const itemsInGrid = [];
+	let id, blockType;
 	const rawLevel = rawLevels[pCurrentLevelID];
 	for (let y = 1 ; y < rawLevel.length ; y++) {
-		grid.push([]);
+		gridF.push([]);
+		gridM.push([]);
 		for (let x = 0 ; x < rawLevel[y].length ; x++) {
-			grid[y-1].push(rawLevel[y].charAt(x));
-			 
-			if (grid[y-1][x] == SPACE.BLOCK) {
-				itemsInGrid.push({item : SPACE.BLOCK, x : x, y : y-1, id : itemsInGrid.length});
+			gridF[y-1].push(rawLevel[y].charAt(x));
+			gridM[y-1].push(-1); 
+			
+			if (isBlock(gridF[y-1][x])) {
+				blockType = gridF[y-1][x];
+				gridF[y-1][x] = SPACE.EMPTY;
+				id = itemsInGrid.length;
+				itemsInGrid.push({blockType : blockType, x : x, y : y-1, id : itemsInGrid.length});
+				gridM[y-1][x] = id;
 			}
 		}
 	}
 	pUpdaters.updateLevelState({moves : [], itemsInGrid : itemsInGrid});
-	pUpdaters.updateGrid(grid);
+	pUpdaters.updateGridF(gridF);
+	pUpdaters.updateGridM(gridM);
 	pUpdaters.updateCurrentLevelID(pCurrentLevelID);
 }
 
 
-function CommandsPanel({currentLevelID, updateCurrentLevelID, grid, updateGrid, levelState, updateLevelState}) {
+function CommandsPanel({currentLevelID, updateCurrentLevelID, gridF, updateGridF, gridM, updateGridM, levelState, updateLevelState}) {
 
 	let pUpdaters = {
 		updateCurrentLevelID : updateCurrentLevelID, 
-		updateGrid : updateGrid, 
+		updateGridF : updateGridF,
+		updateGridM : updateGridM, 
 		updateLevelState : updateLevelState 
 	}
 	
@@ -48,7 +62,7 @@ function CommandsPanel({currentLevelID, updateCurrentLevelID, grid, updateGrid, 
 		let x, y, dx, dy, x2, y2;
 		let itemsInGrid = levelState.itemsInGrid;
 		let moves = levelState.moves;
-		let prevItem;
+		let prevID;
 		
 		// WARNING ! We are sorting blocks according to their coordinates. This works only if we are sure that blocks are moved only by our moves, and not by teleporters, conveyor belts, etc...
 		itemsInGrid.sort(function(pItem1, pItem2) {return pItem1.x - pItem2.x}); 
@@ -61,20 +75,20 @@ function CommandsPanel({currentLevelID, updateCurrentLevelID, grid, updateGrid, 
 			y = itemInGrid.y;
 			x2 = x+MOVES[pDirection].dx;
 			y2 = y+MOVES[pDirection].dy;
-			prevItem = grid[y2][x2];
-			if (grid[y2][x2] != SPACE.WALL && grid[y2][x2] != SPACE.BLOCK) {
-				grid[y2][x2] = SPACE.BLOCK;
-				grid[y][x] = SPACE.EMPTY;
+			prevID = gridM[y2][x2];
+			if (gridF[y2][x2] != SPACE.WALL && gridM[y2][x2] == -1) {
+				gridM[y2][x2] = itemInGrid.id;
+				gridM[y][x] = -1;
 				itemInGrid.x = x2;
 				itemInGrid.y = y2;
-				moves[moves.length-1].newPosBlocks.push({x : x2, y : y2, id : itemInGrid.id, previouslyHereItem : prevItem});
+				moves[moves.length-1].newPosBlocks.push({x : x2, y : y2, id : itemInGrid.id, previousID : prevID});
 			}
 		});
 		if (moves[moves.length-1].newPosBlocks.length == 0) {
 			moves.pop();
 		}
 		updateLevelState({moves : levelState.moves, itemsInGrid : itemsInGrid});
-		updateGrid(grid);
+		updateGridM(gridM);
 	}
 	
 	function undo() {
@@ -91,11 +105,11 @@ function CommandsPanel({currentLevelID, updateCurrentLevelID, grid, updateGrid, 
 				y = newPos.y;
 				x2 = x + MOVES[od].dx;
 				y2 = y + MOVES[od].dy;	
-				grid[y2][x2] = SPACE.BLOCK;
-				grid[y][x] = newPos.previouslyHereItem;
+				gridM[y2][x2] = id;
+				gridM[y][x] = newPos.previouslyHereItem;
 			});
 			updateLevelState({moves : levelState.moves, itemsInGrid : itemsInGrid});
-			updateGrid(grid);
+			updateGridM(gridM);
 		}
 		
 	}
