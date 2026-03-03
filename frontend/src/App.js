@@ -1,43 +1,5 @@
-import logo from './logo.svg';
-import './App.css';
-import PlayField from './components/PlayField.jsx';
-import CommandsPanel  from './components/CommandsPanel.jsx';
-import {startLevel, dummyLevelInfos} from './assets/Logic.jsx';
+import "./App.css";
 
-import { useState, useEffect } from 'react'
-
-function App() {
-
-	const [gridF, updateGridF] = useState([[]]);
-	const [levelInfos, updateLevelInfos] = useState(dummyLevelInfos());
-	const [gridM, updateGridM] = useState([[]]);	
-	const [levelState, updateLevelState] = useState({moves : [], itemsInGrid : []});
-
-	useEffect(() => {
-	  startLevel(
-		levelInfos.currentLevelID,
-		{
-			updateGridF : updateGridF, 
-			updateLevelInfos : updateLevelInfos,
-			updateGridM : updateGridM, 
-			updateLevelState : updateLevelState 
-		}
-	  );
-	}, [levelInfos.currentLevelID]);
-	
-	return (
-		<div className="App">
-			<PlayField gridF={gridF} gridM={gridM} levelState={levelState}></PlayField>
-			<CommandsPanel levelInfos={levelInfos} updateLevelInfos={updateLevelInfos} 
-					gridF={gridF} updateGridF={updateGridF} 
-					gridM={gridM} updateGridM={updateGridM}
-					levelState={levelState} updateLevelState={updateLevelState}>
-			</CommandsPanel>
-		</div>
-	);
-}
+function App() {}
 
 export default App;
-
-
-
