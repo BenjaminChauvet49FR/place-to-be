@@ -36,19 +36,42 @@ export function startLevel(pCurrentLevelID, pUpdaters) {
 	let id, blockType;
 	const rawLevel = rawLevels[pCurrentLevelID];
 	const blockTypes = [];
-	for (let y = 1 ; y < rawLevel.length ; y++) {
+	const REAL_XLENGTH = 20+2;
+	const REAL_YLENGTH = 20+2;
+	const before_rows = Math.floor(REAL_YLENGTH-rawLevel.length)/2;
+	const before_columns = Math.floor(REAL_XLENGTH-rawLevel[1].length)/2;
+	
+	let y = 0;
+	let x;
+	let xRef, yRef;
+	for (; y < before_rows ; y++) {
 		gridF.push([]);
 		gridM.push([]);
-		for (let x = 0 ; x < rawLevel[y].length ; x++) {
-			gridF[y-1].push(rawLevel[y].charAt(x));
-			gridM[y-1].push(-1); 
-			
-			if (isBlock(gridF[y-1][x])) {
-				blockType = gridF[y-1][x];
-				gridF[y-1][x] = SPACE.EMPTY;
+		x = 0;
+		for (; x < REAL_XLENGTH ; x++) {
+			gridF[y].push(SPACE.EMPTY);
+			gridM[y].push(-1);
+		}
+	}
+	yRef = y;
+	for (; y < before_rows+rawLevel.length-1 ; y++) {
+		gridF.push([]);
+		gridM.push([]);
+		x = 0;
+		for (; x < before_columns ; x++) {
+			gridF[y].push(SPACE.EMPTY);
+			gridM[y].push(-1);
+		}
+		xRef = x;
+		for (; x < before_columns+rawLevel[y-yRef+1].length ; x++) {
+			gridF[y].push(rawLevel[y-yRef+1].charAt(x-xRef));
+			gridM[y].push(-1); 
+			if (isBlock(gridF[y][x])) {
+				blockType = gridF[y][x];
+				gridF[y][x] = SPACE.EMPTY;
 				id = itemsInGrid.length;
-				itemsInGrid.push({blockType : blockType, x : x, y : y-1, id : itemsInGrid.length, movedThisTime : false});
-				gridM[y-1][x] = id;
+				itemsInGrid.push({blockType : blockType, x : x, y : y, id : itemsInGrid.length, movedThisTime : false});
+				gridM[y][x] = id;
 				let i = 0;
 				for (i = 0 ; i < blockTypes.length ; i++) {
 					if (blockTypes[i] == blockType) {
@@ -59,6 +82,19 @@ export function startLevel(pCurrentLevelID, pUpdaters) {
 					blockTypes.push(blockType);
 				}
 			}
+		}
+		for (; x < REAL_XLENGTH ; x++) {
+			gridF[y].push(SPACE.EMPTY);
+			gridM[y].push(-1);
+		}
+	}
+	for (; y < REAL_YLENGTH ; y++) {
+		gridF.push([]);
+		gridM.push([]);
+		x = 0;
+		for (; x < REAL_XLENGTH ; x++) {
+			gridF[y].push(SPACE.EMPTY);
+			gridM[y].push(-1);
 		}
 	}
 	pUpdaters.updateLevelState({moves : [], itemsInGrid : itemsInGrid, currentBlockTypeID : 0});

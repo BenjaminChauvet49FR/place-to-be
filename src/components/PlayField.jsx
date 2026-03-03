@@ -24,13 +24,17 @@ function PlayField({gridF, gridM, levelState}) {
 		}
 	}
 	
-	return (Array.from({ length: yLength }).map((_, y) => (
+	return <div className='playField'>
+	  {Array.from({ length: yLength }).map((_, y) => (
             <div key={y} className='spaceRow'>
             	{Array.from({ length: xLength }).map((_, x) => (
             		<div key={x} className={`space ${getClassName(x, y)}`}></div>
             	))}
             </div>
-          )))
+          ))}
+	</div> 
+	
+
 
 
 }

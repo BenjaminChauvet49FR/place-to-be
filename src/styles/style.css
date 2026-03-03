@@ -5,6 +5,7 @@
 
 .spaceRow {
 	display:flex;
+	justify-content: center;
 }
 
 .space_empty {
@@ -22,6 +23,22 @@
 .blockC {
 	background-color:#CC88FF;
 }
+
+/* ------------------ */
+
+.directionsPanel0 {
+	display:flex;
+	flex-direction:row;
+	justify-content: center;
+}
+.directionsPanel {
+	display:flex;
+	flex-direction:column;
+}
+
+.buttonSelectionA { background-color:yellow; }
+.buttonSelectionB { background-color:#FF8844; }
+.buttonSelectionC { background-color:#CC88FF; }
 
 .space_wall {
 	background-color:grey;
