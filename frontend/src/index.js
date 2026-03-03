@@ -1,10 +1,14 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { createRoot } from "react-dom/client";
+
 import Playing from "./pages/Playing/";
 import Editor from "./pages/Editor/";
+
+import Header from "./components/Header.jsx";
+
 import reportWebVitals from "./reportWebVitals";
-import { createRoot } from "react-dom/client";
 
 const container = document.getElementById("root");
 const root = createRoot(container);
@@ -12,6 +16,7 @@ const root = createRoot(container);
 root.render(
   <React.StrictMode>
     <Router>
+      <Header />
       <Routes>
         <Route path="/" element={<Playing />} />
         <Route path="/editor" element={<Editor />} />

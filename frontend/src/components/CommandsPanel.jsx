@@ -69,24 +69,27 @@ function CommandsPanel({
         <button onClick={() => undo(pLuggage)}>Annuler</button>
         <br />
       </div>
-      Couleur active = {getCurrentBlockType(levelInfos, levelState)}
-      {getBlockTypes(levelInfos).map((blockType) => (
-        <button
-          key={blockType}
-          className={`buttonSelection${blockType}`}
-          onClick={() =>
-            setCurrentBlockType(blockType, levelInfos, updateLevelState)
-          }
-        >
-          Sélectionner {blockType}
+      <div>
+        Couleur active = {getCurrentBlockType(levelInfos, levelState)}
+        {getBlockTypes(levelInfos).map((blockType) => (
+          <button
+            key={blockType}
+            className={`buttonSelection${blockType}`}
+            onClick={() =>
+              setCurrentBlockType(blockType, levelInfos, updateLevelState)
+            }
+          >
+            Sélectionner {blockType}
+          </button>
+        ))}
+      </div>
+      <div>
+        <button onClick={() => previousLevel(pStartLuggage)}>
+          Niv. précédent
         </button>
-      ))}
-      <br />
-      <button onClick={() => previousLevel(pStartLuggage)}>
-        Niv. précédent
-      </button>
-      <button onClick={() => restartLevel(pStartLuggage)}>Redémarrer</button>
-      <button onClick={() => nextLevel(pStartLuggage)}>Niv. suivant</button>
+        <button onClick={() => restartLevel(pStartLuggage)}>Redémarrer</button>
+        <button onClick={() => nextLevel(pStartLuggage)}>Niv. suivant</button>
+      </div>
     </div>
   );
 }

@@ -24,8 +24,16 @@
 	background-color:#CC88FF;
 }
 
-/* ------------------ */
+.nav Link {
+	margin-right:3em;
+}
 
+/* ------------------ */
+.CommandsPanel {
+	display:flex;
+	flex-direction:column;
+	align-items: center;
+}
 .directionsPanel0 {
 	display:flex;
 	flex-direction:row;
@@ -34,6 +42,7 @@
 .directionsPanel {
 	display:flex;
 	flex-direction:column;
+	align-items: center;
 }
 
 .buttonSelectionA { background-color:yellow; }
