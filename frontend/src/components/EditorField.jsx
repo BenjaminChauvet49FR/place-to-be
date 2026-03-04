@@ -6,7 +6,14 @@ import {
 } from "../logic/constants.jsx";
 import "../styles/style.css";
 
-function EditorField({ gridF, updateGridF, gridM, updateGridM, editorState }) {
+function EditorField({
+  gridF,
+  updateGridF,
+  gridM,
+  updateGridM,
+  editorState,
+  loadingPackage,
+}) {
   const xLength = gridF[0].length;
   const yLength = gridF.length;
 
@@ -71,17 +78,23 @@ function EditorField({ gridF, updateGridF, gridM, updateGridM, editorState }) {
 
   return (
     <div>
-      {Array.from({ length: yLength }).map((_, y) => (
-        <div key={y} className="spaceRow">
-          {Array.from({ length: xLength }).map((_, x) => (
-            <div
-              key={x}
-              className={`space ${getClassName(x, y)}`}
-              onClick={() => editCase(x, y)}
-            ></div>
+      {loadingPackage.isLoading ? (
+        <div>Chargement en cours...</div>
+      ) : (
+        <div>
+          {Array.from({ length: yLength }).map((_, y) => (
+            <div key={y} className="spaceRow">
+              {Array.from({ length: xLength }).map((_, x) => (
+                <div
+                  key={x}
+                  className={`space ${getClassName(x, y)}`}
+                  onClick={() => editCase(x, y)}
+                ></div>
+              ))}
+            </div>
           ))}
         </div>
-      ))}
+      )}
     </div>
   );
 }
