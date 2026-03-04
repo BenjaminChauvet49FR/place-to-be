@@ -20,7 +20,7 @@ function CommandsPanel({
   levelState,
   updateLevelState,
 }) {
-  let pStartLuggage = {
+  let startLuggage = {
     updateGridF: updateGridF,
     updateGridM: updateGridM,
     updateLevelState: updateLevelState,
@@ -28,7 +28,7 @@ function CommandsPanel({
     levelInfos: levelInfos,
   };
 
-  let pLuggage = {
+  let luggage = {
     levelState: levelState,
     updateLevelState: updateLevelState,
     gridM: gridM,
@@ -43,25 +43,25 @@ function CommandsPanel({
       <div className="directionsPanel0">
         <div className="directionsPanel">
           <div>
-            <button onClick={() => moveBlocks(DIRECTION.U, pLuggage)}>
+            <button onClick={() => moveBlocks(DIRECTION.U, luggage)}>
               Haut
             </button>
           </div>
           <div>
-            <button onClick={() => moveBlocks(DIRECTION.L, pLuggage)}>
+            <button onClick={() => moveBlocks(DIRECTION.L, luggage)}>
               Gauche
             </button>
-            <button onClick={() => moveBlocks(DIRECTION.R, pLuggage)}>
+            <button onClick={() => moveBlocks(DIRECTION.R, luggage)}>
               Droite
             </button>
           </div>
           <div>
-            <button onClick={() => moveBlocks(DIRECTION.D, pLuggage)}>
+            <button onClick={() => moveBlocks(DIRECTION.D, luggage)}>
               Bas
             </button>
           </div>
         </div>
-        <button onClick={() => undo(pLuggage)}>Annuler</button>
+        <button onClick={() => undo(luggage)}>Annuler</button>
         <br />
       </div>
       <div>
@@ -79,11 +79,11 @@ function CommandsPanel({
         ))}
       </div>
       <div>
-        <button onClick={() => previousLevel(pStartLuggage)}>
+        <button onClick={() => previousLevel(startLuggage)}>
           Niv. précédent
         </button>
-        <button onClick={() => restartLevel(pStartLuggage)}>Redémarrer</button>
-        <button onClick={() => nextLevel(pStartLuggage)}>Niv. suivant</button>
+        <button onClick={() => restartLevel(startLuggage)}>Redémarrer</button>
+        <button onClick={() => nextLevel(startLuggage)}>Niv. suivant</button>
       </div>
     </div>
   );
