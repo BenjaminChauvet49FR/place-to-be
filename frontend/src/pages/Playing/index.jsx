@@ -1,6 +1,6 @@
 import PlayField from "../../components/PlayField.jsx";
 import CommandsPanel from "../../components/CommandsPanel.jsx";
-import { startLevel, dummyLevelInfos } from "../../assets/Logic.jsx";
+import { startLevel, dummyLevelInfos } from "../../logic/gameplay.jsx";
 import { useState, useEffect } from "react";
 
 export default function Playing() {

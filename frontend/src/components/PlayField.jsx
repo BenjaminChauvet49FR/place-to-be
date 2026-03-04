@@ -1,4 +1,4 @@
-import { SPACE, BLOCK } from "../assets/Logic.jsx";
+import { SPACE, BLOCK, NO_ID_BLOCK } from "../logic/constants.jsx";
 import "../styles/style.css";
 
 function PlayField({ gridF, gridM, levelState }) {
@@ -8,7 +8,7 @@ function PlayField({ gridF, gridM, levelState }) {
   function getClassName(pX, pY) {
     switch (gridF[pY][pX]) {
       case SPACE.EMPTY:
-        if (gridM[pY][pX] == -1) {
+        if (gridM[pY][pX] == NO_ID_BLOCK) {
           return "space_empty";
         } else {
           switch (levelState.itemsInGrid[gridM[pY][pX]].blockType) {

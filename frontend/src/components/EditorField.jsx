@@ -1,4 +1,9 @@
-import { SPACE, BLOCK } from "../assets/Logic.jsx";
+import {
+  SPACE,
+  BLOCK,
+  REAL_XLENGTH,
+  REAL_YLENGTH,
+} from "../logic/constants.jsx";
 import "../styles/style.css";
 
 function EditorField({ gridF, updateGridF, gridM, updateGridM, editorState }) {
@@ -6,7 +11,12 @@ function EditorField({ gridF, updateGridF, gridM, updateGridM, editorState }) {
   const yLength = gridF.length;
 
   function editCase(pX, pY) {
-    if (pX !== 0 && pX !== 22 - 1 && pY !== 0 && pY !== 22 - 1) {
+    if (
+      pX !== 0 &&
+      pX !== REAL_XLENGTH - 1 &&
+      pY !== 0 &&
+      pY !== REAL_YLENGTH - 1
+    ) {
       updateGridF((prev) =>
         prev.map((row, y) =>
           y !== pY
@@ -32,7 +42,7 @@ function EditorField({ gridF, updateGridF, gridM, updateGridM, editorState }) {
   function getClassName(pX, pY) {
     switch (gridF[pY][pX]) {
       case SPACE.EMPTY:
-        if (gridM[pY][pX] === -1) {
+        if (gridM[pY][pX] === BLOCK.NONE) {
           return "space_empty";
         } else {
           switch (gridM[pY][pX]) {

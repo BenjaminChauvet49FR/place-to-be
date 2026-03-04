@@ -1,4 +1,4 @@
-import { SPACE, BLOCK } from "../assets/Logic.jsx";
+import { SPACE, BLOCK } from "../logic/constants.jsx";
 import "../styles/style.css";
 
 function EditorPanel({ editorState, updateEditorState }) {

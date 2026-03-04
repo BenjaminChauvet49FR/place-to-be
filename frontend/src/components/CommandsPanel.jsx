@@ -1,9 +1,4 @@
 import {
-  SPACE,
-  BLOCK,
-  DIRECTION,
-  OPPOSITE_DIRECTION,
-  MOVES,
   nextLevel,
   previousLevel,
   restartLevel,
@@ -12,8 +7,8 @@ import {
   getBlockTypes,
   setCurrentBlockType,
   getCurrentBlockType,
-} from "../assets/Logic.jsx";
-import { rawLevels } from "../assets/LevelBook.jsx";
+} from "../logic/gameplay.jsx";
+import { DIRECTION } from "../logic/constants.jsx";
 
 function CommandsPanel({
   gridF,

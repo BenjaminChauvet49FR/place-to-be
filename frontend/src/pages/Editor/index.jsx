@@ -1,31 +1,32 @@
-import { SPACE, BLOCK } from "../../assets/Logic";
+import { SPACE, REAL_XLENGTH, REAL_YLENGTH } from "../../logic/constants";
 import EditorField from "../../components/EditorField";
 import EditorPanel from "../../components/EditorPanel";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 function dummyEditorGridF() {
   let field = [];
-  for (let y = 0; y < 22; y++) {
+  for (let y = 0; y < REAL_YLENGTH; y++) {
     field.push([]);
-    for (let x = 0; x < 22; x++) {
-      // TODO change these hard-coded values !
+    for (let x = 0; x < REAL_XLENGTH; x++) {
       field[y].push(SPACE.EMPTY);
     }
   }
-  for (let i = 0; i < 22; i++) {
+  for (let i = 0; i < REAL_YLENGTH; i++) {
     field[i][0] = SPACE.WALL;
-    field[i][22 - 1] = SPACE.WALL;
+    field[i][REAL_XLENGTH - 1] = SPACE.WALL;
+  }
+  for (let i = 0; i < REAL_XLENGTH; i++) {
     field[0][i] = SPACE.WALL;
-    field[22 - 1][i] = SPACE.WALL;
+    field[REAL_YLENGTH - 1][i] = SPACE.WALL;
   }
   return field;
 }
 
 function dummyEditorGridM() {
   let field = [];
-  for (let y = 0; y < 22; y++) {
+  for (let y = 0; y < REAL_YLENGTH; y++) {
     field.push([]);
-    for (let x = 0; x < 22; x++) {
+    for (let x = 0; x < REAL_XLENGTH; x++) {
       // TODO change these hard-coded values !
       field[y].push(-1); // TODO change -1s everywhere !
     }
