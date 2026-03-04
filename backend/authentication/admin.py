@@ -1,3 +1,5 @@
 from django.contrib import admin
 
-# Register your models here.
+from level_management.models import Level
+
+admin.site.register(Level)
