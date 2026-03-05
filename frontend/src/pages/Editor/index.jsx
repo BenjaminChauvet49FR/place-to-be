@@ -3,6 +3,7 @@ import EditorField from "../../components/EditorField";
 import EditorPanel from "../../components/EditorPanel";
 import { useState, useEffect, useRef } from "react";
 import { loadLevelForEditor } from "../../logic/saveLoad";
+import { useParams } from "react-router-dom";
 
 // -----------------------
 
@@ -37,11 +38,13 @@ function dummyEditorGridM() {
   return field;
 }
 
-export default function EditPage() {
+export default function Editor() {
+  const { levelId } = useParams();
+
   const [loadedData, setLoadedData] = useState({});
   const [isLoading, setLoading] = useState(true);
   const [loadingError, setLoadingError] = useState(false);
-  const [idLevel, setIdLevel] = useState(1);
+  const [idLevel, setIdLevel] = useState(parseInt(levelId));
   const [gridF, updateGridF] = useState(dummyEditorGridF());
   const [gridM, updateGridM] = useState(dummyEditorGridM());
   const loadingPackage = {
@@ -71,21 +74,30 @@ export default function EditPage() {
     hasFetched.current = true;
     setLoading(true);
 
-    fetch(`http://localhost:8000/api/level/${idLevel}`).then((response) =>
-      response
-        .json()
-        .then((levelData) => {
-          loadLevelForEditor(levelData.data, {
-            updateGridF: updateGridF,
-            updateGridM: updateGridM,
-          });
-        })
-        .catch((error) => {
-          console.log(error);
-          window.alert("Impossible de charger le niveau d'id " + idLevel);
-        })
-        .finally(setLoading(false)),
-    );
+    if (idLevel > 0) {
+      // TODO il y a mieux à faire !
+      fetch(`http://localhost:8000/api/level/${idLevel}`).then((response) =>
+        response
+          .json()
+          .then((levelData) => {
+            loadLevelForEditor(levelData.data, {
+              updateGridF: updateGridF,
+              updateGridM: updateGridM,
+            });
+          })
+          .catch((error) => {
+            console.log(error);
+            window.alert("Impossible de charger le niveau d'id " + idLevel);
+          })
+          .finally(setLoading(false)),
+      );
+    } else {
+      loadLevelForEditor("", {
+        updateGridF: updateGridF,
+        updateGridM: updateGridM,
+      });
+      setLoading(false);
+    }
   }, [idLevel]);
 
   return (

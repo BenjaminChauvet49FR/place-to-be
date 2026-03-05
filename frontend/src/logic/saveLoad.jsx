@@ -1,4 +1,10 @@
-import { SPACE, BLOCK, REAL_XLENGTH, REAL_YLENGTH } from "./constants.jsx";
+import {
+  SPACE,
+  BLOCK,
+  REAL_XLENGTH,
+  REAL_YLENGTH,
+  NO_ID_LEVEL,
+} from "./constants.jsx";
 
 export function loadLevelForEditor(pLevelData, pLoadingPackage) {
   let x, y;
@@ -61,6 +67,9 @@ export function loadLevelForEditor(pLevelData, pLoadingPackage) {
 export function saveLevel(pLevelData) {
   const gridM = pLevelData.gridM;
   const gridF = pLevelData.gridF;
+  const name = pLevelData.name;
+  const id = pLevelData.id;
+  const setId = pLevelData.setId;
   let x, y;
   let data = "";
   let char = "";
@@ -93,9 +102,54 @@ export function saveLevel(pLevelData) {
     }
   }
 
-  fetch("http://localhost:8000/api/level/", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: '{"data": "' + data + '"}',
-  });
+  if (id === NO_ID_LEVEL) {
+    fetch("http://localhost:8000/api/level/", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: '{"data": "' + data + '", "name": "' + name + '"}',
+    })
+      .then((response) =>
+        response.json().then((levelData) => {
+          setId(levelData.id);
+          window.alert("Niveau correctement sauvegardé !");
+        }),
+      )
+      .catch((error) => {
+        window.alert("Echec dans l'enregistrement du niveau !");
+      });
+  } else {
+    fetch("http://localhost:8000/api/level/" + id + "/", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: '{"data": "' + data + '", "name": "' + name + '"}',
+    })
+      .then((response) =>
+        response.json().then((levelData) => {
+          window.alert("Niveau correctement sauvegardé !");
+        }),
+      )
+      .catch((error) => {
+        window.alert("Echec dans l'enregistrement du niveau !");
+      });
+  }
+
+  /*
+.then((response) =>
+      response
+        .json()
+        .then((levelData) => {
+          loadLevelForEditor(levelData.data, {
+            updateGridF: updateGridF,
+            updateGridM: updateGridM,
+          });
+        })
+        .catch((error) => {
+          console.log(error);
+          window.alert("Impossible de charger le niveau d'id " + idLevel);
+        })
+        .finally(setLoading(false)),
+    );
+  }, [idLevel]);
+
+*/
 }

@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { createRoot } from "react-dom/client";
 
 import Playing from "./pages/Playing/";
+import EditorMenu from "./pages/EditorMenu/";
 import Editor from "./pages/Editor/";
 
 import Header from "./components/Header.jsx";
@@ -19,12 +20,14 @@ root.render(
       <Header />
       <Routes>
         <Route path="/" element={<Playing />} />
-        <Route path="/editor" element={<Editor />} />
+        <Route path="/editor" element={<EditorMenu />} />
+        <Route path="/editLevel/:levelId" element={<Editor />} />
       </Routes>
     </Router>
   </React.StrictMode>,
 );
 
+// TODO IDK if it's a good idea to expose level ID like that...
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals

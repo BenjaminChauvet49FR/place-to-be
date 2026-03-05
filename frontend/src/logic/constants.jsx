@@ -31,3 +31,5 @@ export const MOVES = [
 export const NO_ID_BLOCK = -1;
 export const REAL_XLENGTH = 22; // These are the xLength and the yLength of the global array. The playfield is meant to be 20x20 (which should be enough for most levels)
 export const REAL_YLENGTH = 22; // ... but we add 2 spaces, one on each edge
+
+export const NO_ID_LEVEL = 0;
