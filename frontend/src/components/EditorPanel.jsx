@@ -2,6 +2,7 @@ import { SPACE, BLOCK } from "../logic/constants.jsx";
 import "../styles/style.css";
 import NumericInput from "react-numeric-input";
 import { useState } from "react";
+import { saveLevel } from "../logic/saveLoad";
 
 function EditorPanel({ editorState, updateEditorState, loadingPackage }) {
   // =================================
@@ -39,10 +40,6 @@ function EditorPanel({ editorState, updateEditorState, loadingPackage }) {
 
   function loadLevel() {
     loadingPackage.setIdLevel(fieldIDLevel);
-  }
-
-  function saveLevel() {
-    window.alert("En cours de création...");
   }
 
   // ---------------------------------
@@ -102,7 +99,14 @@ function EditorPanel({ editorState, updateEditorState, loadingPackage }) {
           value={fieldIDLevel}
         />
         <button onClick={() => loadLevel(fieldIDLevel)}>Charger niveau</button>
-        <button className="buttonSelectionC" onClick={() => saveLevel()}>
+        <button
+          onClick={() =>
+            saveLevel({
+              gridM: loadingPackage.gridM,
+              gridF: loadingPackage.gridF,
+            })
+          }
+        >
           Sauver niveau
         </button>
       </div>

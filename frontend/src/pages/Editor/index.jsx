@@ -1,12 +1,8 @@
-import {
-  SPACE,
-  BLOCK,
-  REAL_XLENGTH,
-  REAL_YLENGTH,
-} from "../../logic/constants";
+import { SPACE, REAL_XLENGTH, REAL_YLENGTH } from "../../logic/constants";
 import EditorField from "../../components/EditorField";
 import EditorPanel from "../../components/EditorPanel";
 import { useState, useEffect, useRef } from "react";
+import { loadLevelForEditor } from "../../logic/saveLoad";
 
 // -----------------------
 
@@ -46,6 +42,8 @@ export default function EditPage() {
   const [isLoading, setLoading] = useState(true);
   const [loadingError, setLoadingError] = useState(false);
   const [idLevel, setIdLevel] = useState(1);
+  const [gridF, updateGridF] = useState(dummyEditorGridF());
+  const [gridM, updateGridM] = useState(dummyEditorGridM());
   const loadingPackage = {
     loadedData: loadedData,
     setLoadedData: setLoadedData,
@@ -55,73 +53,18 @@ export default function EditPage() {
     setLoadingError: setLoadingError,
     idLevel: idLevel,
     setIdLevel: setIdLevel,
+    gridF: gridF,
+    updateGridF: updateGridF,
+    gridM: gridM,
+    updateGridM: updateGridM,
   };
 
   const [editorState, updateEditorState] = useState({
     currentSpace: SPACE.EMPTY,
     currentBlock: -1,
   });
-  const [gridF, updateGridF] = useState(dummyEditorGridF());
-  const [gridM, updateGridM] = useState(dummyEditorGridM());
-  const hasFetched = useRef(false);
 
-  function loadLevelForEditor(pLevelData) {
-    let x, y;
-    let gridF = [];
-    let gridM = [];
-    let countData = 0;
-    let spaceF, spaceM;
-    for (y = 0; y < REAL_XLENGTH; y++) {
-      gridF.push([]);
-      gridM.push([]);
-      for (x = 0; x < REAL_XLENGTH; x++) {
-        if (
-          y == 0 ||
-          y == REAL_YLENGTH - 1 ||
-          x == 0 ||
-          x == REAL_XLENGTH - 1
-        ) {
-          spaceF = SPACE.WALL;
-          spaceM = BLOCK.NONE;
-        } else {
-          if (countData < pLevelData.length) {
-            switch (pLevelData.charAt(countData)) {
-              case "1":
-                spaceF = SPACE.WALL;
-                spaceM = SPACE.NONE;
-                break;
-              case "0":
-                spaceF = SPACE.EMPTY;
-                spaceM = BLOCK.NONE;
-                break;
-              case "A":
-                spaceF = SPACE.EMPTY;
-                spaceM = BLOCK.A;
-                break;
-              case "B":
-                spaceF = SPACE.EMPTY;
-                spaceM = BLOCK.B;
-                break;
-              case "C":
-                spaceF = SPACE.EMPTY;
-                spaceM = BLOCK.C;
-                break;
-              default:
-                return 1 / 0;
-            }
-            countData++;
-          } else {
-            spaceF = SPACE.EMPTY;
-            spaceM = BLOCK.NONE;
-          }
-        }
-        gridF[y].push(spaceF);
-        gridM[y].push(spaceM);
-      }
-    }
-    updateGridF(gridF);
-    updateGridM(gridM);
-  }
+  const hasFetched = useRef(false);
 
   useEffect(() => {
     //if (hasFetched.current) return;
@@ -132,7 +75,10 @@ export default function EditPage() {
       response
         .json()
         .then((levelData) => {
-          loadLevelForEditor(levelData.data);
+          loadLevelForEditor(levelData.data, {
+            updateGridF: updateGridF,
+            updateGridM: updateGridM,
+          });
         })
         .catch((error) => {
           console.log(error);
