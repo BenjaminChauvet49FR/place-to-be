@@ -15,10 +15,17 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
-from level_management.views import LevelAPIView
+from django.urls import path, include
+from level_management.views import LevelViewset
+from rest_framework import routers
+ 
+# Ici nous créons notre routeur
+router = routers.SimpleRouter()
+# Puis lui déclarons une url basée sur le mot clé level et notre view
+# afin que l’url générée soit celle que nous souhaitons ‘/api/level/’
+router.register('level', LevelViewset, basename='level')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/level/', LevelAPIView.as_view())
+    path('api/', include(router.urls))  # Il faut bien penser à ajouter les urls du router dans la liste des urls disponibles.
 ]
