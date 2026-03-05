@@ -8,30 +8,24 @@ function PlayField({ gridF, gridM, levelState }) {
   function getClassName(pX, pY) {
     switch (gridF[pY][pX]) {
       case SPACE.EMPTY:
-        if (gridM[pY][pX] == NO_ID_BLOCK) {
+        if (gridM[pY][pX] === NO_ID_BLOCK) {
           return "space_empty";
         } else {
           switch (levelState.itemsInGrid[gridM[pY][pX]].blockType) {
             case BLOCK.A:
               return "blockA";
-              break;
             case BLOCK.B:
               return "blockB";
-              break;
             case BLOCK.C:
               return "blockC";
-              break;
             default:
               return 1 / 0;
           }
         }
-        break;
       case SPACE.WALL:
         return "space_wall";
-        break;
       default:
         return "space_empty";
-        break;
     }
   }
 

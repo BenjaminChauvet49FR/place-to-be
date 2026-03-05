@@ -55,24 +55,18 @@ function EditorField({
           switch (gridM[pY][pX]) {
             case BLOCK.A:
               return "blockA";
-              break;
             case BLOCK.B:
               return "blockB";
-              break;
             case BLOCK.C:
               return "blockC";
-              break;
             default:
               return 1 / 0;
           }
         }
-        break;
       case SPACE.WALL:
         return "space_wall";
-        break;
       default:
         return "space_empty";
-        break;
     }
   }
 

@@ -10,7 +10,12 @@ export function loadLevelForEditor(pLevelData, pLoadingPackage) {
     gridF.push([]);
     gridM.push([]);
     for (x = 0; x < REAL_XLENGTH; x++) {
-      if (y == 0 || y == REAL_YLENGTH - 1 || x == 0 || x == REAL_XLENGTH - 1) {
+      if (
+        y === 0 ||
+        y === REAL_YLENGTH - 1 ||
+        x === 0 ||
+        x === REAL_XLENGTH - 1
+      ) {
         spaceF = SPACE.WALL;
         spaceM = BLOCK.NONE;
       } else {

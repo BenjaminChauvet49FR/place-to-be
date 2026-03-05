@@ -12,7 +12,7 @@ import {
 // Logic to charge a level
 
 function isBlock(pChar) {
-  return pChar == BLOCK.A || pChar == BLOCK.B || pChar == BLOCK.C;
+  return pChar === BLOCK.A || pChar === BLOCK.B || pChar === BLOCK.C;
 }
 
 export function startLevel(pCurrentLevelID, pUpdaters) {
@@ -64,11 +64,11 @@ export function startLevel(pCurrentLevelID, pUpdaters) {
         gridM[y][x] = id;
         let i = 0;
         for (i = 0; i < blockTypes.length; i++) {
-          if (blockTypes[i] == blockType) {
+          if (blockTypes[i] === blockType) {
             break;
           }
         }
-        if (i == blockTypes.length) {
+        if (i === blockTypes.length) {
           blockTypes.push(blockType);
         }
       }
@@ -134,7 +134,7 @@ export function moveBlocks(pDirection, pLuggage) {
   let moves = levelState.moves;
   let currentBlockType = levelInfos.blockTypes[levelState.currentBlockTypeID];
 
-  let x, y, dx, dy, x2, y2, x3, y3;
+  let x, y, x2, y2, x3, y3;
   let item;
 
   let noSameBlockBehind, xBeh, yBeh;
@@ -142,31 +142,31 @@ export function moveBlocks(pDirection, pLuggage) {
   moves.push({ direction: pDirection, newPosBlocks: [] });
 
   itemsInGrid.forEach((itemInGrid) => {
-    if (itemInGrid.blockType == currentBlockType) {
+    if (itemInGrid.blockType === currentBlockType) {
       x = itemInGrid.x;
       y = itemInGrid.y;
       x2 = x + MOVES[pDirection].dx;
       y2 = y + MOVES[pDirection].dy;
-      while (gridF[y2][x2] != SPACE.WALL && gridM[y2][x2] != NO_ID_BLOCK) {
+      while (gridF[y2][x2] !== SPACE.WALL && gridM[y2][x2] !== NO_ID_BLOCK) {
         x2 += MOVES[pDirection].dx;
         y2 += MOVES[pDirection].dy;
       }
       // Right now, either gridF[y2][x2] is uncrossable or gridM[y2][x2] has no blocks. Let's assume it's the second.
-      if (gridF[y2][x2] != SPACE.WALL) {
+      if (gridF[y2][x2] !== SPACE.WALL) {
         // We need an extra check to make sure there is no block of the same type behind that is ready to push !
         noSameBlockBehind = true;
         xBeh = x - MOVES[pDirection].dx;
         yBeh = y - MOVES[pDirection].dy;
-        while (noSameBlockBehind && gridM[yBeh][xBeh] != NO_ID_BLOCK) {
+        while (noSameBlockBehind && gridM[yBeh][xBeh] !== NO_ID_BLOCK) {
           noSameBlockBehind =
-            levelState.itemsInGrid[gridM[yBeh][xBeh]].blockType !=
+            levelState.itemsInGrid[gridM[yBeh][xBeh]].blockType !==
             currentBlockType;
           xBeh -= MOVES[pDirection].dx;
           yBeh -= MOVES[pDirection].dy;
         }
         if (noSameBlockBehind) {
           // Great ! The last block of that colour in the queue is being pushed.
-          // So... backtrack (spaces are moved from x3,y3 to x2,y2) until (x3,y3) == (x,y) included
+          // So... backtrack (spaces are moved from x3,y3 to x2,y2) until (x3,y3) === (x,y) included
           x3 = x2;
           y3 = y2;
           do {
@@ -188,12 +188,12 @@ export function moveBlocks(pDirection, pLuggage) {
             levelState.itemsInGrid[item.id].y = y2;
             x2 = x3;
             y2 = y3;
-          } while (x3 != x || y3 != y);
+          } while (x3 !== x || y3 !== y);
         }
       }
     }
   });
-  if (moves[moves.length - 1].newPosBlocks.length == 0) {
+  if (moves[moves.length - 1].newPosBlocks.length === 0) {
     moves.pop();
   } else {
     // NOW we apply the moves (and not at the "bug spotted" place above) ! And in the correct order (start of queues first : 1234. 123.4 12.34 etc...)
