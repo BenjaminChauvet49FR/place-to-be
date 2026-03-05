@@ -1,5 +1,7 @@
 import { SPACE, BLOCK } from "../logic/constants.jsx";
 import "../styles/style.css";
+import NumericInput from "react-numeric-input";
+import { useState } from "react";
 
 function EditorPanel({ editorState, updateEditorState, loadingPackage }) {
   // =================================
@@ -36,7 +38,7 @@ function EditorPanel({ editorState, updateEditorState, loadingPackage }) {
   }*/
 
   function loadLevel() {
-    loadingPackage.setIdLevel(3 - loadingPackage.idLevel);
+    loadingPackage.setIdLevel(fieldIDLevel);
   }
 
   function saveLevel() {
@@ -62,6 +64,8 @@ function EditorPanel({ editorState, updateEditorState, loadingPackage }) {
   }
 
   // =================================
+
+  const [fieldIDLevel, setFieldIDLevel] = useState(1);
 
   return (
     <div>
@@ -91,9 +95,13 @@ function EditorPanel({ editorState, updateEditorState, loadingPackage }) {
         </button>
       </div>
       <div>
-        <button onClick={() => loadLevel("http://127.0.0.1:8000/api/level/")}>
-          Charger niveau
-        </button>
+        <NumericInput
+          min={1}
+          max={100}
+          onChange={(e) => setFieldIDLevel(e)} // Credits : https://stackoverflow.com/questions/68473280/how-to-do-onchange-with-react-numeric-input
+          value={fieldIDLevel}
+        />
+        <button onClick={() => loadLevel(fieldIDLevel)}>Charger niveau</button>
         <button className="buttonSelectionC" onClick={() => saveLevel()}>
           Sauver niveau
         </button>
