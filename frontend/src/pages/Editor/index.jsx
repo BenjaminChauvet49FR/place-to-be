@@ -48,6 +48,8 @@ export default function EditPage() {
     setLoading: setLoading,
     loadingError: loadingError,
     setLoadingError: setLoadingError,
+    idLevel: idLevel,
+    setIdLevel: setIdLevel,
   };
 
   const [editorState, updateEditorState] = useState({
@@ -59,7 +61,7 @@ export default function EditPage() {
   const hasFetched = useRef(false);
 
   useEffect(() => {
-    if (hasFetched.current) return;
+    //if (hasFetched.current) return;
     hasFetched.current = true;
     setLoading(true);
 

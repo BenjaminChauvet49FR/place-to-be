@@ -36,7 +36,7 @@ function EditorPanel({ editorState, updateEditorState, loadingPackage }) {
   }*/
 
   function loadLevel() {
-    window.alert("En cours de création...");
+    loadingPackage.setIdLevel(3 - loadingPackage.idLevel);
   }
 
   function saveLevel() {
