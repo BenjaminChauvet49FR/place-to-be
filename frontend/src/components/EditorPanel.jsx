@@ -3,7 +3,7 @@ import "../styles/style.css";
 import { useState } from "react";
 import { saveLevel } from "../logic/saveLoad";
 
-function EditorPanel({ editorState, updateEditorState, loadingPackage }) {
+function EditorPanel({ state, dispatch }) {
   // =================================
 
   // =================================
@@ -40,30 +40,19 @@ function EditorPanel({ editorState, updateEditorState, loadingPackage }) {
   // ---------------------------------
 
   function selectSpace(pFixed) {
-    updateEditorState((prev) => ({
-      ...prev,
-      currentSpace: pFixed,
-      currentBlock: -1,
-    }));
+    dispatch({ type: "currentSpace", value: pFixed });
   }
 
   function selectBlock(pMobile) {
-    updateEditorState((prev) => ({
-      ...prev,
-      currentSpace: SPACE.EMPTY,
-      currentBlock: pMobile,
-    }));
+    dispatch({ type: "currentBlock", value: pMobile });
   }
 
   // =================================
 
-  const [fieldNameLevel, setFieldNameLevel] = useState("Mon niveau");
-
   return (
     <div className="mainComponent panel">
       <div>
-        Actuellement sélectionné : {editorState.currentSpace}{" "}
-        {editorState.currentBlock}
+        Actuellement sélectionné : {state.currentSpace} {state.currentBlock}
       </div>
       <div>
         <button onClick={() => selectSpace(SPACE.WALL)}>Mur</button>
@@ -89,20 +78,12 @@ function EditorPanel({ editorState, updateEditorState, loadingPackage }) {
       </div>
       <div>
         <input
-          onChange={(e) => setFieldNameLevel(e.target.value)} // Credits : https://stackoverflow.com/questions/68473280/how-to-do-onchange-with-react-numeric-input
-          value={fieldNameLevel}
+          onChange={(e) =>
+            dispatch({ type: "levelName", levelName: e.target.value })
+          } // Credits : https://stackoverflow.com/questions/68473280/how-to-do-onchange-with-react-numeric-input
+          value={state.levelName}
         />
-        <button
-          onClick={() =>
-            saveLevel({
-              gridM: loadingPackage.gridM,
-              gridF: loadingPackage.gridF,
-              name: fieldNameLevel,
-              id: loadingPackage.idLevel,
-              setId: loadingPackage.setIdLevel,
-            })
-          }
-        >
+        <button onClick={() => saveLevel(state, dispatch)}>
           Sauver niveau
         </button>
       </div>

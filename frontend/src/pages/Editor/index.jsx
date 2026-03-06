@@ -5,6 +5,9 @@ import { useState, useEffect, useRef } from "react";
 import { loadLevelForEditor } from "../../logic/saveLoad";
 import { useParams } from "react-router-dom";
 
+import { useReducer } from "react";
+import { reducer } from "../../logic/reducers.jsx";
+
 // -----------------------
 
 function dummyEditorGridF() {
@@ -39,14 +42,20 @@ function dummyEditorGridM() {
 }
 
 export default function Editor() {
-  const { levelId } = useParams();
+  const { levelId } = useParams(); // Remember : same name as in router mandatory, or else... undefined !
 
   const [loadedData, setLoadedData] = useState({});
   const [isLoading, setLoading] = useState(true);
   const [loadingError, setLoadingError] = useState(false);
-  const [idLevel, setIdLevel] = useState(parseInt(levelId));
-  const [gridF, updateGridF] = useState(dummyEditorGridF());
-  const [gridM, updateGridM] = useState(dummyEditorGridM());
+  const [state, dispatch] = useReducer(reducer, {
+    gridF: dummyEditorGridF(),
+    gridM: dummyEditorGridM(),
+    levelID: parseInt(levelId),
+    levelName: "",
+    currentSpace: SPACE.EMPTY,
+    currentBlock: -1,
+  });
+
   const loadingPackage = {
     loadedData: loadedData,
     setLoadedData: setLoadedData,
@@ -54,18 +63,7 @@ export default function Editor() {
     setLoading: setLoading,
     loadingError: loadingError,
     setLoadingError: setLoadingError,
-    idLevel: idLevel,
-    setIdLevel: setIdLevel,
-    gridF: gridF,
-    updateGridF: updateGridF,
-    gridM: gridM,
-    updateGridM: updateGridM,
   };
-
-  const [editorState, updateEditorState] = useState({
-    currentSpace: SPACE.EMPTY,
-    currentBlock: -1,
-  });
 
   const hasFetched = useRef(false);
 
@@ -74,45 +72,39 @@ export default function Editor() {
     hasFetched.current = true;
     setLoading(true);
 
-    if (idLevel > 0) {
-      // TODO il y a mieux à faire !
-      fetch(`http://localhost:8000/api/level/${idLevel}`).then((response) =>
-        response
-          .json()
-          .then((levelData) => {
-            loadLevelForEditor(levelData.data, {
-              updateGridF: updateGridF,
-              updateGridM: updateGridM,
-            });
-          })
-          .catch((error) => {
-            console.log(error);
-            window.alert("Impossible de charger le niveau d'id " + idLevel);
-          })
-          .finally(setLoading(false)),
+    if (state.levelID > 0) {
+      // TODO il y a mieux à faire, non ?
+      fetch(`http://localhost:8000/api/level/${state.levelID}`).then(
+        (response) =>
+          response
+            .json()
+            .then((levelData) => {
+              loadLevelForEditor(levelData.data, levelData.name, dispatch);
+            })
+            .catch((error) => {
+              console.log(error);
+              window.alert(
+                "Impossible de charger le niveau d'id " + state.levelID,
+              );
+            })
+            .finally(setLoading(false)),
       );
     } else {
-      loadLevelForEditor("", {
-        updateGridF: updateGridF,
-        updateGridM: updateGridM,
-      });
+      loadLevelForEditor("", "", dispatch);
       setLoading(false);
     }
-  }, [idLevel]);
+  }, [state.levelID]);
 
   return (
     <div>
       <EditorField
-        gridF={gridF}
-        updateGridF={updateGridF}
-        gridM={gridM}
-        updateGridM={updateGridM}
-        editorState={editorState}
+        state={state}
+        dispatch={dispatch}
         loadingPackage={loadingPackage}
       ></EditorField>
       <EditorPanel
-        editorState={editorState}
-        updateEditorState={updateEditorState}
+        state={state}
+        dispatch={dispatch}
         loadingPackage={loadingPackage}
       ></EditorPanel>
     </div>

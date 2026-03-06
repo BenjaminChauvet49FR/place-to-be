@@ -6,7 +6,7 @@ import {
   NO_ID_LEVEL,
 } from "./constants.jsx";
 
-export function loadLevelForEditor(pLevelData, pLoadingPackage) {
+export function loadLevelForEditor(pLevelData, pName, pDispatch) {
   let x, y;
   let gridF = [];
   let gridM = [];
@@ -60,16 +60,18 @@ export function loadLevelForEditor(pLevelData, pLoadingPackage) {
       gridM[y].push(spaceM);
     }
   }
-  pLoadingPackage.updateGridF(gridF);
-  pLoadingPackage.updateGridM(gridM);
+  pDispatch({ type: "gridF_ALL", gridF: gridF });
+  pDispatch({ type: "gridM_ALL", gridM: gridM });
+  pDispatch({ type: "levelName", levelName: pName });
 }
 
-export function saveLevel(pLevelData) {
-  const gridM = pLevelData.gridM;
-  const gridF = pLevelData.gridF;
-  const name = pLevelData.name;
-  const id = pLevelData.id;
-  const setId = pLevelData.setId;
+export function saveLevel(pState, pDispatch) {
+  // Note : here, pState is read but not written... except for ID.
+  const gridM = pState.gridM;
+  const gridF = pState.gridF;
+  const name = pState.levelName;
+  const id = pState.levelID;
+
   let x, y;
   let data = "";
   let char = "";
@@ -110,7 +112,7 @@ export function saveLevel(pLevelData) {
     })
       .then((response) =>
         response.json().then((levelData) => {
-          setId(levelData.id);
+          pDispatch({ type: "levelID", levelID: levelData.id });
           window.alert("Niveau correctement sauvegardé !");
         }),
       )
@@ -132,24 +134,4 @@ export function saveLevel(pLevelData) {
         window.alert("Echec dans l'enregistrement du niveau !");
       });
   }
-
-  /*
-.then((response) =>
-      response
-        .json()
-        .then((levelData) => {
-          loadLevelForEditor(levelData.data, {
-            updateGridF: updateGridF,
-            updateGridM: updateGridM,
-          });
-        })
-        .catch((error) => {
-          console.log(error);
-          window.alert("Impossible de charger le niveau d'id " + idLevel);
-        })
-        .finally(setLoading(false)),
-    );
-  }, [idLevel]);
-
-*/
 }

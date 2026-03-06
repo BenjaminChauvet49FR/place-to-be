@@ -1,58 +1,17 @@
-import {
-  SPACE,
-  BLOCK,
-  REAL_XLENGTH,
-  REAL_YLENGTH,
-} from "../logic/constants.jsx";
+import { SPACE, BLOCK } from "../logic/constants.jsx";
 import "../styles/style.css";
 
-function EditorField({
-  gridF,
-  updateGridF,
-  gridM,
-  updateGridM,
-  editorState,
-  loadingPackage,
-}) {
-  const xLength = gridF[0].length;
-  const yLength = gridF.length;
-
-  function editCase(pX, pY) {
-    if (
-      pX !== 0 &&
-      pX !== REAL_XLENGTH - 1 &&
-      pY !== 0 &&
-      pY !== REAL_YLENGTH - 1
-    ) {
-      updateGridF((prev) =>
-        prev.map((row, y) =>
-          y !== pY
-            ? row
-            : row.map((cell, x) =>
-                x === pX ? editorState.currentSpace : cell,
-              ),
-        ),
-      );
-
-      updateGridM((prev) =>
-        prev.map((row, y) =>
-          y !== pY
-            ? row
-            : row.map((cell, x) =>
-                x === pX ? editorState.currentBlock : cell,
-              ),
-        ),
-      );
-    }
-  }
+function EditorField({ state, dispatch, loadingPackage }) {
+  const xLength = state.gridF[0].length;
+  const yLength = state.gridF.length;
 
   function getClassName(pX, pY) {
-    switch (gridF[pY][pX]) {
+    switch (state.gridF[pY][pX]) {
       case SPACE.EMPTY:
-        if (gridM[pY][pX] === BLOCK.NONE) {
+        if (state.gridM[pY][pX] === BLOCK.NONE) {
           return "space_empty";
         } else {
-          switch (gridM[pY][pX]) {
+          switch (state.gridM[pY][pX]) {
             case BLOCK.A:
               return "blockA";
             case BLOCK.B:
@@ -82,7 +41,20 @@ function EditorField({
                 <div
                   key={x}
                   className={`space ${getClassName(x, y)}`}
-                  onClick={() => editCase(x, y)}
+                  onClick={() => {
+                    dispatch({
+                      type: "gridF",
+                      x: x,
+                      y: y,
+                      value: state.currentSpace,
+                    });
+                    dispatch({
+                      type: "gridM",
+                      x: x,
+                      y: y,
+                      value: state.currentBlock,
+                    });
+                  }}
                 ></div>
               ))}
             </div>
