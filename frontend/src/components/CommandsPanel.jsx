@@ -39,7 +39,7 @@ function CommandsPanel({
   };
 
   return (
-    <div className="CommandsPanel">
+    <div className="panel mainComponent">
       <div className="directionsPanel0">
         <div className="directionsPanel">
           <div>

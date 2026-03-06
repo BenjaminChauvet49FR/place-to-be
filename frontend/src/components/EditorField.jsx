@@ -71,7 +71,7 @@ function EditorField({
   }
 
   return (
-    <div>
+    <div className="mainComponent">
       {loadingPackage.isLoading ? (
         <div>Chargement en cours...</div>
       ) : (

@@ -30,7 +30,7 @@ function PlayField({ gridF, gridM, levelState }) {
   }
 
   return (
-    <div className="playField">
+    <div className="playField mainComponent">
       {Array.from({ length: yLength }).map((_, y) => (
         <div key={y} className="spaceRow">
           {Array.from({ length: xLength }).map((_, x) => (

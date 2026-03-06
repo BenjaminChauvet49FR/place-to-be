@@ -60,11 +60,12 @@ function EditorPanel({ editorState, updateEditorState, loadingPackage }) {
   const [fieldNameLevel, setFieldNameLevel] = useState("Mon niveau");
 
   return (
-    <div>
+    <div className="mainComponent panel">
       <div>
         Actuellement sélectionné : {editorState.currentSpace}{" "}
         {editorState.currentBlock}
-        {"     "}
+      </div>
+      <div>
         <button onClick={() => selectSpace(SPACE.WALL)}>Mur</button>
         <button onClick={() => selectSpace(SPACE.EMPTY)}>Case vide</button>
         <button

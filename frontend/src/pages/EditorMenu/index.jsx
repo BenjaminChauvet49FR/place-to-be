@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import "../../styles/style.css";
 
 export default function LevelListForEditor() {
   const [loading, setLoading] = useState(false);
@@ -25,17 +26,21 @@ export default function LevelListForEditor() {
   }, []);
 
   return (
-    <div>
+    <div className="level_menu">
       {loading ? (
         <div>Chargement en cours</div>
       ) : (
         levelListJSON.map((level, key) => (
-          <Link to={`/editLevel/${level.id}`} key={key}>
-            {level.name === "" ? "(anonyme)" : level.name}
-          </Link>
+          <div key={key}>
+            <Link to={`/editLevel/${level.id}`}>
+              {level.name === "" ? "(anonyme)" : level.name}
+            </Link>
+          </div>
         ))
       )}
-      <Link to={`/editLevel/0`}>(Nouveau)</Link>
+      <div className="level_new">
+        <Link to={`/editLevel/0`}>(Nouveau)</Link>
+      </div>
     </div>
   );
 }

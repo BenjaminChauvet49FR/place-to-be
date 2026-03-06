@@ -24,15 +24,39 @@
 	background-color:#CC88FF;
 }
 
-.nav Link {
-	margin-right:3em;
+nav {
+	border-style:outset;
+	background-color: #eeffee;
 }
 
 /* ------------------ */
-.CommandsPanel {
+.mainComponent {
+	border-style:outset;
+	border-width:2px;
+}
+/* ------------------ */
+
+.level_menu div {
+	width:20em;
+	border-style:outset
+}
+.level_new {
+	background-color: #fafffa;
+}
+.level_menu div:nth-child(even):not(:last-child) {
+	background-color: #ffeeff;
+}
+.level_menu div:nth-child(odd):not(:last-child) {
+	background-color: #fafaff;
+}
+
+
+/* ------------------ */
+.panel {
 	display:flex;
 	flex-direction:column;
 	align-items: center;
+	background-color:#ffcc99;
 }
 .directionsPanel0 {
 	display:flex;
