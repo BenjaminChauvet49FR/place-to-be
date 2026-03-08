@@ -105,33 +105,44 @@ export function saveLevel(pState, pDispatch) {
   }
 
   if (id === NO_ID_LEVEL) {
-    fetch("http://localhost:8000/api/level/", {
+    return fetch("http://localhost:8000/api/level/", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: '{"data": "' + data + '", "name": "' + name + '"}',
+      body: JSON.stringify({
+        data: data,
+        name: name,
+      }),
     })
-      .then((response) =>
+      .then(async (response) =>
         response.json().then((levelData) => {
           pDispatch({ type: "levelID", levelID: levelData.id });
-          window.alert("Niveau correctement sauvegardé !");
         }),
       )
       .catch((error) => {
         window.alert("Echec dans l'enregistrement du niveau !");
       });
   } else {
-    fetch("http://localhost:8000/api/level/" + id + "/", {
+    return fetch("http://localhost:8000/api/level/" + id + "/", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: '{"data": "' + data + '", "name": "' + name + '"}',
+      body: JSON.stringify({
+        data: data,
+        name: name,
+      }),
     })
-      .then((response) =>
-        response.json().then((levelData) => {
-          window.alert("Niveau correctement sauvegardé !");
-        }),
-      )
+      .then(async (response) => response.json().then((levelData) => {}))
       .catch((error) => {
         window.alert("Echec dans l'enregistrement du niveau !");
       });
+  }
+}
+
+export async function deleteLevel(id) {
+  const response = await fetch(`http://localhost:8000/api/level/${id}/`, {
+    method: "DELETE",
+  });
+
+  if (!response.ok) {
+    throw new Error("Impossible de supprimer le niveau");
   }
 }

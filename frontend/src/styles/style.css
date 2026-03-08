@@ -49,7 +49,11 @@ nav {
 .level_menu div:nth-child(odd):not(:last-child) {
 	background-color: #fafaff;
 }
-
+.delete{
+	border-style:outset;
+	background-color:#fa8888;
+	color:#ffffff;
+}
 
 /* ------------------ */
 .panel {
