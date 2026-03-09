@@ -1,7 +1,10 @@
 import { SPACE, BLOCK } from "../logic/constants.jsx";
 import "../styles/style.css";
+import { useContext } from "react";
+import { LevelContext } from "../context/LevelContext.jsx";
 
-function EditorField({ state, dispatch, loadingPackage }) {
+function EditorField({ loadingPackage }) {
+  const { state, dispatch } = useContext(LevelContext);
   const xLength = state.gridF[0].length;
   const yLength = state.gridF.length;
 

@@ -3,9 +3,10 @@ import ReactDOM from "react-dom";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { createRoot } from "react-dom/client";
 
-import Playing from "./pages/Playing/";
+import Playing from "./pages/Playing/index.jsx";
 import EditorMenu from "./pages/EditorMenu/";
 import Editor from "./pages/Editor/";
+import LevelProvider from "./context/LevelContext.jsx";
 
 import Header from "./components/Header.jsx";
 
@@ -16,14 +17,16 @@ const root = createRoot(container);
 
 root.render(
   <React.StrictMode>
-    <Router>
-      <Header />
-      <Routes>
-        <Route path="/" element={<Playing />} />
-        <Route path="/editor" element={<EditorMenu />} />
-        <Route path="/editLevel/:levelId" element={<Editor />} />
-      </Routes>
-    </Router>
+    <LevelProvider>
+      <Router>
+        <Header />
+        <Routes>
+          <Route path="/editor" element={<EditorMenu />} />
+          <Route path="/editLevel/:levelId" element={<Editor />} />
+          <Route path="/editLevel/playing" element={<Playing />} />
+        </Routes>
+      </Router>
+    </LevelProvider>
   </React.StrictMode>,
 );
 

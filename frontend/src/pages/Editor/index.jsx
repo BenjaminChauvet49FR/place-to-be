@@ -1,64 +1,26 @@
-import { SPACE, REAL_XLENGTH, REAL_YLENGTH } from "../../logic/constants";
 import EditorField from "../../components/EditorField";
 import EditorPanel from "../../components/EditorPanel";
 import { useState, useEffect, useRef } from "react";
 import { loadLevel, loadNewLevel } from "../../logic/saveLoad";
 import { useParams } from "react-router-dom";
 
-import { useReducer } from "react";
-import { reducer } from "../../logic/reducers.jsx";
+import { useContext } from "react";
+import { LevelContext } from "../../context/LevelContext";
 
 // -----------------------
 
-function dummyEditorGridF() {
-  let field = [];
-  for (let y = 0; y < REAL_YLENGTH; y++) {
-    field.push([]);
-    for (let x = 0; x < REAL_XLENGTH; x++) {
-      field[y].push(SPACE.EMPTY);
-    }
-  }
-  for (let i = 0; i < REAL_YLENGTH; i++) {
-    field[i][0] = SPACE.WALL;
-    field[i][REAL_XLENGTH - 1] = SPACE.WALL;
-  }
-  for (let i = 0; i < REAL_XLENGTH; i++) {
-    field[0][i] = SPACE.WALL;
-    field[REAL_YLENGTH - 1][i] = SPACE.WALL;
-  }
-  return field;
-}
-
-function dummyEditorGridM() {
-  let field = [];
-  for (let y = 0; y < REAL_YLENGTH; y++) {
-    field.push([]);
-    for (let x = 0; x < REAL_XLENGTH; x++) {
-      // TODO change these hard-coded values !
-      field[y].push(-1); // TODO change -1s everywhere !
-    }
-  }
-  return field;
-}
-
 export default function Editor() {
   const { levelId } = useParams(); // Remember : same name as in router mandatory, or else... undefined !
-  let trueLevel = 0;
+  let trueLevelId = 0;
   if (levelId !== "new") {
-    trueLevel = parseInt(levelId);
+    trueLevelId = parseInt(levelId);
   }
 
   const [loadedData, setLoadedData] = useState({});
   const [isLoading, setLoading] = useState(true);
   const [loadingError, setLoadingError] = useState(false);
-  const [state, dispatch] = useReducer(reducer, {
-    gridF: dummyEditorGridF(),
-    gridM: dummyEditorGridM(),
-    levelID: trueLevel,
-    levelName: "",
-    currentSpace: SPACE.EMPTY,
-    currentBlock: -1,
-  });
+
+  const { state, dispatch } = useContext(LevelContext);
 
   const loadingPackage = {
     loadedData: loadedData,
@@ -73,12 +35,14 @@ export default function Editor() {
 
   useEffect(() => {
     //if (hasFetched.current) return;
+    dispatch({ type: "levelID", levelID: trueLevelId });
+
     hasFetched.current = true;
     setLoading(true);
 
-    if (state.levelID > 0) {
+    if (trueLevelId > 0) {
       try {
-        loadLevel(state.levelID, dispatch);
+        loadLevel(trueLevelId, dispatch);
       } finally {
         setLoading(false);
       }
@@ -86,7 +50,7 @@ export default function Editor() {
       loadNewLevel(dispatch);
       setLoading(false);
     }
-  }, [state.levelID]);
+  }, []);
 
   return (
     <div>

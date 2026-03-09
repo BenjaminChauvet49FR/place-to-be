@@ -1,4 +1,6 @@
-export function reducer(pState, pAction) {
+import { SPACE, BLOCK, REAL_XLENGTH, REAL_YLENGTH } from "../logic/constants";
+
+export function levelReducer(pState, pAction) {
   switch (pAction.type) {
     case "gridF":
       return {
@@ -59,3 +61,42 @@ export function reducer(pState, pAction) {
       return 1 / 0;
   }
 }
+
+function dummyGridF() {
+  let field = [];
+  for (let y = 0; y < REAL_YLENGTH; y++) {
+    field.push([]);
+    for (let x = 0; x < REAL_XLENGTH; x++) {
+      field[y].push(SPACE.EMPTY);
+    }
+  }
+  for (let i = 0; i < REAL_YLENGTH; i++) {
+    field[i][0] = SPACE.WALL;
+    field[i][REAL_XLENGTH - 1] = SPACE.WALL;
+  }
+  for (let i = 0; i < REAL_XLENGTH; i++) {
+    field[0][i] = SPACE.WALL;
+    field[REAL_YLENGTH - 1][i] = SPACE.WALL;
+  }
+  return field;
+}
+
+function dummyGridM() {
+  let field = [];
+  for (let y = 0; y < REAL_YLENGTH; y++) {
+    field.push([]);
+    for (let x = 0; x < REAL_XLENGTH; x++) {
+      field[y].push(BLOCK.NONE);
+    }
+  }
+  return field;
+}
+
+export const initialState = {
+  gridF: dummyGridF(),
+  gridM: dummyGridM(),
+  levelID: 0,
+  levelName: "",
+  currentSpace: SPACE.EMPTY,
+  currentBlock: BLOCK.NONE,
+};

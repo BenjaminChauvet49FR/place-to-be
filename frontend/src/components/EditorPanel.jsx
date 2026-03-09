@@ -81,6 +81,10 @@ function EditorPanel({ state, dispatch }) {
     }
   }
 
+  function playtestLevel() {
+    navigate("/editLevel/playing");
+  }
+
   // =================================
 
   return (
@@ -121,6 +125,9 @@ function EditorPanel({ state, dispatch }) {
         <button className="delete" onClick={() => deleteLevel()}>
           Effacer niveau
         </button>
+      </div>
+      <div>
+        <button onClick={() => playtestLevel()}>Tester niveau</button>
       </div>
     </div>
   );
