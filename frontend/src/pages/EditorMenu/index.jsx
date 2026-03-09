@@ -60,7 +60,7 @@ export default function LevelListForEditor() {
         ))
       )}
       <div className="level_new">
-        <Link to={`/editLevel/0`}>(Nouveau)</Link>
+        <Link to={`/editLevel/new`}>(Nouveau)</Link>
       </div>
     </div>
   );

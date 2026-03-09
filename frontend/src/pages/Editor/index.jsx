@@ -2,7 +2,7 @@ import { SPACE, REAL_XLENGTH, REAL_YLENGTH } from "../../logic/constants";
 import EditorField from "../../components/EditorField";
 import EditorPanel from "../../components/EditorPanel";
 import { useState, useEffect, useRef } from "react";
-import { loadLevelForEditor } from "../../logic/saveLoad";
+import { loadLevel, loadNewLevel } from "../../logic/saveLoad";
 import { useParams } from "react-router-dom";
 
 import { useReducer } from "react";
@@ -43,6 +43,10 @@ function dummyEditorGridM() {
 
 export default function Editor() {
   const { levelId } = useParams(); // Remember : same name as in router mandatory, or else... undefined !
+  let trueLevel = 0;
+  if (levelId !== "new") {
+    trueLevel = parseInt(levelId);
+  }
 
   const [loadedData, setLoadedData] = useState({});
   const [isLoading, setLoading] = useState(true);
@@ -50,7 +54,7 @@ export default function Editor() {
   const [state, dispatch] = useReducer(reducer, {
     gridF: dummyEditorGridF(),
     gridM: dummyEditorGridM(),
-    levelID: parseInt(levelId),
+    levelID: trueLevel,
     levelName: "",
     currentSpace: SPACE.EMPTY,
     currentBlock: -1,
@@ -73,24 +77,13 @@ export default function Editor() {
     setLoading(true);
 
     if (state.levelID > 0) {
-      // TODO il y a mieux à faire, non ?
-      fetch(`http://localhost:8000/api/level/${state.levelID}`).then(
-        (response) =>
-          response
-            .json()
-            .then((levelData) => {
-              loadLevelForEditor(levelData.data, levelData.name, dispatch);
-            })
-            .catch((error) => {
-              console.log(error);
-              window.alert(
-                "Impossible de charger le niveau d'id " + state.levelID,
-              );
-            })
-            .finally(setLoading(false)),
-      );
+      try {
+        loadLevel(state.levelID, dispatch);
+      } finally {
+        setLoading(false);
+      }
     } else {
-      loadLevelForEditor("", "", dispatch);
+      loadNewLevel(dispatch);
       setLoading(false);
     }
   }, [state.levelID]);

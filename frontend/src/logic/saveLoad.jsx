@@ -6,7 +6,25 @@ import {
   NO_ID_LEVEL,
 } from "./constants.jsx";
 
-export function loadLevelForEditor(pLevelData, pName, pDispatch) {
+export function loadNewLevel(pDispatch) {
+  loadLevelForEditor("", "", pDispatch);
+}
+
+export function loadLevel(pID, pDispatch) {
+  fetch(`http://localhost:8000/api/level/${pID}`).then((response) =>
+    response
+      .json()
+      .then((levelData) => {
+        loadLevelForEditor(levelData.data, levelData.name, pDispatch);
+      })
+      .catch((error) => {
+        console.log(error);
+        window.alert("Impossible de charger le niveau d'id " + pID);
+      }),
+  );
+}
+
+function loadLevelForEditor(pLevelData, pName, pDispatch) {
   let x, y;
   let gridF = [];
   let gridM = [];
