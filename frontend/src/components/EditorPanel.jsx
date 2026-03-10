@@ -3,6 +3,27 @@ import "../styles/style.css";
 import { useNavigate } from "react-router-dom";
 import * as saveLoad from "../logic/saveLoad";
 
+function captionItemSelected(pSpace, pBlock) {
+  if (pSpace === SPACE.EMPTY) {
+    if (pBlock === BLOCK.NONE) {
+      return "Case vide";
+    }
+    if (pBlock === BLOCK.A) {
+      return "Bloc A";
+    }
+    if (pBlock === BLOCK.B) {
+      return "Bloc B";
+    }
+    if (pBlock === BLOCK.C) {
+      return "Bloc C";
+    }
+  }
+  if (pSpace === SPACE.WALL && pBlock === BLOCK.NONE) {
+    return "Mur";
+  }
+  return 1 / 0;
+}
+
 function EditorPanel({ state, dispatch }) {
   // =================================
 
@@ -43,9 +64,11 @@ function EditorPanel({ state, dispatch }) {
 
   function selectSpace(pFixed) {
     dispatch({ type: "currentSpace", value: pFixed });
+    dispatch({ type: "currentBlock", value: BLOCK.NONE });
   }
 
   function selectBlock(pMobile) {
+    dispatch({ type: "currentSpace", value: BLOCK.EMPTY });
     dispatch({ type: "currentBlock", value: pMobile });
   }
 
@@ -90,7 +113,8 @@ function EditorPanel({ state, dispatch }) {
   return (
     <div className="mainComponent panel">
       <div>
-        Actuellement sélectionné : {state.currentSpace} {state.currentBlock}
+        Actuellement sélectionné :{" "}
+        {captionItemSelected(state.currentSpace, state.currentBlock)}
       </div>
       <div>
         <button onClick={() => selectSpace(SPACE.WALL)}>Mur</button>
