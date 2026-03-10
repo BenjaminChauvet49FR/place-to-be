@@ -6,7 +6,8 @@ import { createRoot } from "react-dom/client";
 import Playing from "./pages/Playing/index.jsx";
 import EditorMenu from "./pages/EditorMenu/";
 import Editor from "./pages/Editor/";
-import LevelProvider from "./context/LevelContext.jsx";
+import LevelEditProvider from "./context/LevelEditContext.jsx";
+import LevelPlayProvider from "./context/LevelPlayContext.jsx";
 
 import Header from "./components/Header.jsx";
 
@@ -17,16 +18,18 @@ const root = createRoot(container);
 
 root.render(
   <React.StrictMode>
-    <LevelProvider>
-      <Router>
-        <Header />
-        <Routes>
-          <Route path="/editor" element={<EditorMenu />} />
-          <Route path="/editLevel/:levelId" element={<Editor />} />
-          <Route path="/editLevel/playing" element={<Playing />} />
-        </Routes>
-      </Router>
-    </LevelProvider>
+    <LevelPlayProvider>
+      <LevelEditProvider>
+        <Router>
+          <Header />
+          <Routes>
+            <Route path="/editor" element={<EditorMenu />} />
+            <Route path="/editLevel/:levelId" element={<Editor />} />
+            <Route path="/editLevel/playing" element={<Playing />} />
+          </Routes>
+        </Router>
+      </LevelEditProvider>
+    </LevelPlayProvider>
   </React.StrictMode>,
 );
 

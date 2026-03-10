@@ -5,7 +5,7 @@ import { loadLevel, loadNewLevel } from "../../logic/saveLoad";
 import { useParams } from "react-router-dom";
 
 import { useContext } from "react";
-import { LevelContext } from "../../context/LevelContext";
+import { LevelEditContext } from "../../context/LevelEditContext";
 
 // -----------------------
 
@@ -20,7 +20,7 @@ export default function Editor() {
   const [isLoading, setLoading] = useState(true);
   const [loadingError, setLoadingError] = useState(false);
 
-  const { state, dispatch } = useContext(LevelContext);
+  const { state, dispatch } = useContext(LevelEditContext);
 
   const loadingPackage = {
     loadedData: loadedData,
@@ -35,20 +35,26 @@ export default function Editor() {
 
   useEffect(() => {
     //if (hasFetched.current) return;
-    dispatch({ type: "levelID", levelID: trueLevelId });
 
-    hasFetched.current = true;
-    setLoading(true);
+    if (!state.keepEditorState) {
+      dispatch({ type: "levelID", levelID: trueLevelId });
 
-    if (trueLevelId > 0) {
-      try {
-        loadLevel(trueLevelId, dispatch);
-      } finally {
+      hasFetched.current = true;
+      setLoading(true);
+
+      if (trueLevelId > 0) {
+        try {
+          loadLevel(trueLevelId, dispatch);
+        } finally {
+          setLoading(false);
+        }
+      } else {
+        loadNewLevel(dispatch);
         setLoading(false);
       }
     } else {
-      loadNewLevel(dispatch);
-      setLoading(false);
+      dispatch({ type: "noLongerKeepEditorState" });
+      setLoading(false); // Note : isLoading is true by default
     }
   }, []);
 

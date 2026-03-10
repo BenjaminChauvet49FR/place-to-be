@@ -1,12 +1,12 @@
 # Ce qui a changé ce commit
 
-* Etablissement du lien entre l'edition d'un niveau et la page de jeu
-* Suppression de rawData et de levelBank
-* Redefinition du rôle de la page Playing (elle sert à tester un niveau de jeu) 
-* suppression des boutons de redémarrage de niveau + d'accès aux niveaux 
+* En plus de LevelEditContext, LevelEditReducer : ajout LevelPlayContext, LevelPlayReducer
+* Pour la mise en place des contextes :
+  * Grand menage dans gameplay.jsx et le composant CommandsPanel 
+  * Epuration page Playing et composant PlayField
+* Ajout d'un bouton de retour du jeu vers l'editeur (gere par un booleen dans le LevelEditReducer, pour signifier qu'il faut garder la grille)
 
 # Ce qui reste à ameliorer
 
-* Pour l'instant, côté jeu nous utilisons toujours une version du jeu basée sur le chargement des niveaux, ainsi que tous les UseState utilisés à l'époque.
-* De plus, la page 'Playing' permet d'aller sur un niveau mais pas d'en ressortir.
-* Si la page 'playing' est rechargée, il faudrait rediriger l'utilisateur vers une page d'accueil (non définie pour l'instant.)
+* Dans CommandsPanel.jsx (l'appel a commandes), beaucoup d'appels a state et a useHook. Il faudra en retirer...
+* La navigation dans le bouton de retour de CommandsPanel.jsx (new, et levelID : nécessite synchronisation avec EditorMenu.)

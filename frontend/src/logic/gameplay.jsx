@@ -17,7 +17,7 @@ function isBlock(pChar) {
 export function startLevelFromGrid(
   pGridFFromEditor,
   pGridMFromEditor,
-  pUpdaters,
+  pDispatchPlay,
 ) {
   const gridF = [];
   const gridM = [];
@@ -92,31 +92,33 @@ export function startLevelFromGrid(
       gridM[y].push(NO_ID_BLOCK);
     }
   }
-  pUpdaters.updateLevelState({
+  pDispatchPlay({ type: "gridF_ALL", gridF: gridF });
+  pDispatchPlay({
+    type: "levelState",
     moves: [],
     itemsInGrid: itemsInGrid,
+    gridM: gridM,
+  });
+  pDispatchPlay({
+    type: "currentBlockTypeID",
     currentBlockTypeID: 0,
   });
-  pUpdaters.updateLevelInfos({
+  pDispatchPlay({
+    type: "blockTypes",
     blockTypes: blockTypes,
-    //currentLevelID: pCurrentLevelID,
   });
-  pUpdaters.updateGridF(gridF);
-  pUpdaters.updateGridM(gridM);
 }
 
 // ===================
 // Logic WITHIN the level
 
-export function moveBlocks(pDirection, pLuggage) {
-  let levelState = pLuggage.levelState;
-  let levelInfos = pLuggage.levelInfos;
-  let gridM = pLuggage.gridM;
-  let gridF = pLuggage.gridF;
+export function moveBlocks(pDirection, pState, pDispatch) {
+  let gridM = pState.gridM;
+  let gridF = pState.gridF;
 
-  let itemsInGrid = levelState.itemsInGrid;
-  let moves = levelState.moves;
-  let currentBlockType = levelInfos.blockTypes[levelState.currentBlockTypeID];
+  let itemsInGrid = pState.itemsInGrid;
+  let moves = pState.moves;
+  let currentBlockType = pState.blockTypes[pState.currentBlockTypeID];
 
   let x, y, x2, y2, x3, y3;
   let item;
@@ -143,7 +145,7 @@ export function moveBlocks(pDirection, pLuggage) {
         yBeh = y - MOVES[pDirection].dy;
         while (noSameBlockBehind && gridM[yBeh][xBeh] !== NO_ID_BLOCK) {
           noSameBlockBehind =
-            levelState.itemsInGrid[gridM[yBeh][xBeh]].blockType !==
+            pState.itemsInGrid[gridM[yBeh][xBeh]].blockType !==
             currentBlockType;
           xBeh -= MOVES[pDirection].dx;
           yBeh -= MOVES[pDirection].dy;
@@ -168,8 +170,8 @@ export function moveBlocks(pDirection, pLuggage) {
               yDest: y2,
               id: item.id,
             });
-            levelState.itemsInGrid[item.id].x = x2;
-            levelState.itemsInGrid[item.id].y = y2;
+            pState.itemsInGrid[item.id].x = x2;
+            pState.itemsInGrid[item.id].y = y2;
             x2 = x3;
             y2 = y3;
           } while (x3 !== x || y3 !== y);
@@ -186,21 +188,22 @@ export function moveBlocks(pDirection, pLuggage) {
       gridM[npb.yDest][npb.xDest] = npb.id;
     });
   }
-  pLuggage.updateLevelState((prev) => ({
-    ...prev,
-    moves: levelState.moves,
+  pDispatch({
+    type: "levelState",
+    moves: moves,
     itemsInGrid: itemsInGrid,
-  }));
-  pLuggage.updateGridM(gridM);
+    gridM: gridM,
+  });
 }
 
-export function undo(pLuggage) {
-  let levelState = pLuggage.levelState;
-  let gridM = pLuggage.gridM;
+export function undo(pState, pDispatch) {
+  if (pState.moves.length > 0) {
+    let gridM = pState.gridM.map((row, y) =>
+      row.map((_, x) => pState.gridM[y][x]),
+    );
 
-  if (levelState.moves.length > 0) {
-    let itemsInGrid = levelState.itemsInGrid;
-    let moves = levelState.moves;
+    let itemsInGrid = pState.itemsInGrid.map((item) => item);
+    let moves = pState.moves.map((item) => item);
     itemsInGrid.sort(function (pItem1, pItem2) {
       return pItem1.id - pItem2.id;
     });
@@ -210,39 +213,28 @@ export function undo(pLuggage) {
       posToUndo = moveToUndo.newPosBlocks.pop();
       gridM[posToUndo.yLeft][posToUndo.xLeft] = posToUndo.id;
       gridM[posToUndo.yDest][posToUndo.xDest] = NO_ID_BLOCK;
-      levelState.itemsInGrid[posToUndo.id].x = posToUndo.xLeft;
-      levelState.itemsInGrid[posToUndo.id].y = posToUndo.yLeft;
+      itemsInGrid[posToUndo.id].x = posToUndo.xLeft;
+      itemsInGrid[posToUndo.id].y = posToUndo.yLeft;
     }
 
-    pLuggage.updateLevelState((prev) => ({
-      ...prev,
-      moves: levelState.moves,
+    pDispatch({
+      type: "levelState",
+      moves: moves,
       itemsInGrid: itemsInGrid,
-    }));
-    pLuggage.updateGridM(gridM);
+      gridM: gridM,
+    });
   }
 }
 
-// TODO : I think there is a way to use way fewer components !
-
-export function getBlockTypes(pLevelInfos) {
-  return pLevelInfos.blockTypes;
+export function getBlockTypes(pState) {
+  return pState.blockTypes;
 }
 
-export function setCurrentBlockType(
-  pBlockType,
-  pLevelInfos,
-  pUpdateLevelState,
-) {
-  let pIndex = pLevelInfos.blockTypes.indexOf(pBlockType);
-  pUpdateLevelState((prev) => ({ ...prev, currentBlockTypeID: pIndex }));
+export function setCurrentBlockType(pBlockType, pState, pDispatch) {
+  let pIndex = pState.blockTypes.indexOf(pBlockType);
+  pDispatch({ type: "currentBlockTypeID", currentBlockTypeID: pIndex });
 }
 
-export function getCurrentBlockType(pLevelInfos, pLevelState) {
-  return pLevelInfos.blockTypes[pLevelState.currentBlockTypeID];
-}
-
-export function dummyLevelInfos() {
-  // Note : if not for this, this would block at initialization of the page
-  return { blockTypes: [], currentLevelID: 0 };
+export function getCurrentBlockType(pState) {
+  return pState.blockTypes[pState.currentBlockTypeID];
 }

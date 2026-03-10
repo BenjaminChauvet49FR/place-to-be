@@ -1,7 +1,14 @@
 import { SPACE, BLOCK, NO_ID_BLOCK } from "../logic/constants.jsx";
 import "../styles/style.css";
 
-function PlayField({ gridF, gridM, levelState }) {
+import { useContext } from "react";
+import { LevelPlayContext } from "../context/LevelPlayContext.jsx";
+
+function PlayField() {
+  const { state, _ } = useContext(LevelPlayContext);
+  const gridF = state.gridF;
+  const gridM = state.gridM;
+  const itemsInGrid = state.itemsInGrid;
   const xLength = gridF[0].length;
   const yLength = gridF.length;
 
@@ -11,7 +18,7 @@ function PlayField({ gridF, gridM, levelState }) {
         if (gridM[pY][pX] === NO_ID_BLOCK) {
           return "space_empty";
         } else {
-          switch (levelState.itemsInGrid[gridM[pY][pX]].blockType) {
+          switch (itemsInGrid[gridM[pY][pX]].blockType) {
             case BLOCK.A:
               return "blockA";
             case BLOCK.B:

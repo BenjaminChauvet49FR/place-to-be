@@ -1,6 +1,11 @@
-import { SPACE, BLOCK, REAL_XLENGTH, REAL_YLENGTH } from "../logic/constants";
+import {
+  SPACE,
+  REAL_XLENGTH,
+  REAL_YLENGTH,
+  NO_ID_BLOCK,
+} from "../logic/constants";
 
-export function levelReducer(pState, pAction) {
+export function levelPlayReducer(pState, pAction) {
   switch (pAction.type) {
     case "gridF":
       return {
@@ -34,25 +39,27 @@ export function levelReducer(pState, pAction) {
           row.map((_, x) => pAction.gridM[y][x]),
         ),
       };
-    case "levelID":
+    case "blockTypes":
       return {
         ...pState,
-        levelID: pAction.levelID,
+        blockTypes: pAction.blockTypes,
       };
     case "levelName":
       return {
         ...pState,
         levelName: pAction.levelName,
       };
-    case "currentSpace":
+    case "currentBlockTypeID":
       return {
         ...pState,
-        currentSpace: pAction.value,
+        currentBlockTypeID: pAction.currentBlockTypeID,
       };
-    case "currentBlock":
+    case "levelState":
       return {
         ...pState,
-        currentBlock: pAction.value,
+        gridM: pAction.gridM,
+        moves: pAction.moves,
+        itemsInGrid: pAction.itemsInGrid,
       };
 
     default:
@@ -86,7 +93,7 @@ function dummyGridM() {
   for (let y = 0; y < REAL_YLENGTH; y++) {
     field.push([]);
     for (let x = 0; x < REAL_XLENGTH; x++) {
-      field[y].push(BLOCK.NONE);
+      field[y].push(NO_ID_BLOCK);
     }
   }
   return field;
@@ -95,8 +102,9 @@ function dummyGridM() {
 export const initialState = {
   gridF: dummyGridF(),
   gridM: dummyGridM(),
-  levelID: 0,
+  blockTypes: [],
   levelName: "",
-  currentSpace: SPACE.EMPTY,
-  currentBlock: BLOCK.NONE,
+  currentBlockTypeID: 0, // TODO add some constraint to make sure it is always between 0 and blockTypes.length
+  moves: [],
+  itemsInGrid: [],
 };

@@ -2,73 +2,97 @@ import {
   moveBlocks,
   undo,
   getBlockTypes,
-  setCurrentBlockType,
   getCurrentBlockType,
+  setCurrentBlockType,
 } from "../logic/gameplay.jsx";
-import { DIRECTION } from "../logic/constants.jsx";
+import { DIRECTION, NO_ID_LEVEL } from "../logic/constants.jsx";
 
-function CommandsPanel({
-  gridF,
-  updateGridF,
-  levelInfos,
-  updateLevelInfos,
-  gridM,
-  updateGridM,
-  levelState,
-  updateLevelState,
-}) {
-  let luggage = {
-    levelState: levelState,
-    updateLevelState: updateLevelState,
-    gridM: gridM,
-    updateGridM: updateGridM,
+import { LevelPlayContext } from "../context/LevelPlayContext.jsx";
+import { useContext } from "react";
+import { LevelEditContext } from "../context/LevelEditContext.jsx";
+import { useNavigate } from "react-router-dom";
 
-    levelInfos: levelInfos,
-    gridF: gridF,
-  };
+function CommandsPanel() {
+  const playContext = useContext(LevelPlayContext);
+  const editContext = useContext(LevelEditContext);
+
+  const navigate = useNavigate();
+
+  function backToEdition() {
+    editContext.dispatch({ type: "keepEditorState" });
+    if (editContext.state.levelID === NO_ID_LEVEL) {
+      navigate(`/editLevel/new`); // TODO make this navigation better
+    } else {
+      navigate(`/editLevel/${editContext.state.levelID}`);
+    }
+  }
 
   return (
     <div className="panel mainComponent">
       <div className="directionsPanel0">
         <div className="directionsPanel">
           <div>
-            <button onClick={() => moveBlocks(DIRECTION.U, luggage)}>
+            <button
+              onClick={() =>
+                moveBlocks(DIRECTION.U, playContext.state, playContext.dispatch)
+              }
+            >
               Haut
             </button>
           </div>
           <div>
-            <button onClick={() => moveBlocks(DIRECTION.L, luggage)}>
+            <button
+              onClick={() =>
+                moveBlocks(DIRECTION.L, playContext.state, playContext.dispatch)
+              }
+            >
               Gauche
             </button>
-            <button onClick={() => moveBlocks(DIRECTION.R, luggage)}>
+            <button
+              onClick={() =>
+                moveBlocks(DIRECTION.R, playContext.state, playContext.dispatch)
+              }
+            >
               Droite
             </button>
           </div>
           <div>
-            <button onClick={() => moveBlocks(DIRECTION.D, luggage)}>
+            <button
+              onClick={() =>
+                moveBlocks(DIRECTION.D, playContext.state, playContext.dispatch)
+              }
+            >
               Bas
             </button>
           </div>
         </div>
-        <button onClick={() => undo(luggage)}>Annuler</button>
+        <button onClick={() => undo(playContext.state, playContext.dispatch)}>
+          Annuler
+        </button>
         <br />
       </div>
       <div>
-        Couleur active = {getCurrentBlockType(levelInfos, levelState)}
-        {getBlockTypes(levelInfos).map((blockType) => (
+        Couleur active = {getCurrentBlockType(playContext.state)}
+        {getBlockTypes(playContext.state).map((blockType) => (
           <button
             key={blockType}
             className={`buttonSelection${blockType}`}
             onClick={() =>
-              setCurrentBlockType(blockType, levelInfos, updateLevelState)
+              setCurrentBlockType(
+                blockType,
+                playContext.state,
+                playContext.dispatch,
+              )
             }
           >
             Sélectionner {blockType}
           </button>
         ))}
       </div>
+      <button onClick={() => backToEdition()}>Retour a l'edition</button>
     </div>
   );
 }
 
 export default CommandsPanel;
+// TODO simplifier les appels a mobeBlocks, undo, getCurrentBlockType, setCurrentBLockType, getBlockTypes... mais faire que leurs définitions (au moins moveBlocks et undo) restent dans gameplay. Ca nécessite de créer un hook ?
