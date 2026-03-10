@@ -47,7 +47,7 @@ function loadLevelForEditor(pLevelData, pName, pDispatch) {
           switch (pLevelData.charAt(countData)) {
             case "1":
               spaceF = SPACE.WALL;
-              spaceM = SPACE.NONE;
+              spaceM = BLOCK.NONE;
               break;
             case "0":
               spaceF = SPACE.EMPTY;
