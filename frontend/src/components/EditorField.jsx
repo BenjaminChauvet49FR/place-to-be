@@ -22,6 +22,7 @@ function EditorField({ loadingPackage }) {
             case BLOCK.C:
               return "blockC";
             default:
+              window.alert("Attention, erreur de className ! (EditorField)");
               return 1 / 0;
           }
         }

@@ -21,6 +21,7 @@ function captionItemSelected(pSpace, pBlock) {
   if (pSpace === SPACE.WALL && pBlock === BLOCK.NONE) {
     return "Mur";
   }
+  window.alert("Attention, erreur d'item selectionne !");
   return 1 / 0;
 }
 
@@ -68,7 +69,7 @@ function EditorPanel({ state, dispatch }) {
   }
 
   function selectBlock(pMobile) {
-    dispatch({ type: "currentSpace", value: BLOCK.EMPTY });
+    dispatch({ type: "currentSpace", value: SPACE.EMPTY });
     dispatch({ type: "currentBlock", value: pMobile });
   }
 

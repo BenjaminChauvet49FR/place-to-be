@@ -66,6 +66,11 @@ function loadLevelForEditor(pLevelData, pName, pDispatch) {
               spaceM = BLOCK.C;
               break;
             default:
+              window.alert(
+                "Mauvais caractère pour le chargement du niveau ! (" +
+                  pLevelData.charAt(countData) +
+                  ")",
+              );
               return 1 / 0;
           }
           countData++;
@@ -116,6 +121,7 @@ export function saveLevel(pState, pDispatch) {
           }
           break;
         default:
+          window.alert("Mauvais caractère pour la sauvegarde du niveau !");
           return 1 / 0;
       }
       data += char;

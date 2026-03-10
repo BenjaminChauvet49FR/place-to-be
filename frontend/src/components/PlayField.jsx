@@ -26,6 +26,7 @@ function PlayField() {
             case BLOCK.C:
               return "blockC";
             default:
+              window.alert("Attention, erreur de className ! (PlayField)");
               return 1 / 0;
           }
         }
