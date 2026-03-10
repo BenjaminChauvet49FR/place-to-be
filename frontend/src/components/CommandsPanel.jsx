@@ -1,7 +1,4 @@
 import {
-  nextLevel,
-  previousLevel,
-  restartLevel,
   moveBlocks,
   undo,
   getBlockTypes,
@@ -20,14 +17,6 @@ function CommandsPanel({
   levelState,
   updateLevelState,
 }) {
-  let startLuggage = {
-    updateGridF: updateGridF,
-    updateGridM: updateGridM,
-    updateLevelState: updateLevelState,
-    updateLevelInfos: updateLevelInfos,
-    levelInfos: levelInfos,
-  };
-
   let luggage = {
     levelState: levelState,
     updateLevelState: updateLevelState,
@@ -77,13 +66,6 @@ function CommandsPanel({
             Sélectionner {blockType}
           </button>
         ))}
-      </div>
-      <div>
-        <button onClick={() => previousLevel(startLuggage)}>
-          Niv. précédent
-        </button>
-        <button onClick={() => restartLevel(startLuggage)}>Redémarrer</button>
-        <button onClick={() => nextLevel(startLuggage)}>Niv. suivant</button>
       </div>
     </div>
   );

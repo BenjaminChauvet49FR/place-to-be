@@ -1,4 +1,3 @@
-import { rawLevels } from "../assets/LevelBook.jsx";
 import {
   MOVES,
   BLOCK,
@@ -15,15 +14,18 @@ function isBlock(pChar) {
   return pChar === BLOCK.A || pChar === BLOCK.B || pChar === BLOCK.C;
 }
 
-export function startLevel(pCurrentLevelID, pUpdaters) {
+export function startLevelFromGrid(
+  pGridFFromEditor,
+  pGridMFromEditor,
+  pUpdaters,
+) {
   const gridF = [];
   const gridM = [];
   const itemsInGrid = [];
   let id, blockType;
-  const rawLevel = rawLevels[pCurrentLevelID];
   const blockTypes = [];
-  const before_rows = Math.floor(REAL_YLENGTH - rawLevel.length) / 2;
-  const before_columns = Math.floor(REAL_XLENGTH - rawLevel[1].length) / 2;
+  const before_rows = 0; //Math.floor(REAL_YLENGTH - rawLevel.length) / 2;
+  const before_columns = 0; //Math.floor(REAL_XLENGTH - rawLevel[1].length) / 2;
 
   let y = 0;
   let x;
@@ -38,7 +40,8 @@ export function startLevel(pCurrentLevelID, pUpdaters) {
     }
   }
   yRef = y;
-  for (; y < before_rows + rawLevel.length - 1; y++) {
+  //for (; y < before_rows + rawLevel.length - 1; y++) {
+  for (; y < before_rows + pGridFFromEditor.length; y++) {
     gridF.push([]);
     gridM.push([]);
     x = 0;
@@ -47,11 +50,13 @@ export function startLevel(pCurrentLevelID, pUpdaters) {
       gridM[y].push(NO_ID_BLOCK);
     }
     xRef = x;
-    for (; x < before_columns + rawLevel[y - yRef + 1].length; x++) {
-      gridF[y].push(rawLevel[y - yRef + 1].charAt(x - xRef));
+    //for (; x < before_columns + rawLevel[y - yRef + 1].length; x++) {
+    for (; x < before_columns + pGridFFromEditor[y - yRef].length; x++) {
+      //gridF[y].push(rawLevel[y - yRef + 1].charAt(x - xRef));
+      gridF[y].push(pGridFFromEditor[y - yRef][x - xRef]);
       gridM[y].push(NO_ID_BLOCK);
-      if (isBlock(gridF[y][x])) {
-        blockType = gridF[y][x];
+      if (isBlock(pGridMFromEditor[y][x])) {
+        blockType = pGridMFromEditor[y][x];
         gridF[y][x] = SPACE.EMPTY;
         id = itemsInGrid.length;
         itemsInGrid.push({
@@ -94,31 +99,10 @@ export function startLevel(pCurrentLevelID, pUpdaters) {
   });
   pUpdaters.updateLevelInfos({
     blockTypes: blockTypes,
-    currentLevelID: pCurrentLevelID,
+    //currentLevelID: pCurrentLevelID,
   });
   pUpdaters.updateGridF(gridF);
   pUpdaters.updateGridM(gridM);
-}
-
-export function dummyLevelInfos() {
-  // Note : if not for this, this would block at initialization of the page
-  return { blockTypes: [], currentLevelID: 0 };
-}
-
-export function previousLevel(pLuggage) {
-  if (pLuggage.levelInfos.currentLevelID > 0) {
-    startLevel(pLuggage.levelInfos.currentLevelID - 1, pLuggage);
-  }
-}
-
-export function restartLevel(pLuggage) {
-  startLevel(pLuggage.levelInfos.currentLevelID, pLuggage);
-}
-
-export function nextLevel(pLuggage) {
-  if (pLuggage.levelInfos.currentLevelID < rawLevels.length - 1) {
-    startLevel(pLuggage.levelInfos.currentLevelID + 1, pLuggage);
-  }
 }
 
 // ===================
@@ -256,4 +240,9 @@ export function setCurrentBlockType(
 
 export function getCurrentBlockType(pLevelInfos, pLevelState) {
   return pLevelInfos.blockTypes[pLevelState.currentBlockTypeID];
+}
+
+export function dummyLevelInfos() {
+  // Note : if not for this, this would block at initialization of the page
+  return { blockTypes: [], currentLevelID: 0 };
 }
