@@ -1,29 +1,7 @@
-import { SPACE, BLOCK } from "../logic/constants.jsx";
+import { SPACE, BLOCK, DO_NOT_CHANGE } from "../logic/constants.jsx";
 import "../styles/style.css";
 import { useNavigate } from "react-router-dom";
 import * as saveLoad from "../logic/saveLoad";
-
-function captionItemSelected(pSpace, pBlock) {
-  if (pSpace === SPACE.EMPTY) {
-    if (pBlock === BLOCK.NONE) {
-      return "Case vide";
-    }
-    if (pBlock === BLOCK.A) {
-      return "Bloc A";
-    }
-    if (pBlock === BLOCK.B) {
-      return "Bloc B";
-    }
-    if (pBlock === BLOCK.C) {
-      return "Bloc C";
-    }
-  }
-  if (pSpace === SPACE.WALL && pBlock === BLOCK.NONE) {
-    return "Mur";
-  }
-  window.alert("Attention, erreur d'item selectionne !");
-  return 1 / 0;
-}
 
 function EditorPanel({ state, dispatch }) {
   // =================================
@@ -61,18 +39,34 @@ function EditorPanel({ state, dispatch }) {
 
   // ---------------------------------
 
-  const navigate = useNavigate();
+  function captionItemSelected(pSpace, pBlock) {
+    return "TODO...";
+  }
 
   function selectSpace(pFixed) {
     dispatch({ type: "currentSpace", value: pFixed });
-    dispatch({ type: "currentBlock", value: BLOCK.NONE });
+    if (pFixed === SPACE.WALL) {
+      dispatch({ type: "currentBlock", value: BLOCK.NONE });
+    } else {
+      dispatch({ type: "currentBlock", value: DO_NOT_CHANGE });
+    }
   }
 
   function selectBlock(pMobile) {
-    dispatch({ type: "currentSpace", value: SPACE.EMPTY });
+    if (state.currentSpace === SPACE.WALL) {
+      dispatch({ type: "currentSpace", value: SPACE.EMPTY });
+    } else {
+      dispatch({ type: "currentSpace", value: DO_NOT_CHANGE });
+    }
     dispatch({ type: "currentBlock", value: pMobile });
   }
 
+  function emptySpace() {
+    dispatch({ type: "currentSpace", value: SPACE.EMPTY });
+    dispatch({ type: "currentBlock", value: BLOCK.NONE });
+  }
+
+  const navigate = useNavigate();
   function deleteLevel() {
     if (window.confirm("Etes-vous certain de vouloir supprimer ce niveau ?")) {
       saveLoad
@@ -119,7 +113,15 @@ function EditorPanel({ state, dispatch }) {
       </div>
       <div>
         <button onClick={() => selectSpace(SPACE.WALL)}>Mur</button>
-        <button onClick={() => selectSpace(SPACE.EMPTY)}>Case vide</button>
+        <button onClick={() => emptySpace()}>Case vide</button>
+      </div>
+      <div>
+        <button onClick={() => selectSpace(SPACE.GOAL_A)}>Cible A</button>
+        <button onClick={() => selectSpace(SPACE.GOAL_B)}>Cible B</button>
+        <button onClick={() => selectSpace(SPACE.GOAL_C)}>Cible C</button>
+        <button onClick={() => selectSpace(SPACE.EMPTY)}>Aucune cible</button>
+      </div>
+      <div>
         <button
           className="buttonSelectionA"
           onClick={() => selectBlock(BLOCK.A)}
@@ -138,6 +140,7 @@ function EditorPanel({ state, dispatch }) {
         >
           Bloc C
         </button>
+        <button onClick={() => selectBlock(BLOCK.NONE)}>Aucun bloc</button>
       </div>
       <div>
         <input
@@ -153,6 +156,14 @@ function EditorPanel({ state, dispatch }) {
       </div>
       <div>
         <button onClick={() => playtestLevel()}>Tester niveau</button>
+      </div>
+      <div>
+        <button
+          className="danger"
+          onClick={() => saveLoad.loadAndSaveALLLevels(state, dispatch)}
+        >
+          Charger et enregistrer TOUS les niveaux
+        </button>
       </div>
     </div>
   );

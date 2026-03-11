@@ -12,17 +12,51 @@
 	background-color:white;
 }
 
-.blockA {
-	background-color:yellow;
+.space_goalA {
+  background-image:url("../images/goal_A.png");
 }
 
-.blockB {
-	background-color:#FF8844;
+.space_goalB {
+  background-image:url("../images/goal_B.png");
 }
 
-.blockC {
-	background-color:#CC88FF;
+.space_goalC {
+  background-image:url("../images/goal_C.png");
 }
+
+.space_blockA {
+  background-image:url("../images/block_A.png");
+}
+
+.space_blockB {
+  background-image:url("../images/block_B.png");
+}
+
+.space_blockC {
+  background-image:url("../images/block_C.png");
+}
+
+.superposition {
+  position:relative;
+  left:3px;
+  top:3px;
+  width:8px;
+  height:8px;
+}
+
+.correct {
+  background-image:url("../images/correct.png");
+}
+.wrong_A {
+  background-image:url("../images/wrong_A.png");
+}
+.wrong_B {
+  background-image:url("../images/wrong_B.png");
+}
+.wrong_C {
+  background-image:url("../images/wrong_C.png");
+}
+
 
 nav {
 	border-style:outset;
@@ -53,6 +87,12 @@ nav {
 	border-style:outset;
 	background-color:#fa8888;
 	color:#ffffff;
+}
+
+.danger{
+	border-style:outset;
+	background-color:#fa4444;
+	color:#ffff00;
 }
 
 /* ------------------ */

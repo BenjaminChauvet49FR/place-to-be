@@ -14,6 +14,11 @@ function isBlock(pChar) {
   return pChar === BLOCK.A || pChar === BLOCK.B || pChar === BLOCK.C;
 }
 
+function defaultRowFill(pRowF, pRowM) {
+  pRowF.push(SPACE.EMPTY);
+  pRowM.push(NO_ID_BLOCK);
+}
+
 export function startLevelFromGrid(
   pGridFFromEditor,
   pGridMFromEditor,
@@ -35,8 +40,7 @@ export function startLevelFromGrid(
     gridM.push([]);
     x = 0;
     for (; x < REAL_XLENGTH; x++) {
-      gridF[y].push(SPACE.EMPTY);
-      gridM[y].push(NO_ID_BLOCK);
+      defaultRowFill(gridF[y], gridM[y]);
     }
   }
   yRef = y;
@@ -46,8 +50,7 @@ export function startLevelFromGrid(
     gridM.push([]);
     x = 0;
     for (; x < before_columns; x++) {
-      gridF[y].push(SPACE.EMPTY);
-      gridM[y].push(NO_ID_BLOCK);
+      defaultRowFill(gridF[y], gridM[y]);
     }
     xRef = x;
     //for (; x < before_columns + rawLevel[y - yRef + 1].length; x++) {
@@ -57,16 +60,19 @@ export function startLevelFromGrid(
       gridM[y].push(NO_ID_BLOCK);
       if (isBlock(pGridMFromEditor[y][x])) {
         blockType = pGridMFromEditor[y][x];
-        gridF[y][x] = SPACE.EMPTY;
+        gridF[y][x] = pGridFFromEditor[y][x];
         id = itemsInGrid.length;
+
         itemsInGrid.push({
           blockType: blockType,
           x: x,
           y: y,
-          id: itemsInGrid.length,
+          id: id,
           movedThisTime: false,
         });
         gridM[y][x] = id;
+
+        // Is it a block type not yet seen in this level ?
         let i = 0;
         for (i = 0; i < blockTypes.length; i++) {
           if (blockTypes[i] === blockType) {
@@ -79,8 +85,7 @@ export function startLevelFromGrid(
       }
     }
     for (; x < REAL_XLENGTH; x++) {
-      gridF[y].push(SPACE.EMPTY);
-      gridM[y].push(NO_ID_BLOCK);
+      defaultRowFill(gridF[y], gridM[y]);
     }
   }
   for (; y < REAL_YLENGTH; y++) {
@@ -88,8 +93,7 @@ export function startLevelFromGrid(
     gridM.push([]);
     x = 0;
     for (; x < REAL_XLENGTH; x++) {
-      gridF[y].push(SPACE.EMPTY);
-      gridM[y].push(NO_ID_BLOCK);
+      defaultRowFill(gridF[y], gridM[y]);
     }
   }
   pDispatchPlay({ type: "gridF_ALL", gridF: gridF });
