@@ -1,5 +1,5 @@
 import PlayField from "../../components/PlayField.jsx";
-import CommandsPanel from "../../components/CommandsPanel.jsx";
+import PlayPanel from "../../components/PlayPanel.jsx";
 import { startLevelFromGrid } from "../../logic/gameplay.jsx";
 import { useContext, useEffect } from "react";
 import { LevelPlayContext } from "../../context/LevelPlayContext";
@@ -17,7 +17,7 @@ export default function Playing() {
   return (
     <div>
       <PlayField></PlayField>
-      <CommandsPanel></CommandsPanel>
+      <PlayPanel></PlayPanel>
     </div>
   );
 }

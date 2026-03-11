@@ -12,7 +12,7 @@ import { useContext } from "react";
 import { LevelEditContext } from "../context/LevelEditContext.jsx";
 import { useNavigate } from "react-router-dom";
 
-function CommandsPanel() {
+function PlayPanel() {
   const playContext = useContext(LevelPlayContext);
   const editContext = useContext(LevelEditContext);
 
@@ -94,5 +94,4 @@ function CommandsPanel() {
   );
 }
 
-export default CommandsPanel;
-// TODO simplifier les appels a mobeBlocks, undo, getCurrentBlockType, setCurrentBLockType, getBlockTypes... mais faire que leurs définitions (au moins moveBlocks et undo) restent dans gameplay. Ca nécessite de créer un hook ?
+export default PlayPanel;
