@@ -2,6 +2,7 @@ import { SPACE, BLOCK, DO_NOT_CHANGE } from "../logic/constants.jsx";
 import "../styles/style.css";
 import { useNavigate } from "react-router-dom";
 import * as saveLoad from "../logic/saveLoad";
+import { paths } from "../index.js";
 
 function EditorPanel({ state, dispatch }) {
   // =================================
@@ -73,7 +74,7 @@ function EditorPanel({ state, dispatch }) {
         .deleteLevel(state.levelID)
         .then(() => {
           alert("Niveau correctement supprimé.");
-          navigate("/editor");
+          navigate(paths.levelList());
         })
         .catch((error) => {
           console.error(error);
@@ -100,7 +101,7 @@ function EditorPanel({ state, dispatch }) {
   }
 
   function playtestLevel() {
-    navigate("/editLevel/playing");
+    navigate(paths.playing());
   }
 
   // =================================

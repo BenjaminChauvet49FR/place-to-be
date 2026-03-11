@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import "../styles/style.css";
+import { paths } from "../index";
 
 const StyledLink = styled(Link)`
   padding: 15px;
@@ -12,8 +13,7 @@ const StyledLink = styled(Link)`
 function Header() {
   return (
     <nav>
-      <StyledLink to="/">Jeu</StyledLink>
-      <StyledLink to="/editor">Editeur</StyledLink>
+      <StyledLink to={paths.levelList()}>Editeur</StyledLink>
     </nav>
   );
 }

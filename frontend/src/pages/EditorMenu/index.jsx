@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "../../styles/style.css";
 import * as saveLoad from "../../logic/saveLoad";
+import { paths } from "../../index";
 
 export default function LevelListForEditor() {
   const [loading, setLoading] = useState(false);
@@ -47,7 +48,7 @@ export default function LevelListForEditor() {
       ) : (
         levelListJSON.map((level, key) => (
           <div key={`O${key}`}>
-            <Link to={`/editLevel/${level.id}`}>
+            <Link to={paths.editLevel(level.id)}>
               {level.name === "" ? "(anonyme)" : level.name}
             </Link>
             <span
@@ -60,7 +61,7 @@ export default function LevelListForEditor() {
         ))
       )}
       <div className="level_new">
-        <Link to={`/editLevel/new`}>(Nouveau)</Link>
+        <Link to={paths.editNewLevel()}>(Nouveau)</Link>
       </div>
     </div>
   );

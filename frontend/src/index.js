@@ -1,5 +1,4 @@
 import React from "react";
-import ReactDOM from "react-dom";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { createRoot } from "react-dom/client";
 
@@ -16,6 +15,16 @@ import reportWebVitals from "./reportWebVitals";
 const container = document.getElementById("root");
 const root = createRoot(container);
 
+export const paths = {
+  editLevel: (id) => `/editLevel/${id}`,
+  editNewLevel: () => `/editLevel/new`,
+  levelList: () => `/editor`,
+  playing: () => `/editLevel/playing`,
+};
+const privatePaths = {
+  editLevelId: () => "/editLevel/:levelId",
+};
+
 root.render(
   <React.StrictMode>
     <LevelPlayProvider>
@@ -23,9 +32,9 @@ root.render(
         <Router>
           <Header />
           <Routes>
-            <Route path="/editor" element={<EditorMenu />} />
-            <Route path="/editLevel/:levelId" element={<Editor />} />
-            <Route path="/editLevel/playing" element={<Playing />} />
+            <Route path={paths.levelList()} element={<EditorMenu />} />
+            <Route path={privatePaths.editLevelId()} element={<Editor />} />
+            <Route path={paths.playing()} element={<Playing />} />
           </Routes>
         </Router>
       </LevelEditProvider>

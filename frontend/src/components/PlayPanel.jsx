@@ -5,6 +5,8 @@ import {
   getCurrentBlockType,
   setCurrentBlockType,
 } from "../logic/gameplay.jsx";
+import { paths } from "../index";
+
 import { DIRECTION, NO_ID_LEVEL } from "../logic/constants.jsx";
 
 import { LevelPlayContext } from "../context/LevelPlayContext.jsx";
@@ -21,9 +23,9 @@ function PlayPanel() {
   function backToEdition() {
     editContext.dispatch({ type: "keepEditorState" });
     if (editContext.state.levelID === NO_ID_LEVEL) {
-      navigate(`/editLevel/new`); // TODO make this navigation better
+      navigate(paths.editNewLevel());
     } else {
-      navigate(`/editLevel/${editContext.state.levelID}`);
+      navigate(paths.editLevel(editContext.state.levelID));
     }
   }
 
