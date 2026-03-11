@@ -1,47 +1,24 @@
-import { SPACE, BLOCK, DO_NOT_CHANGE } from "../logic/constants.jsx";
+import {
+  SPACE,
+  SPACE_INFO,
+  BLOCK,
+  BLOCK_INFO,
+  DO_NOT_CHANGE,
+} from "../logic/constants.jsx";
 import "../styles/style.css";
 import { useNavigate } from "react-router-dom";
 import * as saveLoad from "../logic/saveLoad";
 import { paths } from "../index.js";
 
 function EditorPanel({ state, dispatch }) {
-  // =================================
-
-  // =================================
-
-  /*function loadLevel(pURL) {
-    if (!pURL) return;
-
-    loadingPackage.setLoading(true);
-
-    async function fetchData() {
-      try {
-        const response = await fetch(pURL);
-
-        const data = await response.json();
-
-        loadingPackage.setLoadedData(data);
-      } catch (err) {
-        console.log(err);
-
-        loadingPackage.setLoadingError(true);
-      } finally {
-        loadingPackage.setLoading(false);
-      }
-    }
-
-    fetchData();
-    if (!loadingPackage.loadingError) {
-      window.alert("Chargement réussi !");
-    } else {
-      window.alert("Echec du chargement !");
-    }
-  }*/
-
-  // ---------------------------------
-
   function captionItemSelected(pSpace, pBlock) {
-    return "TODO...";
+    //console.log("captionItemSelected : " + pSpace + pBlock); (great for debug)
+    return (
+      "case " +
+      (pSpace !== DO_NOT_CHANGE ? SPACE_INFO[pSpace].captionEditor : ".") +
+      "/ bloc " +
+      (pBlock !== DO_NOT_CHANGE ? BLOCK_INFO[pBlock].captionEditor : ".")
+    );
   }
 
   function selectSpace(pFixed) {
@@ -117,9 +94,24 @@ function EditorPanel({ state, dispatch }) {
         <button onClick={() => emptySpace()}>Case vide</button>
       </div>
       <div>
-        <button onClick={() => selectSpace(SPACE.GOAL_A)}>Cible A</button>
-        <button onClick={() => selectSpace(SPACE.GOAL_B)}>Cible B</button>
-        <button onClick={() => selectSpace(SPACE.GOAL_C)}>Cible C</button>
+        <button
+          className="buttonSelectionALight"
+          onClick={() => selectSpace(SPACE.GOAL_A)}
+        >
+          Cible A
+        </button>
+        <button
+          className="buttonSelectionBLight"
+          onClick={() => selectSpace(SPACE.GOAL_B)}
+        >
+          Cible B
+        </button>
+        <button
+          className="buttonSelectionCLight"
+          onClick={() => selectSpace(SPACE.GOAL_C)}
+        >
+          Cible C
+        </button>
         <button onClick={() => selectSpace(SPACE.EMPTY)}>Aucune cible</button>
       </div>
       <div>

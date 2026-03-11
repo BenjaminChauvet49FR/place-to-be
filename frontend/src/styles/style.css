@@ -116,6 +116,9 @@ nav {
 .buttonSelectionA { background-color:yellow; }
 .buttonSelectionB { background-color:#FF8844; }
 .buttonSelectionC { background-color:#CC88FF; }
+.buttonSelectionALight { background-color:#ffffaa; }
+.buttonSelectionBLight { background-color:#FFddaa; }
+.buttonSelectionCLight { background-color:#eeaaff; }
 
 .space_wall {
 	background-color:grey;

@@ -6,13 +6,47 @@ export const SPACE = {
   GOAL_C: "C",
 };
 
+export const SPACE_INFO = {
+  [SPACE.EMPTY]: {
+    captionEditor: "vide",
+  },
+  [SPACE.WALL]: {
+    captionEditor: "mur",
+  },
+  [SPACE.GOAL_A]: {
+    captionEditor: "cible A",
+  },
+  [SPACE.GOAL_B]: {
+    captionEditor: "cible B",
+  },
+  [SPACE.GOAL_C]: {
+    captionEditor: "cible C",
+  },
+};
 export const BLOCK = {
   A: "A",
   B: "B",
   C: "C", // WARNING : when you add a block, think about adding it to "isBlockForEditor" (among others)
   NONE: "X",
 };
-const BLOCK_ARRAY = ["A", "B", "C"];
+export const BLOCK_INFO = {
+  [BLOCK.NONE]: {
+    captionEditor: "aucun",
+    isRealBlock: false,
+  },
+  [BLOCK.A]: {
+    captionEditor: "bloc A",
+    isRealBlock: true,
+  },
+  [BLOCK.B]: {
+    captionEditor: "bloc B",
+    isRealBlock: true,
+  },
+  [BLOCK.C]: {
+    captionEditor: "bloc C",
+    isRealBlock: true,
+  },
+};
 
 export const DIRECTION = {
   L: 0,
@@ -43,13 +77,7 @@ export const DO_NOT_CHANGE = -6; // Good for editor.
 // Save load part
 
 export function isBlock(pChar) {
-  for (let iCheck = 0; iCheck < BLOCK_ARRAY.length; iCheck++) {
-    if (pChar === BLOCK_ARRAY[iCheck]) {
-      return true;
-    }
-  }
-  return false;
-  //  return pChar in BLOCK_ARRAY; // The expression ('A' in ['A']) is FALSE !
+  return BLOCK_INFO[pChar].isRealBlock;
 }
 export function blockToEncodedBlock(pChar) {
   return pChar.toLowerCase();
@@ -57,9 +85,10 @@ export function blockToEncodedBlock(pChar) {
 export function encodedBlockToBlock(pChar) {
   return pChar.toUpperCase();
 }
-const ENCODED_BLOCK_ARRAY = BLOCK_ARRAY.map((char) =>
-  blockToEncodedBlock(char),
-);
+
+const ENCODED_BLOCK_ARRAY = Object.values(BLOCK)
+  .filter((char) => BLOCK_INFO[char].isRealBlock)
+  .map((char) => blockToEncodedBlock(char));
 
 export function isEncodedBlock(pChar) {
   for (let iCheck = 0; iCheck < ENCODED_BLOCK_ARRAY.length; iCheck++) {
