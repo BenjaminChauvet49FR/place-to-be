@@ -56,7 +56,7 @@ export default function Editor() {
       dispatch({ type: "noLongerKeepEditorState" });
       setLoading(false); // Note : isLoading is true by default
     }
-  }, []);
+  }, [dispatch, state.keepEditorState, trueLevelId]);
 
   return (
     <div>

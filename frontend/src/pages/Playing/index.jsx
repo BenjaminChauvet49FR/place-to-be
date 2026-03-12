@@ -12,7 +12,7 @@ export default function Playing() {
 
   useEffect(() => {
     startLevelFromGrid(uce.state.gridF, uce.state.gridM, ucp.dispatch);
-  }, []);
+  }, [uce.state.gridF, uce.state.gridM, ucp.dispatch]);
 
   return (
     <div>

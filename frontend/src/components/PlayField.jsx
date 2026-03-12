@@ -5,7 +5,8 @@ import { useContext } from "react";
 import { LevelPlayContext } from "../context/LevelPlayContext.jsx";
 
 function PlayField() {
-  const { state, _ } = useContext(LevelPlayContext);
+  const lpc = useContext(LevelPlayContext);
+  const state = lpc.state;
   const itemsInGrid = state.itemsInGrid;
   const xLength = state.gridF[0].length;
   const yLength = state.gridF.length;
