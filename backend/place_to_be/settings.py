@@ -23,9 +23,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-=tkb=+wbechvl_3rief21mou(k^+w8yh$*w7m4=%@)vs@-qy!_'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "place-to-be.onrender.com",
+    "localhost",
+    "127.0.0.1"
+]
 
 
 # Application definition
@@ -74,6 +78,12 @@ TEMPLATES = [
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
+]
+
+ALLOWED_HOSTS = [
+    "place-to-be.onrender.com",
+    "localhost",
+    "127.0.0.1",
 ]
 
 WSGI_APPLICATION = 'place_to_be.wsgi.application'
