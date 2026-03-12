@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import "../../styles/style.css";
 import * as saveLoad from "../../logic/saveLoad";
 import { paths } from "../../index";
+import { API_URL } from "../../utils/api.jsx";
 
 export default function LevelListForEditor() {
   const [loading, setLoading] = useState(false);
@@ -12,7 +13,7 @@ export default function LevelListForEditor() {
     // TODO : attention au double render !
     setLoading(true);
 
-    fetch(`http://localhost:8000/api/level/`).then((response) =>
+    fetch(`${API_URL}/api/level/`).then((response) =>
       response
         .json()
         .then((data) => {

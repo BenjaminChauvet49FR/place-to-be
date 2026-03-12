@@ -10,12 +10,14 @@ import {
   isEncodedBlock,
 } from "./constants.jsx";
 
+import { API_URL } from "../utils/api.jsx";
+
 export function loadNewLevel(pDispatch) {
   loadLevelForEditor("99991", "", pDispatch);
 }
 
 export function loadLevel(pID, pDispatch) {
-  fetch(`http://localhost:8000/api/level/${pID}`).then((response) =>
+  fetch(`${API_URL}/api/level/${pID}`).then((response) =>
     response
       .json()
       .then((levelData) => {
@@ -158,7 +160,7 @@ export function saveLevel(pState, pDispatch) {
   const id = pState.levelID;
 
   if (id === NO_ID_LEVEL) {
-    return fetch("http://localhost:8000/api/level/", {
+    return fetch(API_URL + "/api/level/", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -175,7 +177,7 @@ export function saveLevel(pState, pDispatch) {
         window.alert("Echec dans l'enregistrement du niveau !");
       });
   } else {
-    return fetch("http://localhost:8000/api/level/" + id + "/", {
+    return fetch(API_URL + "/api/level/" + id + "/", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -191,7 +193,7 @@ export function saveLevel(pState, pDispatch) {
 }
 
 export async function deleteLevel(id) {
-  const response = await fetch(`http://localhost:8000/api/level/${id}/`, {
+  const response = await fetch(`${API_URL}/api/level/${id}/`, {
     method: "DELETE",
   });
 
@@ -203,7 +205,7 @@ export async function deleteLevel(id) {
 // Transfer ALL levels from the previous encoding system to the new one ! (by loading all systems and resaving them)
 // Use with care !
 async function loadAllLevels() {
-  const response = await fetch(`http://localhost:8000/api/level/`); // TODO : ce serait bien d'avoir un point d'entrée qui ne renvoie QUE les ID.
+  const response = await fetch(`${API_URL}/api/level/`); // TODO : ce serait bien d'avoir un point d'entrée qui ne renvoie QUE les ID.
   if (!response.ok) {
     throw new Error("Impossible de récupérer la liste des niveaux !");
   }
