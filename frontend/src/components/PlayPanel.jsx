@@ -4,6 +4,7 @@ import {
   getBlockTypes,
   getCurrentBlockType,
   setCurrentBlockType,
+  getMovesPlayed,
 } from "../logic/gameplay.jsx";
 import { paths } from "../index";
 
@@ -73,22 +74,26 @@ function PlayPanel() {
         </button>
         <br />
       </div>
-      <div>
-        Couleur active = {getCurrentBlockType(playContext.state)}
+      <div className="blockTypePanel0">
         {getBlockTypes(playContext.state).map((blockType) => (
-          <button
+          <div
             key={blockType}
-            className={`buttonSelection${blockType}`}
-            onClick={() =>
-              setCurrentBlockType(
-                blockType,
-                playContext.state,
-                playContext.dispatch,
-              )
-            }
+            className={`blockTypePanel${getCurrentBlockType(playContext.state) === blockType ? " selected" : " not-selected"}`}
           >
-            Sélectionner {blockType}
-          </button>
+            <div>{getMovesPlayed(blockType, playContext.state)}</div>
+            <button
+              className={`buttonSelection${blockType}`}
+              onClick={() =>
+                setCurrentBlockType(
+                  blockType,
+                  playContext.state,
+                  playContext.dispatch,
+                )
+              }
+            >
+              {blockType}
+            </button>
+          </div>
         ))}
       </div>
       <button onClick={() => backToEdition()}>Retour a l'edition</button>

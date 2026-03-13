@@ -31,6 +31,7 @@ export function startLevelFromGrid(
   const blockTypes = [];
   const before_rows = 0; //Math.floor(REAL_YLENGTH - rawLevel.length) / 2;
   const before_columns = 0; //Math.floor(REAL_XLENGTH - rawLevel[1].length) / 2;
+  const blockTypesInfos = [];
 
   let y = 0;
   let x;
@@ -80,6 +81,10 @@ export function startLevelFromGrid(
           }
         }
         if (i === blockTypes.length) {
+          blockTypesInfos[blockType] = {
+            index: blockTypes.length,
+            movesPlayed: 0,
+          }; // Where element of "blockTypesInfos" are set
           blockTypes.push(blockType);
         }
       }
@@ -110,6 +115,10 @@ export function startLevelFromGrid(
   pDispatchPlay({
     type: "blockTypes",
     blockTypes: blockTypes,
+  });
+  pDispatchPlay({
+    type: "blockTypesInfos",
+    blockTypesInfos: blockTypesInfos,
   });
 }
 
@@ -191,6 +200,8 @@ export function moveBlocks(pDirection, pState, pDispatch) {
       gridM[npb.yLeft][npb.xLeft] = NO_ID_BLOCK;
       gridM[npb.yDest][npb.xDest] = npb.id;
     });
+    moves[moves.length - 1].blockType = currentBlockType;
+    pDispatch({ type: "blockTypePlayedPlus1", blockType: currentBlockType });
   }
   pDispatch({
     type: "levelState",
@@ -222,6 +233,10 @@ export function undo(pState, pDispatch) {
     }
 
     pDispatch({
+      type: "blockTypePlayedMinus1",
+      blockType: moveToUndo.blockType,
+    });
+    pDispatch({
       type: "levelState",
       moves: moves,
       itemsInGrid: itemsInGrid,
@@ -235,10 +250,16 @@ export function getBlockTypes(pState) {
 }
 
 export function setCurrentBlockType(pBlockType, pState, pDispatch) {
-  let pIndex = pState.blockTypes.indexOf(pBlockType);
-  pDispatch({ type: "currentBlockTypeID", currentBlockTypeID: pIndex });
+  pDispatch({
+    type: "currentBlockTypeID",
+    currentBlockTypeID: pState.blockTypesInfos[pBlockType].index,
+  });
 }
 
 export function getCurrentBlockType(pState) {
   return pState.blockTypes[pState.currentBlockTypeID];
+}
+
+export function getMovesPlayed(pBlockType, pState) {
+  return pState.blockTypesInfos[pBlockType].movesPlayed;
 }

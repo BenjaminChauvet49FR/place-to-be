@@ -113,6 +113,29 @@ nav {
 	align-items: center;
 }
 
+
+.blockTypePanel0 {
+	display:flex;
+	flex-direction:row;
+}
+.blockTypePanel { /* The number of moves of A + the A */
+	display:row;
+	flex-direction:column;
+	justify-content: center;
+}
+.blockTypePanel div {
+	text-align: center;
+}
+.blockTypePanel.selected { 
+    border-style:solid;
+	border-color: green;
+}
+.blockTypePanel.not-selected { 
+    border-style:solid;
+	border-color: #ffcc99;
+}
+
+
 .buttonSelectionA { background-color:yellow; }
 .buttonSelectionB { background-color:#FF8844; }
 .buttonSelectionC { background-color:#CC88FF; }

@@ -6,6 +6,23 @@ import {
 } from "../logic/constants";
 
 export function levelPlayReducer(pState, pAction) {
+  function blockTypePlayedChangeClosure(pChange) {
+    let newInfos;
+    const answer = Object.entries(pState.blockTypesInfos).map(
+      ([blockType, infos]) => {
+        newInfos =
+          pAction.blockType === blockType
+            ? { ...infos, movesPlayed: infos.movesPlayed + pChange }
+            : infos;
+        return [blockType, newInfos];
+      },
+    );
+    return {
+      ...pState,
+      blockTypesInfos: Object.fromEntries(answer),
+    };
+  }
+
   switch (pAction.type) {
     case "gridF":
       return {
@@ -61,6 +78,15 @@ export function levelPlayReducer(pState, pAction) {
         moves: pAction.moves,
         itemsInGrid: pAction.itemsInGrid,
       };
+    case "blockTypesInfos":
+      return {
+        ...pState,
+        blockTypesInfos: pAction.blockTypesInfos,
+      };
+    case "blockTypePlayedPlus1":
+      return blockTypePlayedChangeClosure(1);
+    case "blockTypePlayedMinus1":
+      return blockTypePlayedChangeClosure(-1);
 
     default:
       console.log("Erreur fatale : mauvaise utilisation de dispatch !");
@@ -103,6 +129,7 @@ export const initialState = {
   gridF: dummyGridF(),
   gridM: dummyGridM(),
   blockTypes: [],
+  blockTypesInfos: {}, // Contains : a list of items with key colours, and infos {index, movesPlayed} (see gameplay.jsx...)
   levelName: "",
   currentBlockTypeID: 0, // TODO add some constraint to make sure it is always between 0 and blockTypes.length
   moves: [],
