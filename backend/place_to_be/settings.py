@@ -91,7 +91,7 @@ WSGI_APPLICATION = 'place_to_be.wsgi.application'
 
 if os.environ.get("DATABASE_URL"):
     DATABASES = {
-        'default': dj_database_url.parse(os.environ["DATABASE_URL"])
+        'default': dj_database_url.parse(os.environ.get("DATABASE_URL"))
     }
 else:
     DATABASES = {
