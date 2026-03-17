@@ -18,7 +18,7 @@ export default function LevelListForEditor() {
         .json()
         .then((data) => {
           //          console.log(data);
-          setLevelListJSON(data);
+          setLevelListJSON(data.results);
         })
         .catch((error) => {
           console.log(error);

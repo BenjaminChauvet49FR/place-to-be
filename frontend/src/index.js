@@ -7,6 +7,7 @@ import EditorMenu from "./pages/EditorMenu/";
 import Editor from "./pages/Editor/";
 import LevelEditProvider from "./context/LevelEditContext.jsx";
 import LevelPlayProvider from "./context/LevelPlayContext.jsx";
+import AuthProvider from "./context/AuthContext.jsx";
 
 import Header from "./components/Header.jsx";
 
@@ -28,16 +29,18 @@ const privatePaths = {
 root.render(
   <React.StrictMode>
     <LevelPlayProvider>
-      <LevelEditProvider>
-        <Router>
-          <Header />
-          <Routes>
-            <Route path={paths.levelList()} element={<EditorMenu />} />
-            <Route path={privatePaths.editLevelId()} element={<Editor />} />
-            <Route path={paths.playing()} element={<Playing />} />
-          </Routes>
-        </Router>
-      </LevelEditProvider>
+      <AuthProvider>
+        <LevelEditProvider>
+          <Router>
+            <Header />
+            <Routes>
+              <Route path={paths.levelList()} element={<EditorMenu />} />
+              <Route path={privatePaths.editLevelId()} element={<Editor />} />
+              <Route path={paths.playing()} element={<Playing />} />
+            </Routes>
+          </Router>
+        </LevelEditProvider>
+      </AuthProvider>
     </LevelPlayProvider>
   </React.StrictMode>,
 );

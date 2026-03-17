@@ -18,7 +18,10 @@ from django.contrib import admin
 from django.urls import path, include
 from level_management.views import LevelViewset
 from rest_framework import routers
- 
+from rest_framework_simplejwt.views import TokenObtainPairView 
+from rest_framework_simplejwt.views import TokenRefreshView 
+
+
 # Ici nous créons notre routeur
 router = routers.SimpleRouter()
 # Puis lui déclarons une url basée sur le mot clé level et notre view
@@ -27,5 +30,7 @@ router.register('level', LevelViewset, basename='level')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include(router.urls))  # Il faut bien penser à ajouter les urls du router dans la liste des urls disponibles.
+    path('api/', include(router.urls)),  # Il faut bien penser à ajouter les urls du router dans la liste des urls disponibles.
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]
