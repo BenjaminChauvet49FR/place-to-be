@@ -1,8 +1,9 @@
 # Ce qui a changé ce commit
 
-* Ajout d'un compteur de coups côté jeu
-* Modification de styles pour refléter le bloc sélectionné côté jeu
+* Attribution d'un auteur à chaque niveau (nullable)
+* Opération admin pour permettre à chaque niveau de se voir attribuer un auteur (codé en dur)
+* Ne permettre à chaque auteur de voir que ses propres niveaux côté édition
 
 # Ce qui reste à ameliorer
 
-* Faire la même chose côté éditeur
+* Créer un viewpoint pour voir tous les niveaux

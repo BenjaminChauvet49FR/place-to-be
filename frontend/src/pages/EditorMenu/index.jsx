@@ -13,7 +13,11 @@ export default function LevelListForEditor() {
     // TODO : attention au double render !
     setLoading(true);
 
-    fetch(`${API_URL}/api/level/`).then((response) =>
+    fetch(`${API_URL}/api/level/`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+      },
+    }).then((response) =>
       response
         .json()
         .then((data) => {
