@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from level_management.views import LevelViewset
+from level_management.views import *
 from rest_framework import routers
 from rest_framework_simplejwt.views import TokenObtainPairView 
 from rest_framework_simplejwt.views import TokenRefreshView 
@@ -26,7 +26,10 @@ from rest_framework_simplejwt.views import TokenRefreshView
 router = routers.SimpleRouter()
 # Puis lui déclarons une url basée sur le mot clé level et notre view
 # afin que l’url générée soit celle que nous souhaitons ‘/api/level/’
-router.register('level', LevelViewset, basename='level')
+router.register('myLevels', OwnLevelViewset, basename='myLevels')
+router.register('levels', LevelFromUserViewset, basename='levels')
+router.register('level', OwnLevelViewset, basename='level')
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),

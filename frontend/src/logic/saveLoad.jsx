@@ -17,7 +17,11 @@ export function loadNewLevel(pDispatch) {
 }
 
 export function loadLevel(pID, pDispatch) {
-  fetch(`${API_URL}/api/level/${pID}`).then((response) =>
+  fetch(`${API_URL}/api/level/${pID}`, {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+    },
+  }).then((response) =>
     response
       .json()
       .then((levelData) => {
@@ -162,7 +166,10 @@ export function saveLevel(pState, pDispatch) {
   if (id === NO_ID_LEVEL) {
     return fetch(API_URL + "/api/level/", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+      },
       body: JSON.stringify({
         data: data,
         name: name,
@@ -179,7 +186,10 @@ export function saveLevel(pState, pDispatch) {
   } else {
     return fetch(API_URL + "/api/level/" + id + "/", {
       method: "PUT",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+      },
       body: JSON.stringify({
         data: data,
         name: name,
