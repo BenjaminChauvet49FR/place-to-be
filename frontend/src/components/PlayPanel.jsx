@@ -6,7 +6,7 @@ import {
   setCurrentBlockType,
   getMovesPlayed,
 } from "../logic/gameplay.jsx";
-import { paths } from "../index";
+import { paths, doIComeFromEditor } from "../index";
 
 import { DIRECTION, NO_ID_LEVEL } from "../logic/constants.jsx";
 
@@ -96,7 +96,9 @@ function PlayPanel() {
           </div>
         ))}
       </div>
-      <button onClick={() => backToEdition()}>Retour a l'edition</button>
+      {doIComeFromEditor() ? (
+        <button onClick={() => backToEdition()}>Retour a l'edition</button>
+      ) : null}
     </div>
   );
 }

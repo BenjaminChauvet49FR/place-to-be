@@ -1,7 +1,7 @@
 import EditorField from "../../components/EditorField";
 import EditorPanel from "../../components/EditorPanel";
 import { useState, useEffect, useRef } from "react";
-import { loadLevel, loadNewLevel } from "../../logic/saveLoad";
+import { loadLevelFromID_CONNECTED, loadNewLevel } from "../../logic/saveLoad";
 import { useParams } from "react-router-dom";
 
 import { useContext } from "react";
@@ -44,7 +44,7 @@ export default function Editor() {
 
       if (trueLevelId > 0) {
         try {
-          loadLevel(trueLevelId, dispatch);
+          loadLevelFromID_CONNECTED(trueLevelId, dispatch);
         } finally {
           setLoading(false);
         }

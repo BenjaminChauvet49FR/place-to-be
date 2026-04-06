@@ -2,7 +2,9 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { createRoot } from "react-dom/client";
 
-import Playing from "./pages/Playing/index.jsx";
+import PlayMenu from "./pages/PlayMenu/";
+import PlayingFromEdit from "./pages/Playing_FromEdit/index.jsx";
+import PlayingFromFree from "./pages/Playing_FromFree/index.jsx";
 import EditorMenu from "./pages/EditorMenu/";
 import Editor from "./pages/Editor/";
 import LevelEditProvider from "./context/LevelEditContext.jsx";
@@ -19,12 +21,19 @@ const root = createRoot(container);
 export const paths = {
   editLevel: (id) => `/editLevel/${id}`,
   editNewLevel: () => `/editLevel/new`,
-  levelList: () => `/editor`,
+  levelListForEditor: () => `/edit`,
+  levelListForPlay: () => `/play`,
+  playLevel: (id) => `/play/${id}`,
   playing: () => `/editLevel/playing`,
 };
 const privatePaths = {
   editLevelId: () => "/editLevel/:levelId",
+  playLevelId: () => "/play/:levelId",
 };
+
+export function doIComeFromEditor() {
+  return window.location.pathname.includes("playing");
+}
 
 root.render(
   <React.StrictMode>
@@ -34,9 +43,18 @@ root.render(
           <Router>
             <Header />
             <Routes>
-              <Route path={paths.levelList()} element={<EditorMenu />} />
+              <Route
+                path={paths.levelListForEditor()}
+                element={<EditorMenu />}
+              />
               <Route path={privatePaths.editLevelId()} element={<Editor />} />
-              <Route path={paths.playing()} element={<Playing />} />
+              <Route path={paths.playing()} element={<PlayingFromEdit />} />
+
+              <Route path={paths.levelListForPlay()} element={<PlayMenu />} />
+              <Route
+                path={privatePaths.playLevelId()}
+                element={<PlayingFromFree />}
+              />
             </Routes>
           </Router>
         </LevelEditProvider>

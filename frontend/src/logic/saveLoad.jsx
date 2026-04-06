@@ -16,12 +16,25 @@ export function loadNewLevel(pDispatch) {
   loadLevelForEditor("99991", "", pDispatch);
 }
 
-export function loadLevel(pID, pDispatch) {
-  fetch(`${API_URL}/api/level/${pID}`, {
-    headers: {
+export function loadLevelFromID_CONNECTED(pID, pDispatch) {
+  loadLevelFromID_aux(pID, pDispatch, false);
+}
+
+export function loadLevelFromID_FREE(pID, pDispatch) {
+  loadLevelFromID_aux(pID, pDispatch, true);
+}
+
+function loadLevelFromID_aux(pID, pDispatch, pFree) {
+  let headers = {};
+  let url = `${API_URL}/api/levels/${pID}`;
+  if (!pFree) {
+    headers = {
       Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-    },
-  }).then((response) =>
+    };
+    url = `${API_URL}/api/level/${pID}`;
+  }
+
+  fetch(url, { headers: headers }).then((response) =>
     response
       .json()
       .then((levelData) => {
@@ -233,7 +246,7 @@ export function loadAndSaveALLLevels(pState, pDispatch) {
         )
       ) {
         JSONResponse.forEach((entry) => {
-          loadLevel(entry.id, pDispatch);
+          loadLevelFromID_CONNECTED(entry.id, pDispatch);
           saveLevel(pState, pDispatch);
         });
       }

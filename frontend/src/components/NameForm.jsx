@@ -24,7 +24,7 @@ function NameForm() {
       login({ username: name }, result.data.access);
 
       // Rediriger vers dashboard
-      navigate(paths.levelList());
+      navigate(paths.levelListForEditor());
     } else {
       // Afficher le message d'erreur
       setError(result.error);

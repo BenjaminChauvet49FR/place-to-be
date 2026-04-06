@@ -14,7 +14,8 @@ const StyledLink = styled(Link)`
 function Header() {
   return (
     <nav>
-      <StyledLink to={paths.levelList()}>Editeur</StyledLink>
+      <StyledLink to={paths.levelListForPlay()}>Jouer</StyledLink>
+      <StyledLink to={paths.levelListForEditor()}>Editer</StyledLink>
       <NameForm></NameForm>
     </nav>
   );
