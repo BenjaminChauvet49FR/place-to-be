@@ -68,6 +68,12 @@ nav {
 	border-style:outset;
 	border-width:2px;
 }
+
+#form_name {
+	display: flex;
+	flex-direction:row;
+	gap:2em;
+}
 /* ------------------ */
 
 .level_menu div {

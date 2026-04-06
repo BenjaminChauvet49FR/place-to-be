@@ -27,18 +27,18 @@ function NameForm() {
       navigate(paths.levelListForEditor());
     } else {
       // Afficher le message d'erreur
-      setError(result.error);
+      setError("Nom ou mot de passe incorrect !");
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} id="form_name">
       <label>
-        Nom :
+        Nom :&nbsp;
         <input type="text" value={name} onChange={handleChange} />
       </label>
       <label>
-        Mot de passe :
+        Mot de passe :&nbsp;
         <input
           type="password"
           value={password}
@@ -46,7 +46,7 @@ function NameForm() {
         />
       </label>
       <input type="submit" value="Se connecter" />
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      {error && <span style={{ color: "red" }}>{error}</span>}
     </form>
   );
 }
