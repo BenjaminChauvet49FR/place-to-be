@@ -5,7 +5,7 @@ const AuthContext = createContext(null);
 
 export default function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   // Vérifier par le biais du token (et d'un appel à l'API) si on est correctement connecté
   useEffect(() => {
