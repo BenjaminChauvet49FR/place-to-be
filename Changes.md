@@ -1,12 +1,20 @@
 # Ce qui a changé ce commit
 
-Theme principal : ajout côté front de la possibilité de jouer directement un niveau
+Theme principal : fermeture côté front de l'accès à l'édition aux connectés (redirection vers "doNotEditLevel")
 
-* Séparation de la page de jeu `Playing` en 2 pages selon qu'on soit dans un contexte de jeu en édition (`Playing_FromEdit`) ou de simple jeu (`Playing_FromFree`) 
-* Transformation de `Playing` en 2 composants
-* Différences de page gérées par `ìndex.js` à la racine 
-* Appel aux differents viewpoints 
+Création de pages :
+
+- Accueil
+- Redirection pour erreurs connexions
+
+Thème principal :
+
+- Test de connexion côté front ̀`AuthContext.jsx` et test plus complet côté back `api/me`
+- Pas mal de modifications dans le routeur
+- Ajout de PrivateEditRoute, un wrappeur qui permet de naviguer vers la page NoEditLevel (cf. ci-dessous)
+
+Aussi : Modification de NameForm selon qu'on est connecté ou non
 
 # Ce qui reste à ameliorer
 
-* Faire en sorte que l'édition ne soit accessible qu'aux connectés
+- Faire en sorte que l'édition ne soit accessible qu'à l'auteur du niveau
