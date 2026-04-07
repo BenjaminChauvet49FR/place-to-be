@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect } from "react";
+import { API_URL } from "../utils/api.jsx";
 
 const AuthContext = createContext(null);
 
@@ -6,10 +7,10 @@ export default function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  // Vérifier par le biais du token (et d'un appel à l'API) si on est correctement connecté 
+  // Vérifier par le biais du token (et d'un appel à l'API) si on est correctement connecté
   useEffect(() => {
     async function init() {
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem("access_token");
 
       if (!token) {
         setLoading(false);
@@ -17,7 +18,7 @@ export default function AuthProvider({ children }) {
       }
 
       try {
-        const res = await fetch("/api/me", {
+        const res = await fetch(`${API_URL}/api/me/`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -27,10 +28,11 @@ export default function AuthProvider({ children }) {
           const data = await res.json();
           setUser(data);
         } else {
-          localStorage.removeItem("token");
+          localStorage.removeItem("access_token");
         }
-      } catch {
-        localStorage.removeItem("token");
+      } catch (error) {
+        console.log(error);
+        localStorage.removeItem("access_token");
       }
 
       setLoading(false);
