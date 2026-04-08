@@ -1,20 +1,9 @@
 # Ce qui a changé ce commit
 
-Theme principal : fermeture côté front de l'accès à l'édition aux connectés (redirection vers "doNotEditLevel")
+Theme principal : empêché l'accès en édition à un niveau pour un autre utilisateur (via manipulation de l'URL dans le navigateur par exemple)
 
-Création de pages :
+Pour cela :
 
-- Accueil
-- Redirection pour erreurs connexions
-
-Thème principal :
-
-- Test de connexion côté front ̀`AuthContext.jsx` et test plus complet côté back `api/me`
-- Pas mal de modifications dans le routeur
-- Ajout de PrivateEditRoute, un wrappeur qui permet de naviguer vers la page NoEditLevel (cf. ci-dessous)
-
-Aussi : Modification de NameForm selon qu'on est connecté ou non
-
-# Ce qui reste à ameliorer
-
-- Faire en sorte que l'édition ne soit accessible qu'à l'auteur du niveau
+- Ajout d'une classe privilège côté back end
+- Ajout côté front d'une exception (Error404) levée par l'API saveLoad.jsx + d'un mécanisme de redirection sur la page d'édition de niveau
+- Ajout d'une page + route correspondant aux niveaux inaccessibles

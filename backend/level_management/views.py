@@ -6,6 +6,8 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser
 
 from .models import Level
 from .serializers import LevelSerializer
+from .permissions import IsOwner
+
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from authentication.models import User
@@ -13,10 +15,10 @@ from authentication.models import User
 class OwnLevelViewset(ModelViewSet):
  
     serializer_class = LevelSerializer
-    permission_classes = [IsAuthenticated] 
+    permission_classes = [IsAuthenticated, IsOwner] 
 
     def get_queryset(self):
-        # Ne retourner que les niveaux créés par l'utilisateur connecté
+        # Cas all : ne retourner que les niveaux créés par l'utilisateur connecté. Cas unique : le niveau si l'utilisateur est l'auteur.
         user = self.request.user
         return Level.objects.filter(creator=user)
     

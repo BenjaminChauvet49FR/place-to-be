@@ -1,11 +1,13 @@
 import EditorField from "../../components/EditorField";
 import EditorPanel from "../../components/EditorPanel";
+import Error404 from "../../logic/Errors.js";
 import { useState, useEffect, useRef } from "react";
 import { loadLevelFromID_CONNECTED, loadNewLevel } from "../../logic/saveLoad";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 import { useContext } from "react";
 import { LevelEditContext } from "../../context/LevelEditContext";
+import { paths } from "../../index.js";
 
 // -----------------------
 
@@ -32,31 +34,37 @@ export default function Editor() {
   };
 
   const hasFetched = useRef(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    //if (hasFetched.current) return;
+    async function init() {
+      if (!state.keepEditorState) {
+        dispatch({ type: "levelID", levelID: trueLevelId });
 
-    if (!state.keepEditorState) {
-      dispatch({ type: "levelID", levelID: trueLevelId });
+        hasFetched.current = true;
+        setLoading(true);
 
-      hasFetched.current = true;
-      setLoading(true);
-
-      if (trueLevelId > 0) {
-        try {
-          loadLevelFromID_CONNECTED(trueLevelId, dispatch);
-        } finally {
+        if (trueLevelId > 0) {
+          try {
+            await loadLevelFromID_CONNECTED(trueLevelId, dispatch);
+          } catch (e) {
+            if (e instanceof Error404) {
+              navigate(paths.notFoundLevel());
+            }
+          } finally {
+            setLoading(false);
+          }
+        } else {
+          loadNewLevel(dispatch);
           setLoading(false);
         }
       } else {
-        loadNewLevel(dispatch);
-        setLoading(false);
+        dispatch({ type: "noLongerKeepEditorState" });
+        setLoading(false); // Note : isLoading is true by default
       }
-    } else {
-      dispatch({ type: "noLongerKeepEditorState" });
-      setLoading(false); // Note : isLoading is true by default
     }
-  }, [dispatch, state.keepEditorState, trueLevelId]);
+    init();
+  }, [dispatch, state.keepEditorState, trueLevelId, navigate]);
 
   return (
     <div>

@@ -7,6 +7,7 @@ import PlayingFromEdit from "./pages/Playing_FromEdit/index.jsx";
 import PlayingFromFree from "./pages/Playing_FromFree/index.jsx";
 import Lobby from "./pages/Lobby/index.jsx";
 import NoEditLevel from "./pages/NoEditLevel/index.jsx";
+import NotFoundLevel from "./pages/NotFoundLevel/index.jsx";
 
 import EditorMenu from "./pages/EditorMenu/";
 import Editor from "./pages/Editor/";
@@ -31,6 +32,7 @@ export const paths = {
   playLevel: (id) => `/play/${id}`,
   playing: () => `/editLevel/playing`,
   noEditLevel: () => `/doNotEditLevel`,
+  notFoundLevel: () => `/notFoundLevel`,
   home: () => `/`,
 };
 const privatePaths = {
@@ -59,6 +61,7 @@ root.render(
               </Route>
 
               <Route path={paths.noEditLevel()} element={<NoEditLevel />} />
+              <Route path={paths.notFoundLevel()} element={<NotFoundLevel />} />
 
               <Route path={paths.playing()} element={<PlayingFromEdit />} />
 

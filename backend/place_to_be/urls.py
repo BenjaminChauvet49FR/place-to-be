@@ -29,7 +29,8 @@ router = routers.SimpleRouter()
 # afin que l’url générée soit celle que nous souhaitons ‘/api/level/’
 router.register('myLevels', OwnLevelViewset, basename='myLevels')
 router.register('levels', LevelFromUserViewset, basename='levels')
-router.register('level', OwnLevelViewset, basename='level')
+router.register('level', OwnLevelViewset, basename='level') 
+#router.register('level', OwnLevelViewset, basename='level') # TODO wanting a route for all levels and a route for detail is not so bad JE SAIS PLUS CE QUE JE VEUX DU COUP
 
 
 urlpatterns = [

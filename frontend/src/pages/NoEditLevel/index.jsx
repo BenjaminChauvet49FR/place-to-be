@@ -7,7 +7,7 @@ export default function NoEditLevel() {
       Vous tentez d'accéder à une page d'édition de niveau(x). Seul l'auteur
       du/des niveau(x) peut y accéder.
       <br />
-      Si c'est vous, veuillez vous connecter.
+      Si c'est vous, veuillez vous connecter.{" "}
       <Link to={paths.home()}>Retour à l'accueil</Link>
     </div>
   );
