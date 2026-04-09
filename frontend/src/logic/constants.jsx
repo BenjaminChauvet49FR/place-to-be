@@ -14,13 +14,13 @@ export const SPACE_INFO = {
     captionEditor: "mur",
   },
   [SPACE.GOAL_A]: {
-    captionEditor: "cible A",
+    captionEditor: "A",
   },
   [SPACE.GOAL_B]: {
-    captionEditor: "cible B",
+    captionEditor: "B",
   },
   [SPACE.GOAL_C]: {
-    captionEditor: "cible C",
+    captionEditor: "C",
   },
 };
 export const BLOCK = {
@@ -35,18 +35,28 @@ export const BLOCK_INFO = {
     isRealBlock: false,
   },
   [BLOCK.A]: {
-    captionEditor: "bloc A",
+    captionEditor: "A",
     isRealBlock: true,
   },
   [BLOCK.B]: {
-    captionEditor: "bloc B",
+    captionEditor: "B",
     isRealBlock: true,
   },
   [BLOCK.C]: {
-    captionEditor: "bloc C",
+    captionEditor: "C",
     isRealBlock: true,
   },
 };
+
+export const BLOCK_TYPES_LIST = [
+  { goal: SPACE.GOAL_A, block: BLOCK.A, cn: "A", id: 0 },
+  { goal: SPACE.GOAL_B, block: BLOCK.B, cn: "B", id: 1 },
+  { goal: SPACE.GOAL_C, block: BLOCK.C, cn: "C", id: 2 },
+];
+
+BLOCK_TYPES_LIST.forEach((block) => {
+  BLOCK_INFO[block.block].id = block.id;
+});
 
 export const DIRECTION = {
   L: 0,

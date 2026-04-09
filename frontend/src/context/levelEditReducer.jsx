@@ -65,6 +65,21 @@ export function levelEditReducer(pState, pAction) {
         keepEditorState: false,
       };
 
+    case "movesLimit":
+      return {
+        ...pState,
+        movesLimit: pState.movesLimit.map((value, index) =>
+          index === pAction.index ? pAction.value : value,
+        ),
+      };
+    case "movesInfinite":
+      return {
+        ...pState,
+        movesInfinite: pState.movesInfinite.map((value, index) =>
+          index === pAction.index ? pAction.value : value,
+        ),
+      };
+
     default:
       console.log("Erreur fatale : mauvaise utilisation de dispatch !");
       console.log(pAction);
@@ -110,4 +125,6 @@ export const initialState = {
   currentSpace: SPACE.EMPTY,
   currentBlock: BLOCK.NONE,
   keepEditorState: false,
+  movesLimit: new Array(10).fill(0),
+  movesInfinite: new Array(10).fill(false),
 };

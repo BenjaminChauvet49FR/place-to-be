@@ -4,11 +4,13 @@ import {
   BLOCK,
   BLOCK_INFO,
   DO_NOT_CHANGE,
+  BLOCK_TYPES_LIST,
 } from "../logic/constants.jsx";
 import "../styles/style.css";
 import { useNavigate } from "react-router-dom";
 import * as saveLoad from "../logic/saveLoad";
 import { paths } from "../index.js";
+import { areMovesInfinite } from "../logic/gameplay.jsx";
 
 function EditorPanel({ state, dispatch }) {
   function captionItemSelected(pSpace, pBlock) {
@@ -81,6 +83,18 @@ function EditorPanel({ state, dispatch }) {
     navigate(paths.playing());
   }
 
+  function handleMovesChange(pBlockId, pValue) {
+    dispatch({ type: "movesLimit", index: pBlockId, value: pValue });
+  }
+
+  function handleInfiniteMovesChange(pBlockId, pValue) {
+    dispatch({
+      type: "movesInfinite",
+      index: pBlockId,
+      value: pValue,
+    });
+  }
+
   // =================================
 
   return (
@@ -92,48 +106,49 @@ function EditorPanel({ state, dispatch }) {
       <div>
         <button onClick={() => selectSpace(SPACE.WALL)}>Mur</button>
         <button onClick={() => emptySpace()}>Case vide</button>
-      </div>
-      <div>
-        <button
-          className="buttonSelectionALight"
-          onClick={() => selectSpace(SPACE.GOAL_A)}
-        >
-          Cible A
-        </button>
-        <button
-          className="buttonSelectionBLight"
-          onClick={() => selectSpace(SPACE.GOAL_B)}
-        >
-          Cible B
-        </button>
-        <button
-          className="buttonSelectionCLight"
-          onClick={() => selectSpace(SPACE.GOAL_C)}
-        >
-          Cible C
-        </button>
         <button onClick={() => selectSpace(SPACE.EMPTY)}>Aucune cible</button>
+        <button onClick={() => selectBlock(BLOCK.NONE)}>Aucun bloc</button>
       </div>
       <div>
-        <button
-          className="buttonSelectionA"
-          onClick={() => selectBlock(BLOCK.A)}
-        >
-          Bloc A
-        </button>
-        <button
-          className="buttonSelectionB"
-          onClick={() => selectBlock(BLOCK.B)}
-        >
-          Bloc B
-        </button>
-        <button
-          className="buttonSelectionC"
-          onClick={() => selectBlock(BLOCK.C)}
-        >
-          Bloc C
-        </button>
-        <button onClick={() => selectBlock(BLOCK.NONE)}>Aucun bloc</button>
+        {BLOCK_TYPES_LIST.map((type) => (
+          <div key={type.cn}>
+            <button
+              className={`buttonSelection${type.cn}Light`}
+              onClick={() => selectSpace(type.goal)}
+            >
+              Cible {type.goal}
+            </button>
+            <button
+              className={`buttonSelection${type.cn}`}
+              onClick={() => selectBlock(type.block)}
+            >
+              Bloc {type.block}
+            </button>
+            {"               "}
+            <span className={"littleHelp"}>Coups limites :</span>
+            {"  "}
+            <input
+              className={`input${type.cn}`}
+              onChange={(e) => handleMovesChange(type.id, e.target.value)}
+              disabled={
+                state.movesInfinite[type.id] ? "disabled" : ""
+              } /** Credits : https://stackoverflow.com/questions/36773671/deactivate-input-in-react-with-a-button-click */
+              value={state.movesLimit[type.id]}
+              min={0}
+              max={99}
+              type="number"
+            ></input>
+            {"     "}
+            <span className={"littleHelp"}>Coups infinis : </span>
+            <input
+              type="checkbox"
+              checked={state.movesInfinite[type.id]}
+              onChange={(e) =>
+                handleInfiniteMovesChange(type.id, e.target.checked)
+              }
+            />
+          </div>
+        ))}
       </div>
       <div>
         <input

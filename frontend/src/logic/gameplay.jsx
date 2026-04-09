@@ -5,7 +5,12 @@ import {
   SPACE,
   REAL_XLENGTH,
   REAL_YLENGTH,
+  BLOCK_INFO,
 } from "./constants.jsx";
+
+import { useContext, useEffect } from "react";
+import { LevelPlayContext } from "../context/LevelPlayContext.jsx";
+import { LevelEditContext } from "../context/LevelEditContext.jsx";
 
 // ===================
 // Logic to charge a level
@@ -19,9 +24,32 @@ function defaultRowFill(pRowF, pRowM) {
   pRowM.push(NO_ID_BLOCK);
 }
 
-export function startLevelFromGrid(
+export function useStartLevelFromGrid() {
+  const ucp = useContext(LevelPlayContext);
+  const uce = useContext(LevelEditContext);
+
+  useEffect(() => {
+    startLevelFromGrid(
+      uce.state.gridF,
+      uce.state.gridM,
+      uce.state.movesLimit,
+      uce.state.movesInfinite,
+      ucp.dispatch,
+    );
+  }, [
+    uce.state.gridF,
+    uce.state.gridM,
+    uce.state.movesLimit,
+    uce.state.movesInfinite,
+    ucp.dispatch,
+  ]);
+}
+
+function startLevelFromGrid(
   pGridFFromEditor,
   pGridMFromEditor,
+  pMovesLimit,
+  pMovesInfinite,
   pDispatchPlay,
 ) {
   const gridF = [];
@@ -45,7 +73,7 @@ export function startLevelFromGrid(
     }
   }
   yRef = y;
-  //for (; y < before_rows + rawLevel.length - 1; y++) {
+
   for (; y < before_rows + pGridFFromEditor.length; y++) {
     gridF.push([]);
     gridM.push([]);
@@ -54,9 +82,7 @@ export function startLevelFromGrid(
       defaultRowFill(gridF[y], gridM[y]);
     }
     xRef = x;
-    //for (; x < before_columns + rawLevel[y - yRef + 1].length; x++) {
     for (; x < before_columns + pGridFFromEditor[y - yRef].length; x++) {
-      //gridF[y].push(rawLevel[y - yRef + 1].charAt(x - xRef));
       gridF[y].push(pGridFFromEditor[y - yRef][x - xRef]);
       gridM[y].push(NO_ID_BLOCK);
       if (isBlock(pGridMFromEditor[y][x])) {
@@ -84,6 +110,8 @@ export function startLevelFromGrid(
           blockTypesInfos[blockType] = {
             index: blockTypes.length,
             movesPlayed: 0,
+            movesLimit: pMovesLimit[BLOCK_INFO[blockType].id],
+            movesInfinite: pMovesInfinite[BLOCK_INFO[blockType].id],
           }; // Where element of "blockTypesInfos" are set
           blockTypes.push(blockType);
         }
@@ -262,4 +290,12 @@ export function getCurrentBlockType(pState) {
 
 export function getMovesPlayed(pBlockType, pState) {
   return pState.blockTypesInfos[pBlockType].movesPlayed;
+}
+
+export function getMovesLimit(pBlockType, pState) {
+  return pState.blockTypesInfos[pBlockType].movesLimit;
+}
+
+export function areMovesInfinite(pBlockType, pState) {
+  return pState.blockTypesInfos[pBlockType].movesInfinite;
 }

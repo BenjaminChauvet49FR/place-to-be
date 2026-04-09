@@ -5,6 +5,8 @@ import {
   getCurrentBlockType,
   setCurrentBlockType,
   getMovesPlayed,
+  getMovesLimit,
+  areMovesInfinite,
 } from "../logic/gameplay.jsx";
 import { paths, doIComeFromEditor } from "../index";
 
@@ -32,6 +34,8 @@ function PlayPanel() {
 
   return (
     <div className="panel mainComponent">
+      {/* Les directions */}
+
       <div className="directionsPanel0">
         <div className="directionsPanel">
           <div>
@@ -74,13 +78,32 @@ function PlayPanel() {
         </button>
         <br />
       </div>
+
+      {/* Les types de blocs (+ le nombre de coups joués) */}
       <div className="blockTypePanel0">
         {getBlockTypes(playContext.state).map((blockType) => (
           <div
             key={blockType}
             className={`blockTypePanel${getCurrentBlockType(playContext.state) === blockType ? " selected" : " not-selected"}`}
           >
-            <div>{getMovesPlayed(blockType, playContext.state)}</div>
+            {areMovesInfinite(blockType, playContext.state) ? (
+              <div className="infiniteMoves">
+                {getMovesPlayed(blockType, playContext.state)}
+              </div>
+            ) : (
+              <div
+                className={
+                  (getMovesPlayed(blockType, playContext.state) >
+                    getMovesLimit(blockType, playContext.state) &&
+                    "tooManyMoves") ||
+                  ""
+                }
+              >
+                {getMovesPlayed(blockType, playContext.state)}/
+                {getMovesLimit(blockType, playContext.state)}
+              </div>
+            )}
+
             <button
               className={`buttonSelection${blockType}`}
               onClick={() =>
@@ -96,6 +119,9 @@ function PlayPanel() {
           </div>
         ))}
       </div>
+
+      {/* Le reste */}
+
       {doIComeFromEditor() ? (
         <button onClick={() => backToEdition()}>Retour a l'edition</button>
       ) : null}

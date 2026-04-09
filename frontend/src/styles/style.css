@@ -63,6 +63,20 @@ nav {
 	background-color: #eeffee;
 }
 
+.infiniteMoves {
+	background-color : #ffffff;
+	border-color:#0000ff;
+	color:#0000ff;
+	border-width:2px;
+}
+.tooManyMoves { color : #ff0000;
+font-weight:bold;}
+
+.space_wall {
+	background-color:grey;
+}
+
+
 /* ------------------ */
 .mainComponent {
 	border-style:outset;
@@ -118,6 +132,11 @@ nav {
 	flex-direction:column;
 	align-items: center;
 }
+.verticalLayout {
+	display:flex;
+	flex-direction:column;
+	align-items: center;
+}
 
 
 .blockTypePanel0 {
@@ -148,7 +167,10 @@ nav {
 .buttonSelectionALight { background-color:#ffffaa; }
 .buttonSelectionBLight { background-color:#FFddaa; }
 .buttonSelectionCLight { background-color:#eeaaff; }
-
-.space_wall {
-	background-color:grey;
+.inputA { background-color:#ffffbb; }
+.inputB { background-color:#ffeebb; }
+.inputC { background-color:#fabbff; }
+.littleHelp {
+	font-style: italic;
+	font-size:0.6em;
 }
