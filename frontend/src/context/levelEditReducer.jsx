@@ -1,4 +1,11 @@
-import { SPACE, BLOCK, REAL_XLENGTH, REAL_YLENGTH } from "../logic/constants";
+import {
+  SPACE,
+  BLOCK,
+  REAL_XLENGTH,
+  REAL_YLENGTH,
+  NEW_ARRAY_MOVES_INFINITE,
+  NEW_ARRAY_MOVES_LIMIT,
+} from "../logic/constants";
 
 export function levelEditReducer(pState, pAction) {
   switch (pAction.type) {
@@ -80,8 +87,23 @@ export function levelEditReducer(pState, pAction) {
         ),
       };
 
+    case "movesLimit_ALL":
+      return {
+        ...pState,
+        movesLimit: pAction.movesLimit,
+      };
+    case "movesInfinite_ALL":
+      return {
+        ...pState,
+        movesInfinite: pAction.movesInfinite,
+      };
+
     default:
-      console.log("Erreur fatale : mauvaise utilisation de dispatch !");
+      console.log(
+        "Erreur fatale : mauvaise utilisation de dispatch ! (" +
+          pAction.type +
+          ")",
+      );
       console.log(pAction);
       return 1 / 0;
   }
@@ -125,6 +147,6 @@ export const initialState = {
   currentSpace: SPACE.EMPTY,
   currentBlock: BLOCK.NONE,
   keepEditorState: false,
-  movesLimit: new Array(10).fill(0),
-  movesInfinite: new Array(10).fill(false),
+  movesLimit: NEW_ARRAY_MOVES_LIMIT(),
+  movesInfinite: NEW_ARRAY_MOVES_INFINITE(),
 };

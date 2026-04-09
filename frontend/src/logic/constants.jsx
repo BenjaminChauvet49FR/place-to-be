@@ -58,6 +58,15 @@ BLOCK_TYPES_LIST.forEach((block) => {
   BLOCK_INFO[block.block].id = block.id;
 });
 
+export function NEW_ARRAY_MOVES_INFINITE() {
+  return new Array(10).fill(false);
+}
+export function NEW_ARRAY_MOVES_LIMIT() {
+  return new Array(10).fill(0);
+}
+
+// ---
+
 export const DIRECTION = {
   L: 0,
   U: 1,
