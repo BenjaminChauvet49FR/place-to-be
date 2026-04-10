@@ -38,5 +38,6 @@ urlpatterns = [
     path('api/', include(router.urls)),  # Il faut bien penser à ajouter les urls du router dans la liste des urls disponibles.
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('api/levelIdsNOTOnlyForAdmin/', idsNOTOnlyForAdmin, name='ids_only_for_admin'),
     path('api/me/', me, name='me'),
 ]

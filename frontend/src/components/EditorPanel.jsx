@@ -10,6 +10,7 @@ import "../styles/style.css";
 import { useNavigate } from "react-router-dom";
 import * as saveLoad from "../logic/saveLoad";
 import { paths } from "../index.js";
+import { loadAndSaveALLLevels } from "../logic/encodingBascule.jsx";
 import { areMovesInfinite } from "../logic/gameplay.jsx";
 
 function EditorPanel({ state, dispatch }) {
@@ -168,7 +169,7 @@ function EditorPanel({ state, dispatch }) {
       <div>
         <button
           className="danger"
-          onClick={() => saveLoad.loadAndSaveALLLevels(state, dispatch)}
+          onClick={() => loadAndSaveALLLevels(state, dispatch)}
         >
           Charger et enregistrer TOUS les niveaux
         </button>
