@@ -11,7 +11,6 @@ import { useNavigate } from "react-router-dom";
 import * as saveLoad from "../logic/saveLoad";
 import { paths } from "../index.js";
 import { loadAndSaveALLLevels } from "../logic/encodingBascule.jsx";
-import { areMovesInfinite } from "../logic/gameplay.jsx";
 
 function EditorPanel({ state, dispatch }) {
   function captionItemSelected(pSpace, pBlock) {
