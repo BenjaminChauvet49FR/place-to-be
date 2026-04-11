@@ -1,24 +1,13 @@
-import {
-  moveBlocks,
-  undo,
-  getBlockTypes,
-  getCurrentBlockType,
-  setCurrentBlockType,
-  getMovesPlayed,
-  getMovesLimit,
-  areMovesInfinite,
-} from "../logic/gameplay.jsx";
+import { useGameplay } from "../logic/gameplay.jsx";
 import { paths, doIComeFromEditor } from "../index";
 
 import { DIRECTION, NO_ID_LEVEL } from "../logic/constants.jsx";
 
-import { LevelPlayContext } from "../context/LevelPlayContext.jsx";
 import { useContext } from "react";
 import { LevelEditContext } from "../context/LevelEditContext.jsx";
 import { useNavigate } from "react-router-dom";
 
 function PlayPanel() {
-  const playContext = useContext(LevelPlayContext);
   const editContext = useContext(LevelEditContext);
 
   const navigate = useNavigate();
@@ -32,6 +21,17 @@ function PlayPanel() {
     }
   }
 
+  const {
+    undo,
+    moveBlocks,
+    getBlockTypes,
+    getCurrentBlockType,
+    getMovesPlayed,
+    getMovesLimit,
+    areMovesInfinite,
+    setCurrentBlockType,
+  } = useGameplay();
+
   return (
     <div className="panel mainComponent">
       {/* Les directions */}
@@ -39,80 +39,44 @@ function PlayPanel() {
       <div className="directionsPanel0">
         <div className="directionsPanel">
           <div>
-            <button
-              onClick={() =>
-                moveBlocks(DIRECTION.U, playContext.state, playContext.dispatch)
-              }
-            >
-              Haut
-            </button>
+            <button onClick={() => moveBlocks(DIRECTION.U)}>Haut</button>
           </div>
           <div>
-            <button
-              onClick={() =>
-                moveBlocks(DIRECTION.L, playContext.state, playContext.dispatch)
-              }
-            >
-              Gauche
-            </button>
-            <button
-              onClick={() =>
-                moveBlocks(DIRECTION.R, playContext.state, playContext.dispatch)
-              }
-            >
-              Droite
-            </button>
+            <button onClick={() => moveBlocks(DIRECTION.L)}>Gauche</button>
+            <button onClick={() => moveBlocks(DIRECTION.R)}>Droite</button>
           </div>
           <div>
-            <button
-              onClick={() =>
-                moveBlocks(DIRECTION.D, playContext.state, playContext.dispatch)
-              }
-            >
-              Bas
-            </button>
+            <button onClick={() => moveBlocks(DIRECTION.D)}>Bas</button>
           </div>
         </div>
-        <button onClick={() => undo(playContext.state, playContext.dispatch)}>
-          Annuler
-        </button>
+        <button onClick={() => undo()}>Annuler</button>
         <br />
       </div>
 
       {/* Les types de blocs (+ le nombre de coups joués) */}
       <div className="blockTypePanel0">
-        {getBlockTypes(playContext.state).map((blockType) => (
+        {getBlockTypes().map((blockType) => (
           <div
             key={blockType}
-            className={`blockTypePanel${getCurrentBlockType(playContext.state) === blockType ? " selected" : " not-selected"}`}
+            className={`blockTypePanel${getCurrentBlockType() === blockType ? " selected" : " not-selected"}`}
           >
-            {areMovesInfinite(blockType, playContext.state) ? (
-              <div className="infiniteMoves">
-                {getMovesPlayed(blockType, playContext.state)}
-              </div>
+            {areMovesInfinite(blockType) ? (
+              <div className="infiniteMoves">{getMovesPlayed(blockType)}</div>
             ) : (
               <div
                 className={
-                  (getMovesPlayed(blockType, playContext.state) >
-                    getMovesLimit(blockType, playContext.state) &&
+                  (getMovesPlayed(blockType) > getMovesLimit(blockType) &&
                     "tooManyMoves") ||
                   ""
                 }
               >
-                {getMovesPlayed(blockType, playContext.state)}/
-                {getMovesLimit(blockType, playContext.state)}
+                {getMovesPlayed(blockType)}/{getMovesLimit(blockType)}
               </div>
             )}
 
             <button
               className={`buttonSelection${blockType}`}
-              onClick={() =>
-                setCurrentBlockType(
-                  blockType,
-                  playContext.state,
-                  playContext.dispatch,
-                )
-              }
+              onClick={() => setCurrentBlockType(blockType)}
             >
               {blockType}
             </button>
