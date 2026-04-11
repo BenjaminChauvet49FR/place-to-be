@@ -1,3 +1,6 @@
+// ====================================================
+// Field part
+
 export const SPACE = {
   EMPTY: "0",
   WALL: "1",
@@ -9,24 +12,29 @@ export const SPACE = {
 export const SPACE_INFO = {
   [SPACE.EMPTY]: {
     captionEditor: "vide",
+    className: "space_empty",
   },
   [SPACE.WALL]: {
     captionEditor: "mur",
+    className: "space_wall",
   },
   [SPACE.GOAL_A]: {
     captionEditor: "A",
+    className: "space_goalA",
   },
   [SPACE.GOAL_B]: {
     captionEditor: "B",
+    className: "space_goalB",
   },
   [SPACE.GOAL_C]: {
     captionEditor: "C",
+    className: "space_goalC",
   },
 };
 export const BLOCK = {
   A: "A",
   B: "B",
-  C: "C", // WARNING : when you add a block, think about adding it to "isBlockForEditor" (among others)
+  C: "C",
   NONE: "X",
 };
 export const BLOCK_INFO = {
@@ -36,14 +44,17 @@ export const BLOCK_INFO = {
   },
   [BLOCK.A]: {
     captionEditor: "A",
+    className: "space_blockA",
     isRealBlock: true,
   },
   [BLOCK.B]: {
     captionEditor: "B",
+    className: "space_blockB",
     isRealBlock: true,
   },
   [BLOCK.C]: {
     captionEditor: "C",
+    className: "space_blockC",
     isRealBlock: true,
   },
 };
@@ -65,7 +76,16 @@ export function NEW_ARRAY_MOVES_LIMIT() {
   return new Array(10).fill(0);
 }
 
-// ---
+// ----------------------------------------------------
+// Superposition part
+
+export const SUPERPOSITION_NONE = "superposition none";
+export const SUPERPOSITION_CORRECT = "superposition correct";
+export const SUPERPOSITION_WRONG = (pColour) =>
+  "superposition wrong_" + pColour;
+
+// ====================================================
+// Direction part
 
 export const DIRECTION = {
   L: 0,
@@ -74,9 +94,7 @@ export const DIRECTION = {
   D: 3,
 };
 
-export function OPPOSITE_DIRECTION(pDir) {
-  return (pDir + 2) % 4;
-}
+export const OPPOSITE_DIRECTION = (pDir) => (pDir + 2) % 4;
 
 export const MOVES = [
   { dx: -1, dy: 0 },
@@ -84,6 +102,9 @@ export const MOVES = [
   { dx: 1, dy: 0 },
   { dx: 0, dy: 1 },
 ];
+
+// ====================================================
+// Misc part
 
 export const NO_ID_BLOCK = -1;
 export const REAL_XLENGTH = 22; // These are the xLength and the yLength of the global array. The playfield is meant to be 20x20 (which should be enough for most levels)
@@ -95,15 +116,9 @@ export const DO_NOT_CHANGE = -6; // Good for editor.
 // ====================================================
 // Save load part
 
-export function isBlock(pChar) {
-  return BLOCK_INFO[pChar].isRealBlock;
-}
-export function blockToEncodedBlock(pChar) {
-  return pChar.toLowerCase();
-}
-export function encodedBlockToBlock(pChar) {
-  return pChar.toUpperCase();
-}
+export const isBlock = (pChar) => BLOCK_INFO[pChar].isRealBlock;
+export const blockToEncodedBlock = (pChar) => pChar.toLowerCase();
+export const encodedBlockToBlock = (pChar) => pChar.toUpperCase();
 
 const ENCODED_BLOCK_ARRAY = Object.values(BLOCK)
   .filter((char) => BLOCK_INFO[char].isRealBlock)

@@ -1,4 +1,13 @@
-import { SPACE, BLOCK, NO_ID_BLOCK } from "../logic/constants.jsx";
+import {
+  SPACE,
+  SPACE_INFO,
+  BLOCK,
+  BLOCK_INFO,
+  NO_ID_BLOCK,
+  SUPERPOSITION_CORRECT,
+  SUPERPOSITION_NONE,
+  SUPERPOSITION_WRONG,
+} from "../logic/constants.jsx";
 import "../styles/style.css";
 
 import { useContext } from "react";
@@ -15,32 +24,39 @@ function PlayField() {
     if (state.gridM[pY][pX] === NO_ID_BLOCK) {
       switch (state.gridF[pY][pX]) {
         case SPACE.GOAL_A:
-          return "space_goalA";
         case SPACE.GOAL_B:
-          return "space_goalB";
         case SPACE.GOAL_C:
-          return "space_goalC";
         case SPACE.WALL:
-          return "space_wall";
         case SPACE.EMPTY:
-          return "space_empty";
+          return SPACE_INFO[state.gridF[pY][pX]].className;
         default:
+          console.log("Grille fixe");
+          console.log(pX + "," + pY);
+          console.log(state.gridF);
           window.alert(
-            "Attention, erreur de className sur NO_ID_BLOCK ! (PlayField)",
+            "Attention, erreur de className sur case sans bloc (PlayField) " +
+              state.gridF[pY][pX] +
+              "," +
+              state.gridM[pY][pX],
           );
           return 1 / 0;
       }
     } else {
-      switch (itemsInGrid[state.gridM[pY][pX]].blockType) {
+      let blocktype = itemsInGrid[state.gridM[pY][pX]].blockType;
+      switch (blocktype) {
         case BLOCK.A:
-          return "space_blockA";
         case BLOCK.B:
-          return "space_blockB";
         case BLOCK.C:
-          return "space_blockC";
+          return BLOCK_INFO[blocktype].className;
         default:
+          console.log("Grille mobile");
+          console.log(pX + "," + pY);
+          console.log(state.gridF);
           window.alert(
-            "Attention, erreur de className sur bloc présent ! (PlayField)",
+            "Attention, erreur de className sur bloc présent ! (PlayField) " +
+              state.gridF[pY][pX] +
+              "," +
+              state.gridM[pY][pX],
           );
           return 1 / 0;
       }
@@ -52,12 +68,12 @@ function PlayField() {
       state.gridF[pY][pX] === SPACE.EMPTY ||
       state.gridM[pY][pX] === NO_ID_BLOCK
     ) {
-      return "superposition none";
+      return SUPERPOSITION_NONE;
     }
     if (state.gridF[pY][pX] === itemsInGrid[state.gridM[pY][pX]].blockType) {
-      return "superposition correct";
+      return SUPERPOSITION_CORRECT;
     } else {
-      return "superposition wrong_" + state.gridF[pY][pX];
+      return SUPERPOSITION_WRONG(state.gridF[pY][pX]);
     }
   }
 

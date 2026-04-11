@@ -1,4 +1,13 @@
-import { SPACE, BLOCK, DO_NOT_CHANGE } from "../logic/constants.jsx";
+import {
+  SPACE,
+  BLOCK,
+  DO_NOT_CHANGE,
+  SPACE_INFO,
+  BLOCK_INFO,
+  SUPERPOSITION_CORRECT,
+  SUPERPOSITION_NONE,
+  SUPERPOSITION_WRONG,
+} from "../logic/constants.jsx";
 import "../styles/style.css";
 import { useContext } from "react";
 import { LevelEditContext } from "../context/LevelEditContext.jsx";
@@ -9,46 +18,44 @@ function EditorField({ loadingPackage }) {
   const yLength = state.gridF.length;
 
   function getClassName(pX, pY) {
-    if (state.gridF[pY][pX] === SPACE.WALL) {
-      return "space_wall";
+    if (state.gridM[pY][pX] !== BLOCK.NONE) {
+      switch (state.gridM[pY][pX]) {
+        case BLOCK.A:
+        case BLOCK.B:
+        case BLOCK.C:
+          return BLOCK_INFO[state.gridM[pY][pX]].className;
+        default:
+          console.log("Grille mobile");
+          console.log(pX + "," + pY);
+          console.log(state.gridM);
+          window.alert(
+            "Attention, erreur de className, cf. EditorPanel ! (EditorField) " +
+              state.gridF[pY][pX] +
+              "," +
+              state.gridM[pY][pX],
+          );
+          return 1 / 0;
+      }
     } else {
-      if (state.gridM[pY][pX] !== BLOCK.NONE) {
-        switch (state.gridM[pY][pX]) {
-          case BLOCK.A:
-            return "space_blockA";
-          case BLOCK.B:
-            return "space_blockB";
-          case BLOCK.C:
-            return "space_blockC";
-          default:
-            window.alert(
-              "Attention, erreur de className, cf. EditorPanel ! (EditorField) " +
-                state.gridF[pY][pX] +
-                "," +
-                state.gridM[pY][pX],
-            );
-            return 1 / 0;
-        }
+      switch (state.gridF[pY][pX]) {
+        case SPACE.GOAL_A:
+        case SPACE.GOAL_B:
+        case SPACE.GOAL_C:
+        case SPACE.WALL:
+        case SPACE.EMPTY:
+          return SPACE_INFO[state.gridF[pY][pX]].className;
+        default:
+          console.log("Grille fixe");
+          console.log(pX + "," + pY);
+          console.log(state.gridF);
+          window.alert(
+            "Attention, erreur de className, cf. EditorPanel ! (EditorField) " +
+              state.gridF[pY][pX] +
+              "," +
+              state.gridM[pY][pX],
+          );
+          return 1 / 0;
       }
-      if (state.gridF[pY][pX] === SPACE.GOAL_A) {
-        return "space_goalA";
-      }
-      if (state.gridF[pY][pX] === SPACE.GOAL_B) {
-        return "space_goalB";
-      }
-      if (state.gridF[pY][pX] === SPACE.GOAL_C) {
-        return "space_goalC";
-      }
-      if (state.gridF[pY][pX] === SPACE.EMPTY) {
-        return "space_empty";
-      }
-      window.alert(
-        "Attention, erreur de className, cf. EditorPanel ! (EditorField) " +
-          state.gridF[pY][pX] +
-          "," +
-          state.gridM[pY][pX],
-      );
-      return 1 / 0;
     }
   }
 
@@ -57,12 +64,12 @@ function EditorField({ loadingPackage }) {
       state.gridF[pY][pX] === SPACE.EMPTY ||
       state.gridM[pY][pX] === BLOCK.NONE
     ) {
-      return "superposition none";
+      return SUPERPOSITION_NONE;
     }
     if (state.gridF[pY][pX] === state.gridM[pY][pX]) {
-      return "superposition correct";
+      return SUPERPOSITION_CORRECT;
     } else {
-      return "superposition wrong_" + state.gridF[pY][pX];
+      return SUPERPOSITION_WRONG(state.gridF[pY][pX]);
     }
   }
 
