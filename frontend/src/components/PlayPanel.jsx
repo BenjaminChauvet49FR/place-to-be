@@ -61,13 +61,15 @@ function PlayPanel() {
             className={`blockTypePanel${getCurrentBlockType() === blockType ? " selected" : " not-selected"}`}
           >
             {areMovesInfinite(blockType) ? (
-              <div className="infiniteMoves">{getMovesPlayed(blockType)}</div>
+              <div className="moveDisplay infiniteMoves">
+                {getMovesPlayed(blockType)}
+              </div>
             ) : (
               <div
                 className={
                   (getMovesPlayed(blockType) > getMovesLimit(blockType) &&
-                    "tooManyMoves") ||
-                  ""
+                    "moveDisplay tooManyMoves") ||
+                  "moveDisplay"
                 }
               >
                 {getMovesPlayed(blockType)}/{getMovesLimit(blockType)}
@@ -75,7 +77,7 @@ function PlayPanel() {
             )}
 
             <button
-              className={`buttonSelection${blockType}`}
+              className={`buttonSelectionPlay ${blockType}`}
               onClick={() => setCurrentBlockType(blockType)}
             >
               {blockType}

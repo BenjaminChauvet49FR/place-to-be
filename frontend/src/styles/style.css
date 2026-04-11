@@ -127,6 +127,14 @@ nav {
 	color : #ff0000;
 	font-weight:bold;
 }
+.moveDisplay {
+	font-size:0.75em;
+	block-size: fit-content;
+}
+.buttonSelectionPlay {width: 2.5em;  } /*Note : cela force la largeur des composants englobants (blockTypePanel)*/
+.A {background-color:yellow; }
+.B {background-color:#FF8844; }
+.C {background-color:#CC88FF; }
 
 /* ------------------ */
 /* panels (jeu et edition) */
@@ -137,8 +145,6 @@ nav {
 	align-items: center;
 	background-color:#ffcc99;
 }
-
-/* Note : les clics sur les boutons de sélection de bloc sont directement stockés dans la partie "panel (edition)" */
 
 /* ------------------ */
 /* panel (edition) */
