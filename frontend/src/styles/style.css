@@ -1,41 +1,83 @@
+/* menus generaux */
+
+nav {
+	border-style:outset;
+	background-color: #eeffee;
+}
+.mainComponent {
+	border-style:outset;
+	border-width:2px;
+}
+#form_name {
+	display: flex;
+	flex-direction:row;
+	gap:2em;
+}
+
+/* ------------------ */
+/* menu de selection de niveau (jeu et edition) */
+
+.level_menu div {
+	width:20em;
+	border-style:outset
+}
+.level_new {
+	background-color: #fafffa;
+}
+
+.level_menu div:nth-child(even):not(:last-child) {
+	background-color: #ffeeff;
+}
+
+.level_menu div:nth-child(odd):not(:last-child) {
+	background-color: #fafaff;
+}
+.delete{
+	border-style:outset;
+	background-color:#fa8888;
+	color:#ffffff;
+}
+.danger{
+	border-style:outset;
+	background-color:#fa4444;
+	color:#ffff00;
+}
+
+/* ------------------ */
+/* terrain (jeu et édition) */
+
 .space {
 	width:20px;
 	height:20px;
 }
-
 .spaceRow {
 	display:flex;
 	justify-content: center;
 }
-
 .space_empty {
 	background-color:white;
 }
-
+.space_wall {
+	background-color:grey;
+}
 .space_goalA {
   background-image:url("../images/goal_A.png");
 }
-
 .space_goalB {
   background-image:url("../images/goal_B.png");
 }
-
 .space_goalC {
   background-image:url("../images/goal_C.png");
 }
-
 .space_blockA {
   background-image:url("../images/block_A.png");
 }
-
 .space_blockB {
   background-image:url("../images/block_B.png");
 }
-
 .space_blockC {
   background-image:url("../images/block_C.png");
 }
-
 .superposition {
   position:relative;
   left:3px;
@@ -43,7 +85,6 @@
   width:8px;
   height:8px;
 }
-
 .correct {
   background-image:url("../images/correct.png");
 }
@@ -57,92 +98,9 @@
   background-image:url("../images/wrong_C.png");
 }
 
-
-nav {
-	border-style:outset;
-	background-color: #eeffee;
-}
-
-.infiniteMoves {
-	background-color : #ffffff;
-	border-color:#0000ff;
-	color:#0000ff;
-	border-width:2px;
-}
-.tooManyMoves { color : #ff0000;
-font-weight:bold;}
-
-.space_wall {
-	background-color:grey;
-}
-
-
 /* ------------------ */
-.mainComponent {
-	border-style:outset;
-	border-width:2px;
-}
+/* panel de jeu */
 
-#form_name {
-	display: flex;
-	flex-direction:row;
-	gap:2em;
-}
-/* ------------------ */
-
-.level_menu div {
-	width:20em;
-	border-style:outset
-}
-.level_new {
-	background-color: #fafffa;
-}
-.level_menu div:nth-child(even):not(:last-child) {
-	background-color: #ffeeff;
-}
-.level_menu div:nth-child(odd):not(:last-child) {
-	background-color: #fafaff;
-}
-.delete{
-	border-style:outset;
-	background-color:#fa8888;
-	color:#ffffff;
-}
-
-.danger{
-	border-style:outset;
-	background-color:#fa4444;
-	color:#ffff00;
-}
-
-/* ------------------ */
-.panel {
-	display:flex;
-	flex-direction:column;
-	align-items: center;
-	background-color:#ffcc99;
-}
-.directionsPanel0 {
-	display:flex;
-	flex-direction:row;
-	justify-content: center;
-}
-.directionsPanel {
-	display:flex;
-	flex-direction:column;
-	align-items: center;
-}
-.verticalLayout {
-	display:flex;
-	flex-direction:column;
-	align-items: center;
-}
-
-
-.blockTypePanel0 {
-	display:flex;
-	flex-direction:row;
-}
 .blockTypePanel { /* The number of moves of A + the A */
 	display:row;
 	flex-direction:column;
@@ -159,8 +117,51 @@ font-weight:bold;}
     border-style:solid;
 	border-color: #ffcc99;
 }
+.infiniteMoves {
+	background-color : #ffffff;
+	border-color:#0000ff;
+	color:#0000ff;
+	border-width:2px;
+}
+.tooManyMoves { 
+	color : #ff0000;
+	font-weight:bold;
+}
 
+/* ------------------ */
+/* panels (jeu et edition) */
 
+.panel {
+	display:flex;
+	flex-direction:column;
+	align-items: center;
+	background-color:#ffcc99;
+}
+
+/* Note : les clics sur les boutons de sélection de bloc sont directement stockés dans la partie "panel (edition)" */
+
+/* ------------------ */
+/* panel (edition) */
+
+.directionsPanel0 {
+	display:flex;
+	flex-direction:row;
+	justify-content: center;
+}
+.directionsPanel {
+	display:flex;
+	flex-direction:column;
+	align-items: center;
+}
+.verticalLayout {
+	display:flex;
+	flex-direction:column;
+	align-items: center;
+}
+.blockTypePanel0 {
+	display:flex;
+	flex-direction:row;
+}
 .buttonSelectionA { background-color:yellow; }
 .buttonSelectionB { background-color:#FF8844; }
 .buttonSelectionC { background-color:#CC88FF; }
