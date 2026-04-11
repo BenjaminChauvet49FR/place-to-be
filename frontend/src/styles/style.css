@@ -168,10 +168,14 @@ nav {
 .buttonSelectionALight { background-color:#ffffaa; }
 .buttonSelectionBLight { background-color:#FFddaa; }
 .buttonSelectionCLight { background-color:#eeaaff; }
-.inputA { background-color:#ffffbb; }
-.inputB { background-color:#ffeebb; }
-.inputC { background-color:#fabbff; }
+.inputMoves.A { background-color:#ffffbb; }
+.inputMoves.B { background-color:#ffeebb; }
+.inputMoves.C { background-color:#fabbff; }
 .littleHelp {
 	font-style: italic;
 	font-size:0.6em;
+	white-space: pre;
+}
+.inputMoves {
+	width:2.8em;
 }

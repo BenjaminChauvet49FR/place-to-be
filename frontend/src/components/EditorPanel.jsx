@@ -125,10 +125,10 @@ function EditorPanel({ state, dispatch }) {
               Bloc {type.block}
             </button>
             {"               "}
-            <span className={"littleHelp"}>Coups limites :</span>
+            <span className={"littleHelp"}>{"   "}Coups limites :</span>
             {"  "}
             <input
-              className={`input${type.cn}`}
+              className={`inputMoves ${type.cn}`}
               onChange={(e) => handleMovesChange(type.id, e.target.value)}
               disabled={
                 state.movesInfinite[type.id] ? "disabled" : ""
@@ -150,6 +150,7 @@ function EditorPanel({ state, dispatch }) {
           </div>
         ))}
       </div>
+      <br></br>
       <div>
         <input
           onChange={(e) =>
