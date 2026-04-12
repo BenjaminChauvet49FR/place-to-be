@@ -21,6 +21,7 @@ from authentication.views import *
 from rest_framework import routers
 from rest_framework_simplejwt.views import TokenObtainPairView 
 from rest_framework_simplejwt.views import TokenRefreshView 
+from django.http import JsonResponse
 
 
 # Ici nous créons notre routeur
@@ -32,6 +33,8 @@ router.register('levels', LevelFromUserViewset, basename='levels')
 router.register('level', OwnLevelViewset, basename='level') 
 #router.register('level', OwnLevelViewset, basename='level') # TODO wanting a route for all levels and a route for detail is not so bad JE SAIS PLUS CE QUE JE VEUX DU COUP
 
+def ping(request):
+    return JsonResponse({"status": "ok"})
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -40,4 +43,6 @@ urlpatterns = [
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/levelIdsNOTOnlyForAdmin/', idsNOTOnlyForAdmin, name='ids_only_for_admin'),
     path('api/me/', me, name='me'),
+    path('api/ping/', ping, name='ping'),
+
 ]

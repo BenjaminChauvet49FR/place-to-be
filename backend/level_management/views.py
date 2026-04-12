@@ -45,7 +45,6 @@ def idsNOTOnlyForAdmin(request):
     ids = list(Level.objects.values_list('id', flat=True))
     return Response(ids)
 
-
 '''class AllLevelAdminViewset(ModelViewSet):
     serializer_class = LevelSerializer
     permission_classes = [IsAdminUser]
