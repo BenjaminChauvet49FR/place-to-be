@@ -27,12 +27,11 @@ export default function AuthProvider({ children }) {
         if (res.ok) {
           const data = await res.json();
           setUser(data);
-        } else {
+        } else if (res.status === 401 || res.status === 403) {
           localStorage.removeItem("access_token");
         }
       } catch (error) {
         console.log(error);
-        localStorage.removeItem("access_token");
       }
 
       setLoading(false);
