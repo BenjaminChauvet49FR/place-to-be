@@ -2,7 +2,8 @@ export const API_URL = process.env.REACT_APP_API_URL;
 
 export async function connect(pUsername, pPassword) {
   try {
-    const res = await fetch("http://localhost:8000/api/token/", {
+    // Note : pas de panique, au moment où je pushe ce commit API_URL vaut bien des valeurs différentes en local et en prod !
+    const res = await fetch(API_URL + "/api/token/", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username: pUsername, password: pPassword }),
