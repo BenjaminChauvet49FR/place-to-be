@@ -23,7 +23,7 @@ export default function AuthProvider({ children }) {
             Authorization: `Bearer ${token}`,
           },
         });
-
+        console.log("me status:", res.status);
         if (res.ok) {
           const data = await res.json();
           setUser(data);
