@@ -10,5 +10,4 @@ def me(request): # Note : la "requête" est un token...
     return Response({
         "id": user.id,
         "username": user.username,
-        "email": user.email,
     })
