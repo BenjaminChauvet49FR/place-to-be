@@ -20,6 +20,7 @@ function Header() {
       <StyledLink data-testid="link-editLevel" to={paths.levelListForEditor()}>
         Editer
       </StyledLink>
+      <StyledLink to={paths.newUser()}>Nouvel utilisateur</StyledLink>
       <NameForm></NameForm>
     </nav>
   );

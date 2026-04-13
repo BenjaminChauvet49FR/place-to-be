@@ -15,6 +15,8 @@ import LevelEditProvider from "./context/LevelEditContext.jsx";
 import LevelPlayProvider from "./context/LevelPlayContext.jsx";
 import AuthProvider from "./context/AuthContext.jsx";
 
+import NewUser from "./pages/NewUser/index.jsx";
+
 import Header from "./components/Header.jsx";
 
 import PrivateEditRoute from "./PrivateEditRoute.jsx";
@@ -33,6 +35,7 @@ export const paths = {
   playing: () => `/editLevel/playing`,
   noEditLevel: () => `/doNotEditLevel`,
   notFoundLevel: () => `/notFoundLevel`,
+  newUser: () => `/newUser`,
   home: () => `/`,
 };
 const privatePaths = {
@@ -70,6 +73,8 @@ root.render(
                 path={privatePaths.playLevelId()}
                 element={<PlayingFromFree />}
               />
+              <Route path={paths.newUser()} element={<NewUser />} />
+
               <Route path={paths.home()} element={<Lobby />} />
             </Routes>
           </Router>
