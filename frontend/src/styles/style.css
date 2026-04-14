@@ -17,19 +17,21 @@ nav {
 /* ------------------ */
 /* menu de selection de niveau (jeu et edition) */
 
-.level_menu div {
+.level_list div {
 	width:20em;
 	border-style:outset
 }
 .level_new {
+	width:16em;
+	border-style:outset;
 	background-color: #fafffa;
 }
 
-.level_menu div:nth-child(even):not(:last-child) {
+.level_list div:nth-child(even) {
 	background-color: #ffeeff;
 }
 
-.level_menu div:nth-child(odd):not(:last-child) {
+.level_list div:nth-child(odd) {
 	background-color: #fafaff;
 }
 .delete{
