@@ -5,7 +5,7 @@ class Level(models.Model):
 
     data = models.fields.CharField(max_length=400)
     name = models.fields.CharField(max_length=100, default='')
-    position = models.PositiveIntegerField(null=True, blank=True)
+    position = models.PositiveIntegerField(default=0)
 
     creator = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -17,3 +17,13 @@ class Level(models.Model):
 
     def __str__(self):
         return self.name
+    
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=["creator", "position"],
+                name="unique_position_per_creator"
+            )
+        ]
+
+        ordering = ["position", "id"]
