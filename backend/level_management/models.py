@@ -5,6 +5,7 @@ class Level(models.Model):
 
     data = models.fields.CharField(max_length=400)
     name = models.fields.CharField(max_length=100, default='')
+    position = models.PositiveIntegerField(null=True, blank=True)
 
     creator = models.ForeignKey(
         settings.AUTH_USER_MODEL,
