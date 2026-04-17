@@ -74,7 +74,7 @@ export default function LevelListForEditor() {
           console.log(error);
           window.alert("Echec du chargement des niveaux !");
         })
-        .finally(setLoading(false)),
+        .finally(() => setLoading(false)),
     );
   }, []);
 
