@@ -37,7 +37,7 @@ export default function LevelListForPlayer() {
         <div>Chargement en cours</div>
       ) : (
         levelListJSON.map((level, key) => (
-          <div key={`O${key}`}>
+          <div key={`O${key}`} role="listitem">
             <Link to={paths.playLevel(level.id)}>
               {level.name === "" ? "(anonyme)" : level.name}
             </Link>
