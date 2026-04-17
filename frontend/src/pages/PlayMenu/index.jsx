@@ -30,7 +30,7 @@ export default function LevelListForPlayer() {
   }, []);
 
   return (
-    <div className="level_menu">
+    <div className="level_list">
       <div>--- Jouer à un niveau ---</div>
 
       {loading ? (
