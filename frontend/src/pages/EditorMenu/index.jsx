@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "../../styles/style.css";
 import * as saveLoad from "../../logic/saveLoad";
-import { paths } from "../../index";
+import { paths } from "../../utils/paths.jsx";
 import { API_URL } from "../../utils/api.jsx";
 
 import { DndContext, closestCenter } from "@dnd-kit/core";

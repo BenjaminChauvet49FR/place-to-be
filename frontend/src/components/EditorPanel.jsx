@@ -9,7 +9,7 @@ import {
 import "../styles/style.css";
 import { useNavigate } from "react-router-dom";
 import * as saveLoad from "../logic/saveLoad";
-import { paths } from "../index.js";
+import { paths } from "../utils/paths.jsx";
 import { loadAndSaveALLLevels } from "../logic/encodingBascule.jsx";
 
 function EditorPanel({ state, dispatch }) {

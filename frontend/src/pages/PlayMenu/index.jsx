@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "../../styles/style.css";
-import { paths } from "../../index";
+import { paths } from "../../utils/paths.jsx";
 import { API_URL } from "../../utils/api.jsx";
 
 export default function LevelListForPlayer() {

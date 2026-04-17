@@ -1,5 +1,5 @@
 import { useGameplay } from "../logic/gameplay.jsx";
-import { paths, doIComeFromEditor } from "../index";
+import { paths, doIComeFromEditor } from "../utils/paths.jsx";
 
 import { DIRECTION, NO_ID_LEVEL } from "../logic/constants.jsx";
 

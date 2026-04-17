@@ -1,7 +1,7 @@
 import { createUser } from "../../utils/api.jsx";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { paths } from "../../index.js";
+import { paths } from "../../utils/paths.jsx";
 import { useAuth } from "../../context/AuthContext.jsx";
 
 export default function NewUser() {

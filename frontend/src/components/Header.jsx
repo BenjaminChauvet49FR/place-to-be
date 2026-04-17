@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import "../styles/style.css";
-import { paths } from "../index";
+import { paths } from "../utils/paths.jsx";
 import NameForm from "./NameForm";
 
 const StyledLink = styled(Link)`
@@ -10,6 +10,8 @@ const StyledLink = styled(Link)`
   text-decoration: none;
   font-size: 18px;
 `;
+
+console.log("INDEX LOADED");
 
 function Header() {
   return (

@@ -1,4 +1,4 @@
-import { paths } from "../../index.js";
+import { paths } from "../../utils/paths.jsx";
 import { Link } from "react-router-dom";
 
 export default function NotFoundLevel() {

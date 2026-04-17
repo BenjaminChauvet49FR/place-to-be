@@ -7,7 +7,7 @@ import { useParams, useNavigate } from "react-router-dom";
 
 import { useContext } from "react";
 import { LevelEditContext } from "../../context/LevelEditContext";
-import { paths } from "../../index.js";
+import { paths } from "../../utils/paths.jsx";
 
 // -----------------------
 

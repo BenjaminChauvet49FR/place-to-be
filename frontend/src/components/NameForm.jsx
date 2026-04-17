@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { paths } from "../index.js";
+import { paths } from "../utils/paths.jsx";
 import { connect } from "../utils/api.jsx";
 import { useAuth } from "../context/AuthContext.jsx";
 
