@@ -24,7 +24,9 @@ class OwnLevelViewset(ModelViewSet):
         return Level.objects.filter(creator=user)
     
     def perform_create(self, serializer):
-        serializer.save(creator=self.request.user)
+        user = self.request.user
+        allPos = map(lambda lvl:lvl.position, Level.objects.filter(creator=user))
+        serializer.save(creator=self.request.user, position=max(allPos)+1)
 
 class LevelFromUserViewset(ModelViewSet):
     serializer_class = LevelSerializer
