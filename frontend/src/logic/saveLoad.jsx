@@ -98,6 +98,7 @@ export function saveLevel(pState, pDispatch) {
       )
       .catch((error) => {
         window.alert("Echec dans l'enregistrement du niveau !");
+        throw error;
       });
   } else {
     return fetch(API_URL + "/api/level/" + id + "/", {
@@ -114,6 +115,7 @@ export function saveLevel(pState, pDispatch) {
       .then(async (response) => response.json().then((levelData) => {}))
       .catch((error) => {
         window.alert("Echec dans l'enregistrement du niveau !");
+        throw error;
       });
   }
 }
