@@ -29,7 +29,8 @@ router = routers.SimpleRouter()
 # Puis lui déclarons une url basée sur le mot clé level et notre view
 # afin que l’url générée soit celle que nous souhaitons ‘/api/level/’
 router.register('myLevels', OwnLevelViewset, basename='myLevels')
-router.register('levels', LevelFromUserViewset, basename='levels')
+router.register('levelsGeneralPublic', LevelFromUsersViewset, basename='levels')
+router.register('levelsMainQuest', LevelFromMainQuestViewSet, basename='levelsMQ')
 router.register('level', OwnLevelViewset, basename='level') 
 #router.register('level', OwnLevelViewset, basename='level') # TODO wanting a route for all levels and a route for detail is not so bad JE SAIS PLUS CE QUE JE VEUX DU COUP
 
@@ -41,10 +42,8 @@ urlpatterns = [
     path('api/', include(router.urls)),  # Il faut bien penser à ajouter les urls du router dans la liste des urls disponibles.
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path('api/levelIdsNOTOnlyForAdmin/', idsNOTOnlyForAdmin, name='ids_only_for_admin'),
     path('api/me/', me, name='me'),
     path('api/ping/', ping, name='ping'),
     path('api/register/', register, name='register'),
     path('api/reorder/', reorder, name='reorder')
-
 ]

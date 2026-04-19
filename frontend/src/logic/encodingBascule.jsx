@@ -4,7 +4,7 @@ import { API_URL } from "../utils/api.jsx";
 // Transfer ALL levels from the previous encoding system to the new one ! (by loading all systems and resaving them)
 // Use with care !
 async function loadAllLevels() {
-  const response = await fetch(`${API_URL}/api/levelIdsNOTOnlyForAdmin/`); // TODO change that, of course
+  const response = await fetch(`${API_URL}/api/TODO/`); // TODO make an endpoint with absolutely all levels !
   if (!response.ok) {
     throw new Error("Impossible de récupérer la liste des niveaux !");
   }

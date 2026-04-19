@@ -2,6 +2,8 @@ import { Outlet } from "react-router-dom";
 
 import { useAuth } from "./context/AuthContext.jsx";
 import NoEditLevel from "./pages/NoEditLevel/index.jsx";
+import NoMainQuest from "./pages/NoMainQuest/index.jsx";
+import { amIInMainQuest } from "./utils/paths.jsx";
 
 export default function PrivateEditRoute() {
   const { user, loading } = useAuth();
@@ -10,7 +12,10 @@ export default function PrivateEditRoute() {
 
   // if (!user) return <Navigate to={paths.noEditLevel()} />; Good, but it always redirected towards the page "doNotEditLevel"... a bit weird. We can do better, by not changing the address of the page we are on.
 
-  if (!user) return <NoEditLevel />;
+  if (!user) {
+    if (amIInMainQuest()) return <NoMainQuest />;
+    else return <NoEditLevel />;
+  }
 
   return <Outlet />;
 }

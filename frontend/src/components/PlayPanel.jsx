@@ -1,5 +1,5 @@
 import { useGameplay } from "../logic/gameplay.jsx";
-import { paths, doIComeFromEditor } from "../utils/paths.jsx";
+import { paths, doIComeFromEditor, amIInMainQuest } from "../utils/paths.jsx";
 
 import { DIRECTION, NO_ID_LEVEL } from "../logic/constants.jsx";
 
@@ -19,6 +19,10 @@ function PlayPanel() {
     } else {
       navigate(paths.editLevel(editContext.state.levelID));
     }
+  }
+
+  function backToMainQuest() {
+    navigate(paths.levelListForMainQuest());
   }
 
   const {
@@ -90,6 +94,10 @@ function PlayPanel() {
 
       {doIComeFromEditor() ? (
         <button onClick={() => backToEdition()}>Retour a l'edition</button>
+      ) : amIInMainQuest() ? (
+        <button onClick={() => backToMainQuest()}>
+          Retour au choix du niveau
+        </button>
       ) : null}
     </div>
   );

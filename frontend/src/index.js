@@ -4,11 +4,14 @@ import { createRoot } from "react-dom/client";
 import { paths } from "./utils/paths.jsx";
 
 import PlayMenu from "./pages/PlayMenu/";
+import MainQuestMenu from "./pages/MainQuestMenu/index.jsx";
 import PlayingFromEdit from "./pages/Playing_FromEdit/index.jsx";
 import PlayingFromFree from "./pages/Playing_FromFree/index.jsx";
+import PlayingFromQuest from "./pages/Playing_FromQuest/index.jsx";
 import Lobby from "./pages/Lobby/index.jsx";
 import NoEditLevel from "./pages/NoEditLevel/index.jsx";
 import NotFoundLevel from "./pages/NotFoundLevel/index.jsx";
+import NoLevelQuest from "./pages/NoLevelQuest/index.jsx";
 
 import EditorMenu from "./pages/EditorMenu/";
 import Editor from "./pages/Editor/";
@@ -20,7 +23,7 @@ import NewUser from "./pages/NewUser/index.jsx";
 
 import Header from "./components/Header.jsx";
 
-import PrivateEditRoute from "./PrivateEditRoute.jsx";
+import PrivateRoute from "./PrivateRoute.jsx";
 
 import reportWebVitals from "./reportWebVitals";
 
@@ -35,23 +38,31 @@ root.render(
           <Router>
             <Header />
             <Routes>
-              <Route element={<PrivateEditRoute />}>
+              <Route element={<PrivateRoute />}>
                 <Route
                   path={paths.levelListForEditor()}
                   element={<EditorMenu />}
                 />
                 <Route path={paths.editLevelId()} element={<Editor />} />
+                <Route
+                  path={paths.levelListForMainQuest()}
+                  element={<MainQuestMenu />}
+                />
               </Route>
 
               <Route path={paths.noEditLevel()} element={<NoEditLevel />} />
               <Route path={paths.notFoundLevel()} element={<NotFoundLevel />} />
+              <Route path={paths.noLevelQuest()} element={<NoLevelQuest />} />
 
               <Route path={paths.playing()} element={<PlayingFromEdit />} />
 
               <Route path={paths.levelListForPlay()} element={<PlayMenu />} />
               <Route path={paths.playLevelId()} element={<PlayingFromFree />} />
+              <Route
+                path={paths.playLevelQuestNumber()}
+                element={<PlayingFromQuest />}
+              />
               <Route path={paths.newUser()} element={<NewUser />} />
-
               <Route path={paths.home()} element={<Lobby />} />
             </Routes>
           </Router>

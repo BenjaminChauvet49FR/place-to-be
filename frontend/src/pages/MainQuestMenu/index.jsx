@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "../../styles/style.css";
 import { paths } from "../../utils/paths.jsx";
-import { API_URL, API_LEVELS_GENERAL_PUBLIC } from "../../utils/api.jsx";
+import { API_URL, API_LEVEL_MAIN_QUEST } from "../../utils/api.jsx";
 
-export default function LevelListForPlayer() {
+export default function MainQuestMenu() {
   const [loading, setLoading] = useState(false);
   const [levelListJSON, setLevelListJSON] = useState([]);
 
@@ -12,13 +12,14 @@ export default function LevelListForPlayer() {
     // TODO : attention au double render !
     setLoading(true);
 
-    fetch(`${API_URL}/${API_LEVELS_GENERAL_PUBLIC}/`, {
-      headers: {},
+    fetch(`${API_URL}/${API_LEVEL_MAIN_QUEST}/`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+      },
     }).then((response) =>
       response
         .json()
         .then((data) => {
-          //          console.log(data);
           setLevelListJSON(data.results);
         })
         .catch((error) => {
@@ -31,17 +32,17 @@ export default function LevelListForPlayer() {
 
   return (
     <div className="level_list">
-      <div>--- Jouer à un niveau ---</div>
+      <div>--- Quête principale ---</div>
 
       {loading ? (
         <div>Chargement en cours</div>
       ) : (
         levelListJSON.map((level, key) => (
           <div key={`O${key}`} role="listitem">
-            <Link to={paths.playLevel(level.id)}>
+            <span>{level.position} - </span>
+            <Link to={paths.playLevelQuest(level.position)}>
               {level.name === "" ? "(anonyme)" : level.name}
             </Link>
-            <span>{level.authorName}</span>
           </div>
         ))
       )}

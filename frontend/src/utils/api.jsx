@@ -1,4 +1,7 @@
 export const API_URL = process.env.REACT_APP_API_URL;
+export const API_LEVELS_GENERAL_PUBLIC = "api/levelsGeneralPublic";
+export const API_LEVEL_EDIT = "api/level";
+export const API_LEVEL_MAIN_QUEST = "api/levelsMainQuest";
 
 export async function connect(pUsername, pPassword) {
   try {

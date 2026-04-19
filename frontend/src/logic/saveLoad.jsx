@@ -2,7 +2,12 @@ import { NO_ID_LEVEL } from "./constants.jsx";
 
 import * as encodeDecode from "./encodeDecode.jsx";
 
-import { API_URL } from "../utils/api.jsx";
+import {
+  API_URL,
+  API_LEVELS_GENERAL_PUBLIC,
+  API_LEVEL_EDIT,
+  API_LEVEL_MAIN_QUEST,
+} from "../utils/api.jsx";
 import Error404 from "./Errors.js";
 
 export const PREFIX_FOR_BASCULE_ENCODING = "TEST_ENCODING_PURPOSE_ONLY";
@@ -12,22 +17,39 @@ export function loadNewLevel(pDispatch) {
   loadLevelForEditor("99991", "", pDispatch);
 }
 
+const LEVEL_TYPE = {
+  GENERAL_CONNECTED: 0,
+  GENERAL_FREE: 1,
+  MAIN: 2,
+}; // Oh, by the way : main = main quest
+
 export async function loadLevelFromID_CONNECTED(pID, pDispatch) {
-  await loadLevelFromID_aux(pID, pDispatch, false);
+  await loadLevelFromID_aux(pID, pDispatch, LEVEL_TYPE.GENERAL_CONNECTED);
 }
 
 export async function loadLevelFromID_FREE(pID, pDispatch) {
-  await loadLevelFromID_aux(pID, pDispatch, true);
+  await loadLevelFromID_aux(pID, pDispatch, LEVEL_TYPE.GENERAL_FREE);
 }
 
-async function loadLevelFromID_aux(pID, pDispatch, pFree) {
+export async function loadMainLevelFromNUMBER_CONNECTED(pNUMBER, pDispatch) {
+  await loadLevelFromID_aux(pNUMBER, pDispatch, LEVEL_TYPE.MAIN);
+}
+
+async function loadLevelFromID_aux(pID_NB, pDispatch, pLevelType) {
+  // pID_NB : ID or number
   let headers = {};
-  let url = `${API_URL}/api/levels/${pID}`;
-  if (!pFree) {
+  let url = `${API_URL}/${API_LEVELS_GENERAL_PUBLIC}/${pID_NB}`;
+  if (pLevelType === LEVEL_TYPE.GENERAL_CONNECTED) {
     headers = {
       Authorization: `Bearer ${localStorage.getItem("access_token")}`,
     };
-    url = `${API_URL}/api/level/${pID}`;
+    url = `${API_URL}/${API_LEVEL_EDIT}/${pID_NB}`;
+  }
+  if (pLevelType === LEVEL_TYPE.MAIN) {
+    headers = {
+      Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+    };
+    url = `${API_URL}/${API_LEVEL_MAIN_QUEST}/${pID_NB}`;
   }
   await fetch(url, { headers: headers })
     .then((response) => {
@@ -42,7 +64,13 @@ async function loadLevelFromID_aux(pID, pDispatch, pFree) {
         loadLevelForEditor(levelData.data, levelData.name, pDispatch);
       } catch (error) {
         console.log(error);
-        window.alert("Impossible de charger le niveau d'id " + pID);
+        let errorMsg;
+        if (pLevelType === LEVEL_TYPE.MAIN) {
+          errorMsg = "Impossible de charger le niveau d'id" + pID_NB;
+        } else {
+          errorMsg = "Impossible de charger le niveau de numéro " + pID_NB;
+        }
+        window.alert(errorMsg); // TODO distinguer ces messages d'erreur
         throw error;
       }
     });

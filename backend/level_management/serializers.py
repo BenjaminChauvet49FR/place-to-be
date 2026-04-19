@@ -6,4 +6,4 @@ class LevelSerializer(ModelSerializer):
  
     class Meta:
         model = Level
-        fields = ['id', 'name', 'data']
+        fields = ['id', 'name', 'data', 'position']

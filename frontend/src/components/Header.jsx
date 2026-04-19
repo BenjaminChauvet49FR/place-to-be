@@ -16,6 +16,12 @@ console.log("INDEX LOADED");
 function Header() {
   return (
     <nav>
+      <StyledLink
+        data-testid="link-mainQuestMenu"
+        to={paths.levelListForMainQuest()}
+      >
+        Quête principale
+      </StyledLink>
       <StyledLink data-testid="link-playMenu" to={paths.levelListForPlay()}>
         Jouer
       </StyledLink>

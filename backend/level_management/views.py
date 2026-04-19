@@ -30,11 +30,11 @@ class OwnLevelViewset(ModelViewSet):
         allPos = map(lambda lvl:lvl.position, Level.objects.filter(creator=user))
         serializer.save(creator=self.request.user, position=max(allPos)+1)
 
-class LevelFromUserViewset(ModelViewSet):
+class LevelFromUsersViewset(ModelViewSet):
     serializer_class = LevelSerializer
 
     def get_queryset(self):
-        queryset = Level.objects.all()
+        queryset = Level.objects.exclude(creator__username__startswith="___BenjAdmin")
         creator_name = self.request.query_params.get("creator")
         if creator_name:
             try:
@@ -44,9 +44,19 @@ class LevelFromUserViewset(ModelViewSet):
                 queryset = queryset.none()
         return queryset
 
+class LevelFromMainQuestViewSet(ModelViewSet):
+    serializer_class = LevelSerializer
+    permission_classes = [IsAuthenticated]
+    lookup_field = "position" # Cette ligne est TRES IMPORTANTE ! Elle permet de vérifier sur les positions et non les id. 
+    
+    def get_queryset(self):
+        queryset = Level.objects.filter(creator__username__startswith="___BenjAdmin")
+        # TODO modifier le modèle pour prendre en compte les niveaux atteints
+        return queryset
+
 @api_view(['GET'])
-def idsNOTOnlyForAdmin(request):
-    ids = list(Level.objects.values_list('id', flat=True))
+def idsGeneralPublic(request):
+    ids = list(Level.objects.exclude(creator__username__startswith="___BenjAdmin").values_list('id', flat=True))
     return Response(ids)
 
 '''class AllLevelAdminViewset(ModelViewSet):
