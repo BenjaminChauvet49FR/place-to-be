@@ -133,3 +133,20 @@ export async function deleteLevel(id) {
     throw new Error("Impossible de supprimer le niveau");
   }
 }
+
+export async function reorderLevels(pLevelList) {
+  const response = await fetch(`${API_URL}/api/reorder/`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+    },
+    body: JSON.stringify({
+      idList: pLevelList,
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error("Impossible de réordonner les niveaux !");
+  }
+}

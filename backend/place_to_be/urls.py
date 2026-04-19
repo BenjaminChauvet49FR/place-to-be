@@ -44,6 +44,7 @@ urlpatterns = [
     path('api/levelIdsNOTOnlyForAdmin/', idsNOTOnlyForAdmin, name='ids_only_for_admin'),
     path('api/me/', me, name='me'),
     path('api/ping/', ping, name='ping'),
-    path('api/register/', register, name='register')
+    path('api/register/', register, name='register'),
+    path('api/reorder/', reorder, name='reorder')
 
 ]

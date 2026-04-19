@@ -117,7 +117,6 @@ export default function LevelListForEditor() {
 
   function finishReorder() {
     console.log("Nouvel ordre :", levelListJSON);
-
     // POST vers Django !
     saveLoad.reorderLevels(levelListJSON.map((level) => level.id));
     setDragMode(false);
