@@ -10,8 +10,6 @@ export default function PrivateEditRoute() {
 
   if (loading) return <div>Chargement...</div>;
 
-  // if (!user) return <Navigate to={paths.noEditLevel()} />; Good, but it always redirected towards the page "doNotEditLevel"... a bit weird. We can do better, by not changing the address of the page we are on.
-
   if (!user) {
     if (amIInMainQuest()) return <NoMainQuest />;
     else return <NoEditLevel />;

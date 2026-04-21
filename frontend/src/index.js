@@ -9,7 +9,6 @@ import PlayingFromEdit from "./pages/Playing_FromEdit/index.jsx";
 import PlayingFromFree from "./pages/Playing_FromFree/index.jsx";
 import PlayingFromQuest from "./pages/Playing_FromQuest/index.jsx";
 import Lobby from "./pages/Lobby/index.jsx";
-import NoEditLevel from "./pages/NoEditLevel/index.jsx";
 import NotFoundLevel from "./pages/NotFoundLevel/index.jsx";
 import NoLevelQuest from "./pages/NoLevelQuest/index.jsx";
 
@@ -43,23 +42,31 @@ root.render(
                   path={paths.levelListForEditor()}
                   element={<EditorMenu />}
                 />
-                <Route path={paths.editLevelId()} element={<Editor />} />
+                <Route path={paths.editLevelRouter()} element={<Editor />} />
                 <Route
                   path={paths.levelListForMainQuest()}
                   element={<MainQuestMenu />}
                 />
               </Route>
 
-              <Route path={paths.noEditLevel()} element={<NoEditLevel />} />
               <Route path={paths.notFoundLevel()} element={<NotFoundLevel />} />
               <Route path={paths.noLevelQuest()} element={<NoLevelQuest />} />
 
-              <Route path={paths.playing()} element={<PlayingFromEdit />} />
-
-              <Route path={paths.levelListForPlay()} element={<PlayMenu />} />
-              <Route path={paths.playLevelId()} element={<PlayingFromFree />} />
               <Route
-                path={paths.playLevelQuestNumber()}
+                path={paths.editLevelPlaying()}
+                element={<PlayingFromEdit />}
+              />
+
+              <Route
+                path={paths.levelListForFreePlay()}
+                element={<PlayMenu />}
+              />
+              <Route
+                path={paths.playLevelFreeRouter()}
+                element={<PlayingFromFree />}
+              />
+              <Route
+                path={paths.playLevelQuestRouter()}
                 element={<PlayingFromQuest />}
               />
               <Route path={paths.newUser()} element={<NewUser />} />

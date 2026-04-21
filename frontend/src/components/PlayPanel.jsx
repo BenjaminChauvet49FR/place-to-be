@@ -15,7 +15,7 @@ function PlayPanel() {
   function backToEdition() {
     editContext.dispatch({ type: "keepEditorState" });
     if (editContext.state.levelID === NO_ID_LEVEL) {
-      navigate(paths.editNewLevel());
+      navigate(paths.editLevelNew());
     } else {
       navigate(paths.editLevel(editContext.state.levelID));
     }

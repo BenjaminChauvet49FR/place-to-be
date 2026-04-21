@@ -4,7 +4,7 @@ import "../../styles/style.css";
 import { paths } from "../../utils/paths.jsx";
 import { API_URL, API_LEVELS_GENERAL_PUBLIC } from "../../utils/api.jsx";
 
-export default function LevelListForPlayer() {
+export default function PlayMenu() {
   const [loading, setLoading] = useState(false);
   const [levelListJSON, setLevelListJSON] = useState([]);
 
@@ -38,7 +38,7 @@ export default function LevelListForPlayer() {
       ) : (
         levelListJSON.map((level, key) => (
           <div key={`O${key}`} role="listitem">
-            <Link to={paths.playLevel(level.id)}>
+            <Link to={paths.playLevelFree(level.id)}>
               {level.name === "" ? "(anonyme)" : level.name}
             </Link>
             <span>{level.authorName}</span>

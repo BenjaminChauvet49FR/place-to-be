@@ -22,7 +22,7 @@ function Header() {
       >
         Quête principale
       </StyledLink>
-      <StyledLink data-testid="link-playMenu" to={paths.levelListForPlay()}>
+      <StyledLink data-testid="link-playMenu" to={paths.levelListForFreePlay()}>
         Jouer
       </StyledLink>
       <StyledLink data-testid="link-editLevel" to={paths.levelListForEditor()}>

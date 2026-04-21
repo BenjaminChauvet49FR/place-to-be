@@ -1,20 +1,31 @@
 export const paths = {
-  editLevel: (id) => `/editLevel/${id}`,
-  editNewLevel: () => `/editLevel/new`,
+  home: () => `/`,
+  newUser: () => `/newUser`,
+
+  // Distnction editLevelColon / editLevel :
+  // Le premier sert dans le routeur, avec :levelId, pour indiquer une route. Le second sert pour rejoindre directement une page, via
+
+  // Edition de niveaux (liste - edition - jeu depuis edition)
   levelListForEditor: () => `/edit`,
-  levelListForPlay: () => `/play`,
+  editLevel: (id) => `/editLevel/${id}`,
+  editLevelRouter: () => "/editLevel/:levelId",
+  editLevelNew: () => `/editLevel/new`,
+  editLevelPlaying: () => `/editLevel/playing`,
+
+  // Niveaux, categorie libre
+  levelListForFreePlay: () => `/play`,
+  playLevelFreeRouter: () => "/play/:levelId",
+  playLevelFree: (id) => `/play/${id}`,
+
+  // Niveaux, categorie principale
   levelListForMainQuest: () => `/quest`,
-  playLevel: (id) => `/play/${id}`,
-  playing: () => `/editLevel/playing`,
-  noEditLevel: () => `/doNotEditLevel`,
+  playLevelQuestRouter: () => "/quest/:levelNumber",
+  playLevelQuest: (nb) => `/quest/${nb}`,
+
+  // Niveau non trouvé
   notFoundLevel: () => `/notFoundLevel`,
   noLevelQuest: () => `/noLevelQuest`,
-  newUser: () => `/newUser`,
-  home: () => `/`,
-  editLevelId: () => "/editLevel/:levelId",
-  playLevelId: () => "/play/:levelId",
-  playLevelQuestNumber: () => "/quest/:levelNumber",
-  playLevelQuest: (nb) => `/quest/${nb}`,
+  // Note : les liens "accès à une liste de niveaux" sont directement dans PrivateRoute.jsx ...
 };
 
 export function doIComeFromEditor() {

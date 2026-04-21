@@ -80,7 +80,7 @@ function EditorPanel({ state, dispatch }) {
   }
 
   function playtestLevel() {
-    navigate(paths.playing());
+    navigate(paths.editLevelPlaying());
   }
 
   function handleMovesChange(pBlockId, pValue) {

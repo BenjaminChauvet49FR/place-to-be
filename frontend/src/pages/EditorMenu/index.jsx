@@ -174,7 +174,7 @@ export default function LevelListForEditor() {
       {dragMode ? null : (
         <>
           <div className="level_new">
-            <Link to={paths.editNewLevel()}>(Nouveau)</Link>
+            <Link to={paths.editLevelNew()}>(Nouveau)</Link>
           </div>
           <button onClick={() => startReorder()}>Déplacer niveaux</button>{" "}
         </>
