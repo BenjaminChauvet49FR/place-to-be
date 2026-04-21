@@ -32,6 +32,13 @@ export function doIComeFromEditor() {
   return window.location.pathname.includes("playing");
 }
 
+export function amIInFreePlay() {
+  return (
+    window.location.pathname.includes("play") &&
+    !window.location.pathname.includes("ing")
+  );
+}
+
 export function amIInMainQuest() {
   return window.location.pathname.includes("quest");
 }

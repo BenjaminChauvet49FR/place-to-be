@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { paths } from "../../utils/paths.jsx";
 import { useAuth } from "../../context/AuthContext.jsx";
 
-export default function NewUser() {
+export default function Page() {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [password2, setPassword2] = useState("");

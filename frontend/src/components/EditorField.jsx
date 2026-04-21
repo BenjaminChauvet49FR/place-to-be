@@ -12,7 +12,7 @@ import "../styles/style.css";
 import { useContext } from "react";
 import { LevelEditContext } from "../context/LevelEditContext.jsx";
 
-function EditorField({ loadingPackage }) {
+export default function Component({ loadingPackage }) {
   const { state, dispatch } = useContext(LevelEditContext);
   const xLength = state.gridF[0].length;
   const yLength = state.gridF.length;
@@ -114,5 +114,3 @@ function EditorField({ loadingPackage }) {
     </div>
   );
 }
-
-export default EditorField;

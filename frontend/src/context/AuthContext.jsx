@@ -3,7 +3,7 @@ import { API_URL } from "../utils/api.jsx";
 
 const AuthContext = createContext(null);
 
-export default function AuthProvider({ children }) {
+export default function Provider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 

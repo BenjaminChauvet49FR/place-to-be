@@ -3,7 +3,7 @@ import { levelPlayReducer, initialState } from "./levelPlayReducer.jsx";
 
 export const LevelPlayContext = createContext();
 
-export default function LevelPlayProvider({ children }) {
+export default function Provider({ children }) {
   const [state, dispatch] = useReducer(levelPlayReducer, initialState);
 
   return (

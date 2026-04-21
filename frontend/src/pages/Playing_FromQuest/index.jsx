@@ -6,7 +6,7 @@ import Error404 from "../../logic/Errors.js";
 import Playing from "../../components/Playing.jsx";
 import { paths } from "../../utils/paths.jsx";
 
-export default function PlayingFromQuest() {
+export default function Page() {
   const navigate = useNavigate();
 
   const uce = useContext(LevelEditContext);

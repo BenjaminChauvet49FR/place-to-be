@@ -4,7 +4,7 @@ import { paths } from "../utils/paths.jsx";
 import { connect } from "../utils/api.jsx";
 import { useAuth } from "../context/AuthContext.jsx";
 
-function NameForm() {
+export default function Component() {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -71,5 +71,3 @@ function NameForm() {
     </div>
   );
 }
-
-export default NameForm;

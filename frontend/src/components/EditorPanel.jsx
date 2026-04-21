@@ -12,7 +12,7 @@ import * as saveLoad from "../logic/saveLoad";
 import { paths } from "../utils/paths.jsx";
 import { loadAndSaveALLLevels } from "../logic/encodingBascule.jsx";
 
-function EditorPanel({ state, dispatch }) {
+export default function Component({ state, dispatch }) {
   function captionItemSelected(pSpace, pBlock) {
     //console.log("captionItemSelected : " + pSpace + pBlock); (great for debug)
     return (
@@ -177,5 +177,3 @@ function EditorPanel({ state, dispatch }) {
     </div>
   );
 }
-
-export default EditorPanel;

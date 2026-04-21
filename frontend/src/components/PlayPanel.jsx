@@ -1,5 +1,10 @@
 import { useGameplay } from "../logic/gameplay.jsx";
-import { paths, doIComeFromEditor, amIInMainQuest } from "../utils/paths.jsx";
+import {
+  paths,
+  doIComeFromEditor,
+  amIInFreePlay,
+  amIInMainQuest,
+} from "../utils/paths.jsx";
 
 import { DIRECTION, NO_ID_LEVEL } from "../logic/constants.jsx";
 
@@ -7,7 +12,7 @@ import { useContext } from "react";
 import { LevelEditContext } from "../context/LevelEditContext.jsx";
 import { useNavigate } from "react-router-dom";
 
-function PlayPanel() {
+export default function Component() {
   const editContext = useContext(LevelEditContext);
 
   const navigate = useNavigate();
@@ -94,13 +99,17 @@ function PlayPanel() {
 
       {doIComeFromEditor() ? (
         <button onClick={() => backToEdition()}>Retour a l'edition</button>
+      ) : amIInFreePlay() ? (
+        <button onClick={() => backToMainQuest()}>
+          Retour au choix du niveau
+        </button>
       ) : amIInMainQuest() ? (
         <button onClick={() => backToMainQuest()}>
           Retour au choix du niveau
         </button>
-      ) : null}
+      ) : (
+        <button className="error">NE DEVRAIT PAS APPARAITRE</button>
+      )}
     </div>
   );
 }
-
-export default PlayPanel;

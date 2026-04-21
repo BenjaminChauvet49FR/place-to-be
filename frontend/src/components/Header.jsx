@@ -13,7 +13,7 @@ const StyledLink = styled(Link)`
 
 console.log("INDEX LOADED");
 
-function Header() {
+export default function Component() {
   return (
     <nav>
       <StyledLink
@@ -33,5 +33,3 @@ function Header() {
     </nav>
   );
 }
-
-export default Header;

@@ -11,7 +11,7 @@ import { paths } from "../../utils/paths.jsx";
 
 // -----------------------
 
-export default function Editor() {
+export default function Page() {
   const { levelId } = useParams(); // Remember : same name as in router mandatory, or else... undefined !
   let trueLevelId = 0;
   if (levelId !== "new") {

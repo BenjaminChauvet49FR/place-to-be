@@ -13,7 +13,7 @@ import "../styles/style.css";
 import { useContext } from "react";
 import { LevelPlayContext } from "../context/LevelPlayContext.jsx";
 
-function PlayField() {
+export default function Component() {
   const lpc = useContext(LevelPlayContext);
   const state = lpc.state;
   const itemsInGrid = state.itemsInGrid;
@@ -92,5 +92,3 @@ function PlayField() {
     </div>
   );
 }
-
-export default PlayField;

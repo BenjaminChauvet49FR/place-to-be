@@ -1,14 +1,11 @@
-import { paths } from "../../utils/paths.jsx";
-import { Link } from "react-router-dom";
-
-export default function NoEditLevel() {
+import UserOrLobby from "../../components/UserOrLobby.jsx";
+export default function Page() {
   return (
     <div>
       Vous tentez d'accéder à une page d'édition de niveau(x). Seul l'auteur
       du/des niveau(x) peut y accéder.
       <br />
-      Si c'est vous, veuillez vous connecter.{" "}
-      <Link to={paths.home()}>Retour à l'accueil</Link>
+      Si c'est vous, veuillez vous connecter. <UserOrLobby />
     </div>
   );
 }

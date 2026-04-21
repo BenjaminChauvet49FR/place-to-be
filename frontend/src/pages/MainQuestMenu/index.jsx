@@ -4,7 +4,7 @@ import "../../styles/style.css";
 import { paths } from "../../utils/paths.jsx";
 import { API_URL, API_LEVEL_MAIN_QUEST } from "../../utils/api.jsx";
 
-export default function MainQuestMenu() {
+export default function Page() {
   const [loading, setLoading] = useState(false);
   const [levelListJSON, setLevelListJSON] = useState([]);
 

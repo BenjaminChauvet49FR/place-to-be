@@ -4,7 +4,7 @@ import "../../styles/style.css";
 import { paths } from "../../utils/paths.jsx";
 import { API_URL, API_LEVELS_GENERAL_PUBLIC } from "../../utils/api.jsx";
 
-export default function PlayMenu() {
+export default function Page() {
   const [loading, setLoading] = useState(false);
   const [levelListJSON, setLevelListJSON] = useState([]);
 

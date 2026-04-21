@@ -51,7 +51,7 @@ function findByLevelIndex(pList, pId) {
   return -1;
 }
 
-export default function LevelListForEditor() {
+export default function Page() {
   const [loading, setLoading] = useState(false);
   const [levelListJSON, setLevelListJSON] = useState([]);
 

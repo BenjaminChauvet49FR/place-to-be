@@ -187,3 +187,10 @@ nav {
 .inputMoves {
 	width:2.8em;
 }
+
+/* ------------------ */
+/* divers */
+.error {
+	color : #ff4400;
+	background-color : #880000;
+}

@@ -3,7 +3,7 @@ import { levelEditReducer, initialState } from "./levelEditReducer";
 
 export const LevelEditContext = createContext();
 
-export default function LevelEditProvider({ children }) {
+export default function Provider({ children }) {
   const [state, dispatch] = useReducer(levelEditReducer, initialState);
 
   return (
