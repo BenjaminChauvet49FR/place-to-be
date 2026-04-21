@@ -2,29 +2,34 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { createRoot } from "react-dom/client";
 import { paths } from "./utils/paths.jsx";
+import reportWebVitals from "./reportWebVitals";
 
-import PlayMenu from "./pages/PlayMenu/";
-import MainQuestMenu from "./pages/MainQuestMenu/index.jsx";
-import PlayingFromEdit from "./pages/Playing_FromEdit/index.jsx";
-import PlayingFromFree from "./pages/Playing_FromFree/index.jsx";
-import PlayingFromQuest from "./pages/Playing_FromQuest/index.jsx";
-import Lobby from "./pages/Lobby/index.jsx";
-import NotFoundLevel from "./pages/NotFoundLevel/index.jsx";
-import NoLevelQuest from "./pages/NoLevelQuest/index.jsx";
-
-import EditorMenu from "./pages/EditorMenu/";
-import Editor from "./pages/Editor/";
 import LevelEditProvider from "./context/LevelEditContext.jsx";
 import LevelPlayProvider from "./context/LevelPlayContext.jsx";
 import AuthProvider from "./context/AuthContext.jsx";
 
-import NewUser from "./pages/NewUser/index.jsx";
-
-import Header from "./components/Header.jsx";
-
 import PrivateRoute from "./PrivateRoute.jsx";
 
-import reportWebVitals from "./reportWebVitals";
+// Composants
+import Header from "./components/Header.jsx";
+
+// -- Pages
+// misc
+import Lobby from "./pages/Lobby/index.jsx";
+import NewUser from "./pages/NewUser/index.jsx";
+// Jeu libre
+import PlayMenu from "./pages/PlayMenu/";
+import PlayingFromFree from "./pages/Playing_FromFree/index.jsx";
+// Quete principale
+import MainQuestMenu from "./pages/MainQuestMenu/index.jsx";
+import PlayingFromQuest from "./pages/Playing_FromQuest/index.jsx";
+// Editeur
+import EditorMenu from "./pages/EditorMenu/";
+import Editor from "./pages/Editor/";
+import PlayingFromEdit from "./pages/Playing_FromEdit/index.jsx";
+// Non accessible
+import NotFoundLevel from "./pages/NotFoundLevel/index.jsx";
+import NotReachableLevelQuest from "./pages/NotReachableLevelQuest/index.jsx";
 
 const container = document.getElementById("root");
 const root = createRoot(container);
@@ -37,6 +42,8 @@ root.render(
           <Router>
             <Header />
             <Routes>
+              {/*Pages nécessitant une connexion privée */}
+
               <Route element={<PrivateRoute />}>
                 <Route
                   path={paths.levelListForEditor()}
@@ -47,15 +54,33 @@ root.render(
                   path={paths.levelListForMainQuest()}
                   element={<MainQuestMenu />}
                 />
+                <Route
+                  path={paths.playLevelQuestRouter()}
+                  element={<PlayingFromQuest />}
+                />
               </Route>
 
+              {/*Pages de niveaux non trouves / accessibles */}
+
               <Route path={paths.notFoundLevel()} element={<NotFoundLevel />} />
-              <Route path={paths.noLevelQuest()} element={<NoLevelQuest />} />
+              <Route
+                path={paths.notReachableLevelQuest()}
+                element={<NotReachableLevelQuest />}
+              />
+
+              {/* Misc */}
+
+              <Route path={paths.newUser()} element={<NewUser />} />
+              <Route path={paths.home()} element={<Lobby />} />
+
+              {/*Edition */}
 
               <Route
                 path={paths.editLevelPlaying()}
                 element={<PlayingFromEdit />}
               />
+
+              {/*Jeu libre */}
 
               <Route
                 path={paths.levelListForFreePlay()}
@@ -65,12 +90,6 @@ root.render(
                 path={paths.playLevelFreeRouter()}
                 element={<PlayingFromFree />}
               />
-              <Route
-                path={paths.playLevelQuestRouter()}
-                element={<PlayingFromQuest />}
-              />
-              <Route path={paths.newUser()} element={<NewUser />} />
-              <Route path={paths.home()} element={<Lobby />} />
             </Routes>
           </Router>
         </LevelEditProvider>

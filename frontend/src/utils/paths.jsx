@@ -24,7 +24,7 @@ export const paths = {
 
   // Niveau non trouvé
   notFoundLevel: () => `/notFoundLevel`,
-  noLevelQuest: () => `/noLevelQuest`,
+  notReachableLevelQuest: () => `/notReachableLevelQuest`,
   // Note : les liens "accès à une liste de niveaux" sont directement dans PrivateRoute.jsx ...
 };
 

@@ -20,7 +20,7 @@ export default function Page() {
         await loadMainLevelFromNUMBER_CONNECTED(trueLevelNb, uce.dispatch);
       } catch (e) {
         if (e instanceof Error404) {
-          navigate(paths.noLevelQuest());
+          navigate(paths.notReachableLevelQuest());
           // TODO : faire pareil avec un niveau "non débloqué"
         }
       }
