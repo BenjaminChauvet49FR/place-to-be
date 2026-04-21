@@ -47,24 +47,38 @@ export default function Component() {
     <div>
       {user !== null ? (
         <form onSubmit={handleSubmitDisconnect} id="form_name">
-          <span>Bienvenue {user.username}</span>
-          <input type="submit" value="Se déconnecter" />
+          <span data-testid="span-welcoming">Bienvenue {user.username}</span>
+          <input
+            data-testid="button-disconnect"
+            type="submit"
+            value="Se déconnecter"
+          />
         </form>
       ) : (
         <form onSubmit={handleSubmitConnect} id="form_name">
           <label>
             Nom :&nbsp;
-            <input type="text" value={name} onChange={handleChange} />
+            <input
+              data-testid="input-username"
+              type="text"
+              value={name}
+              onChange={handleChange}
+            />
           </label>
           <label>
             Mot de passe :&nbsp;
             <input
+              data-testid="input-password"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
           </label>
-          <input type="submit" value="Se connecter" />
+          <input
+            data-testid="button-connect"
+            type="submit"
+            value="Se connecter"
+          />
           {error && <span style={{ color: "red" }}>{error}</span>}
         </form>
       )}
