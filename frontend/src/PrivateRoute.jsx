@@ -13,6 +13,7 @@ export default function PrivateEditRoute() {
   if (!user) {
     if (amIInMainQuest()) return <NoMainQuest />;
     else return <NoEditLevel />;
+    /*Pour les niveaux en edit ou en play */
   }
 
   return <Outlet />;

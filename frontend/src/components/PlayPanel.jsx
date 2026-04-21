@@ -26,6 +26,10 @@ export default function Component() {
     }
   }
 
+  function backToFreePlay() {
+    navigate(paths.levelListForFreePlay());
+  }
+
   function backToMainQuest() {
     navigate(paths.levelListForMainQuest());
   }
@@ -100,7 +104,7 @@ export default function Component() {
       {doIComeFromEditor() ? (
         <button onClick={() => backToEdition()}>Retour a l'edition</button>
       ) : amIInFreePlay() ? (
-        <button onClick={() => backToMainQuest()}>
+        <button onClick={() => backToFreePlay()}>
           Retour au choix du niveau
         </button>
       ) : amIInMainQuest() ? (

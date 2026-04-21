@@ -26,7 +26,7 @@ export default function Page() {
       }
     }
     init();
-  }, [levelNumber, uce.dispatch]);
+  }, [levelNumber, uce.dispatch, navigate]);
 
   return <Playing />;
 }
