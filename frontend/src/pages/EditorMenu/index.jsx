@@ -56,7 +56,7 @@ export default function Page() {
   const [levelListJSON, setLevelListJSON] = useState([]);
 
   useEffect(() => {
-    // TODO : attention au double render !
+    // Note : Attention au double render !
     setLoading(true);
 
     fetch(`${API_URL}/api/myLevels/`, {

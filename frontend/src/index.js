@@ -37,6 +37,7 @@ const root = createRoot(container);
 
 root.render(
   <React.StrictMode>
+    {/* Bon à savoir : le strictMode est la raison pour laquelle il y a des 'double renders'. Plus de détails ici : https://react.dev/reference/react/StrictMode#strictmode */}
     <LevelPlayProvider>
       <AuthProvider>
         <MainQuestProvider>
