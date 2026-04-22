@@ -38,12 +38,19 @@ def ping(request):
     return JsonResponse({"status": "ok"})
 
 urlpatterns = [
+    # Admin
     path('admin/', admin.site.urls),
+
+    # Router (ci-dessus)
     path('api/', include(router.urls)),  # Il faut bien penser à ajouter les urls du router dans la liste des urls disponibles.
+    
+    # Auth
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/me/', me, name='me'),
     path('api/ping/', ping, name='ping'),
     path('api/register/', register, name='register'),
+   
+    # Manipulations sur niveaux
     path('api/reorder/', reorder, name='reorder')
 ]

@@ -1,5 +1,5 @@
 import { useContext, useEffect } from "react";
-import { redirect, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { loadLevelFromID_FREE } from "../../logic/saveLoad.jsx";
 
 import { LevelEditContext } from "../../context/LevelEditContext";

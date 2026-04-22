@@ -112,7 +112,7 @@ export default function Page() {
   // Bouton commencer, terminer, annuler
   function startReorder() {
     setDragMode(true);
-    setFormerLevelsList(levelListJSON.map((level) => level)); // TODO Je sais pas si une telle copie est utile !
+    setFormerLevelsList(levelListJSON);
   }
 
   function finishReorder() {

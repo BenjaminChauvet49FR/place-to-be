@@ -44,7 +44,7 @@ root.render(
             <Router>
               <Header />
               <Routes>
-                {/*Pages nécessitant une connexion privée */}
+                {/*Pages nécessitant une connexion privée (édition et quête principale) */}
 
                 <Route element={<PrivateRoute />}>
                   <Route
@@ -52,6 +52,10 @@ root.render(
                     element={<EditorMenu />}
                   />
                   <Route path={paths.editLevelRouter()} element={<Editor />} />
+                  <Route
+                    path={paths.editLevelPlaying()}
+                    element={<PlayingFromEdit />}
+                  />
                   <Route
                     path={paths.levelListForMainQuest()}
                     element={<MainQuestMenu />}
@@ -77,13 +81,6 @@ root.render(
 
                 <Route path={paths.newUser()} element={<NewUser />} />
                 <Route path={paths.home()} element={<Lobby />} />
-
-                {/*Edition */}
-
-                <Route
-                  path={paths.editLevelPlaying()}
-                  element={<PlayingFromEdit />}
-                />
 
                 {/*Jeu libre */}
 

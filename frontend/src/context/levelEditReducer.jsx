@@ -100,7 +100,7 @@ export function levelEditReducer(pState, pAction) {
 
     default:
       console.log(
-        "Erreur fatale : mauvaise utilisation de dispatch ! (" +
+        "Erreur fatale : mauvaise utilisation de dispatch de levelEditReducer ! (" +
           pAction.type +
           ")",
       );

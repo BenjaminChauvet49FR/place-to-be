@@ -89,7 +89,11 @@ export function levelPlayReducer(pState, pAction) {
       return blockTypePlayedChangeClosure(-1);
 
     default:
-      console.log("Erreur fatale : mauvaise utilisation de dispatch !");
+      console.log(
+        "Erreur fatale : mauvaise utilisation de dispatch de levelPlayReducer ! (" +
+          pAction.type +
+          ")",
+      );
       console.log(pAction);
       return 1 / 0;
   }
