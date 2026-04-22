@@ -53,7 +53,7 @@ export default function Component({ state, dispatch }) {
         .deleteLevel(state.levelID)
         .then(() => {
           alert("Niveau correctement supprimé.");
-          navigate(paths.levelList());
+          navigate(paths.levelListForEditor());
         })
         .catch((error) => {
           console.error(error);
