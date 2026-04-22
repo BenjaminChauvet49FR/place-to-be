@@ -7,6 +7,7 @@ import {
   SUPERPOSITION_CORRECT,
   SUPERPOSITION_NONE,
   SUPERPOSITION_WRONG,
+  canChangeSpace,
 } from "../logic/constants.jsx";
 import "../styles/style.css";
 import { useContext } from "react";
@@ -86,21 +87,23 @@ export default function Component({ loadingPackage }) {
                   key={x}
                   className={`space ${getClassName(x, y)}`}
                   onClick={() => {
-                    if (state.currentSpace !== DO_NOT_CHANGE) {
-                      dispatch({
-                        type: "gridF",
-                        x: x,
-                        y: y,
-                        value: state.currentSpace,
-                      });
-                    }
-                    if (state.currentBlock !== DO_NOT_CHANGE) {
-                      dispatch({
-                        type: "gridM",
-                        x: x,
-                        y: y,
-                        value: state.currentBlock,
-                      });
+                    if (canChangeSpace(x, y)) {
+                      if (state.currentSpace !== DO_NOT_CHANGE) {
+                        dispatch({
+                          type: "gridF",
+                          x: x,
+                          y: y,
+                          value: state.currentSpace,
+                        });
+                      }
+                      if (state.currentBlock !== DO_NOT_CHANGE) {
+                        dispatch({
+                          type: "gridM",
+                          x: x,
+                          y: y,
+                          value: state.currentBlock,
+                        });
+                      }
                     }
                   }}
                 >

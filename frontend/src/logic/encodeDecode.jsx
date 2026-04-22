@@ -153,7 +153,12 @@ export function encodedLevelData(pGridF, pGridM, pMovesInfinite, pMovesLimit) {
       }
     }
   }
-  // TODO WARNING ! Potential bug, if someone decides to let the lines on top/bottom/left/right completely blank !
+  if (xFirst === 99) {
+    xFirst = Math.floor(REAL_XLENGTH / 2);
+    yFirst = Math.floor(REAL_YLENGTH / 2);
+    xLast = xFirst;
+    yLast = yFirst;
+  }
 
   let dataSize =
     valToChar(xFirst) + valToChar(yFirst) + valToChar(xLast) + valToChar(yLast);
