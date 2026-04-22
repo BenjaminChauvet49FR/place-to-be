@@ -83,6 +83,11 @@ export function levelPlayReducer(pState, pAction) {
         ...pState,
         blockTypesInfos: pAction.blockTypesInfos,
       };
+    case "clear":
+      return {
+        ...pState,
+        clear: pAction.clear,
+      };
     case "blockTypePlayedPlus1":
       return blockTypePlayedChangeClosure(1);
     case "blockTypePlayedMinus1":
@@ -138,4 +143,5 @@ export const initialState = {
   currentBlockTypeID: 0, // TODO add some constraint to make sure it is always between 0 and blockTypes.length
   moves: [],
   itemsInGrid: [],
+  clear: false,
 };

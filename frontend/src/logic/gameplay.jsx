@@ -61,6 +61,8 @@ function startLevelFromGrid(
   const before_columns = 0; //Math.floor(REAL_XLENGTH - rawLevel[1].length) / 2;
   const blockTypesInfos = [];
 
+  pDispatchPlay({ type: "clear", clear: false });
+
   let y = 0;
   let x;
   let xRef, yRef;
@@ -172,6 +174,7 @@ export function useGameplay() {
     let item;
 
     let noSameBlockBehind, xBeh, yBeh;
+    let movePerformed = false;
 
     moves.push({ direction: pDirection, newPosBlocks: [] });
 
@@ -237,6 +240,7 @@ export function useGameplay() {
       });
       moves[moves.length - 1].blockType = currentBlockType;
       dispatch({ type: "blockTypePlayedPlus1", blockType: currentBlockType });
+      movePerformed = true;
     }
     dispatch({
       type: "levelState",
@@ -244,6 +248,12 @@ export function useGameplay() {
       itemsInGrid: itemsInGrid,
       gridM: gridM,
     });
+
+    // Fait un peu tôt MAIS le fait que "l'attente" (un window.alert ou un message d'API) soit juste avant le tout dernier déplacement n'est pas idiot en soi. Ca va me rappeler l'heurese époque de Django ;)
+    if (!state.clear && movePerformed && checkClearConditions()) {
+      window.alert("C'est gagné ;)");
+      dispatch({ type: "clear", clear: true });
+    }
   }
 
   function undo() {
@@ -278,6 +288,22 @@ export function useGameplay() {
         gridM: gridM,
       });
     }
+  }
+
+  // ------------------
+  // The win conditions
+  function checkClearConditions() {
+    let item = null;
+    let x, y;
+    for (let i = 0; i < state.itemsInGrid.length; i++) {
+      item = state.itemsInGrid[i];
+      x = item.x;
+      y = item.y;
+      if (state.gridF[y][x] !== item.blockType) {
+        return false;
+      }
+    }
+    return true;
   }
 
   // -------------------
