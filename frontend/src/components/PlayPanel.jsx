@@ -10,12 +10,15 @@ import { DIRECTION, NO_ID_LEVEL } from "../logic/constants.jsx";
 
 import { useContext } from "react";
 import { LevelEditContext } from "../context/LevelEditContext.jsx";
+import { LevelPlayContext } from "../context/LevelPlayContext.jsx";
 import { MainQuestContext } from "../context/MainQuestContext.jsx";
 
 import { useNavigate } from "react-router-dom";
+import { mainQuestReducer } from "../context/mainQuestReducer.jsx";
 
 export default function Component() {
   const editContext = useContext(LevelEditContext);
+  const playContext = useContext(LevelPlayContext);
   const questContext = useContext(MainQuestContext);
 
   const navigate = useNavigate();
@@ -108,6 +111,18 @@ export default function Component() {
             </button>
           </div>
         ))}
+      </div>
+
+      {/* Nom du niveau (+ petite marge) */}
+
+      <div>
+        {(doIComeFromEditor()
+          ? "Edition - "
+          : amIInMainQuest()
+            ? "Niveau " + questContext.state.number + " - "
+            : "") + editContext.state.levelName}
+
+        {/*+ amIInFreePlay ? " (Auteur : " + "" + ")" : ""} TODO*/}
       </div>
 
       {/* Changement de niveau */}
