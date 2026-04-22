@@ -30,6 +30,36 @@ class OwnLevelViewset(ModelViewSet):
         allPos = map(lambda lvl:lvl.position, Level.objects.filter(creator=user))
         serializer.save(creator=self.request.user, position=max(allPos)+1)
 
+    def perform_destroy(self, serializer):
+        user = self.request.user
+        askedPos = serializer.position
+        print(serializer)
+        print(askedPos)
+        # Obtenir le niveau et ceux d'id > (note : on aurait pu obtenir TOUS les niveaux, mais ça rendra la transaction plus rapide...)
+        level = Level.objects.filter(creator=user).filter(id=askedPos)
+        levelsAfter = Level.objects.filter(creator=user).filter(position__gt=askedPos) # Note : utilisation de __gt ici https://docs.djangoproject.com/en/6.0/ref/models/querysets/
+        # Position maximale
+        allOrigPos = list(map(lambda lvl:lvl.position, levelsAfter))
+        maxPos = 0
+        if (len(allOrigPos) > 0):
+            maxPos = max(allOrigPos)+1
+        # Maintenant, on agit : on detruit le niveau, on decremente toutes les valeurs superieures de 1
+        with transaction.atomic():
+
+            super().perform_destroy(serializer) # https://stackoverflow.com/questions/44209878/override-serializer-delete-method-in-django-rf/44223413
+            if (len(allOrigPos) > 0): 
+                cases = [
+                    When(position=level_nb, then=Value(level_nb - 1))
+                    for level_nb in range(askedPos+1, maxPos)
+                ]
+                levelsAfter.update(
+                    position=Case(
+                        *cases,
+                        output_field=IntegerField()
+                    )
+                )
+
+
 class LevelFromUsersViewset(ModelViewSet):
     serializer_class = LevelSerializer
 
