@@ -6,6 +6,7 @@ import reportWebVitals from "./reportWebVitals";
 
 import LevelEditProvider from "./context/LevelEditContext.jsx";
 import LevelPlayProvider from "./context/LevelPlayContext.jsx";
+import MainQuestProvider from "./context/MainQuestContext.jsx";
 import AuthProvider from "./context/AuthContext.jsx";
 
 import PrivateRoute from "./PrivateRoute.jsx";
@@ -38,61 +39,66 @@ root.render(
   <React.StrictMode>
     <LevelPlayProvider>
       <AuthProvider>
-        <LevelEditProvider>
-          <Router>
-            <Header />
-            <Routes>
-              {/*Pages nécessitant une connexion privée */}
+        <MainQuestProvider>
+          <LevelEditProvider>
+            <Router>
+              <Header />
+              <Routes>
+                {/*Pages nécessitant une connexion privée */}
 
-              <Route element={<PrivateRoute />}>
+                <Route element={<PrivateRoute />}>
+                  <Route
+                    path={paths.levelListForEditor()}
+                    element={<EditorMenu />}
+                  />
+                  <Route path={paths.editLevelRouter()} element={<Editor />} />
+                  <Route
+                    path={paths.levelListForMainQuest()}
+                    element={<MainQuestMenu />}
+                  />
+                  <Route
+                    path={paths.playLevelQuestRouter()}
+                    element={<PlayingFromQuest />}
+                  />
+                </Route>
+
+                {/*Pages de niveaux non trouves / accessibles */}
+
                 <Route
-                  path={paths.levelListForEditor()}
-                  element={<EditorMenu />}
-                />
-                <Route path={paths.editLevelRouter()} element={<Editor />} />
-                <Route
-                  path={paths.levelListForMainQuest()}
-                  element={<MainQuestMenu />}
+                  path={paths.notFoundLevel()}
+                  element={<NotFoundLevel />}
                 />
                 <Route
-                  path={paths.playLevelQuestRouter()}
-                  element={<PlayingFromQuest />}
+                  path={paths.notReachableLevelQuest()}
+                  element={<NotReachableLevelQuest />}
                 />
-              </Route>
 
-              {/*Pages de niveaux non trouves / accessibles */}
+                {/* Misc */}
 
-              <Route path={paths.notFoundLevel()} element={<NotFoundLevel />} />
-              <Route
-                path={paths.notReachableLevelQuest()}
-                element={<NotReachableLevelQuest />}
-              />
+                <Route path={paths.newUser()} element={<NewUser />} />
+                <Route path={paths.home()} element={<Lobby />} />
 
-              {/* Misc */}
+                {/*Edition */}
 
-              <Route path={paths.newUser()} element={<NewUser />} />
-              <Route path={paths.home()} element={<Lobby />} />
+                <Route
+                  path={paths.editLevelPlaying()}
+                  element={<PlayingFromEdit />}
+                />
 
-              {/*Edition */}
+                {/*Jeu libre */}
 
-              <Route
-                path={paths.editLevelPlaying()}
-                element={<PlayingFromEdit />}
-              />
-
-              {/*Jeu libre */}
-
-              <Route
-                path={paths.levelListForFreePlay()}
-                element={<PlayMenu />}
-              />
-              <Route
-                path={paths.playLevelFreeRouter()}
-                element={<PlayingFromFree />}
-              />
-            </Routes>
-          </Router>
-        </LevelEditProvider>
+                <Route
+                  path={paths.levelListForFreePlay()}
+                  element={<PlayMenu />}
+                />
+                <Route
+                  path={paths.playLevelFreeRouter()}
+                  element={<PlayingFromFree />}
+                />
+              </Routes>
+            </Router>
+          </LevelEditProvider>
+        </MainQuestProvider>
       </AuthProvider>
     </LevelPlayProvider>
   </React.StrictMode>,

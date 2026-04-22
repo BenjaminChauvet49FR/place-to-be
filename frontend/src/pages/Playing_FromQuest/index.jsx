@@ -5,11 +5,13 @@ import { loadMainLevelFromNUMBER_CONNECTED } from "../../logic/saveLoad.jsx";
 import Error404 from "../../logic/Errors.js";
 import Playing from "../../components/Playing.jsx";
 import { paths } from "../../utils/paths.jsx";
+import { MainQuestContext } from "../../context/MainQuestContext.jsx";
 
 export default function Page() {
   const navigate = useNavigate();
 
-  const uce = useContext(LevelEditContext);
+  const uceDispatch = useContext(LevelEditContext).dispatch;
+  const ucqDispatch = useContext(MainQuestContext).dispatch;
 
   const { levelNumber } = useParams(); // Remember : same name as in router mandatory, or else... undefined !
 
@@ -17,7 +19,8 @@ export default function Page() {
     const trueLevelNb = parseInt(levelNumber, 10);
     async function init() {
       try {
-        await loadMainLevelFromNUMBER_CONNECTED(trueLevelNb, uce.dispatch);
+        await loadMainLevelFromNUMBER_CONNECTED(trueLevelNb, uceDispatch);
+        ucqDispatch({ type: "number", number: trueLevelNb });
       } catch (e) {
         if (e instanceof Error404) {
           navigate(paths.notReachableLevelQuest());
@@ -26,7 +29,7 @@ export default function Page() {
       }
     }
     init();
-  }, [levelNumber, uce.dispatch, navigate]);
+  }, [levelNumber, uceDispatch, ucqDispatch, navigate]);
 
   return <Playing />;
 }

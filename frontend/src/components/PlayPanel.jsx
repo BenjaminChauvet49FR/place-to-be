@@ -10,10 +10,13 @@ import { DIRECTION, NO_ID_LEVEL } from "../logic/constants.jsx";
 
 import { useContext } from "react";
 import { LevelEditContext } from "../context/LevelEditContext.jsx";
+import { MainQuestContext } from "../context/MainQuestContext.jsx";
+
 import { useNavigate } from "react-router-dom";
 
 export default function Component() {
   const editContext = useContext(LevelEditContext);
+  const questContext = useContext(MainQuestContext);
 
   const navigate = useNavigate();
 
@@ -32,6 +35,14 @@ export default function Component() {
 
   function backToMainQuest() {
     navigate(paths.levelListForMainQuest());
+  }
+
+  function toPreviousLevelMQ() {
+    navigate(paths.playLevelQuest(questContext.state.number - 1));
+  }
+
+  function toNextLevelMQ() {
+    navigate(paths.playLevelQuest(questContext.state.number + 1));
   }
 
   const {
@@ -99,7 +110,7 @@ export default function Component() {
         ))}
       </div>
 
-      {/* Le reste */}
+      {/* Changement de niveau */}
 
       {doIComeFromEditor() ? (
         <button onClick={() => backToEdition()}>Retour a l'edition</button>
@@ -108,9 +119,25 @@ export default function Component() {
           Retour au choix du niveau
         </button>
       ) : amIInMainQuest() ? (
-        <button onClick={() => backToMainQuest()}>
-          Retour au choix du niveau
-        </button>
+        <div>
+          <button
+            disabled={questContext.state.number === 1}
+            onClick={() => toPreviousLevelMQ()}
+          >
+            Niveau précédent
+          </button>
+          <button onClick={() => backToMainQuest()}>
+            Retour au choix du niveau
+          </button>
+          <button
+            disabled={
+              questContext.state.number === questContext.state.lastLevelNumber
+            }
+            onClick={() => toNextLevelMQ()}
+          >
+            Niveau suivant
+          </button>
+        </div>
       ) : (
         <button className="error">NE DEVRAIT PAS APPARAITRE</button>
       )}

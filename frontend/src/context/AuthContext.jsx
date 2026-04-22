@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import { API_URL } from "../utils/api.jsx";
+import { API_URL, getLastLevelNumber } from "../utils/api.jsx";
+import { MainQuestContext } from "./MainQuestContext.jsx";
 
 const AuthContext = createContext(null);
 
@@ -40,10 +41,29 @@ export default function Provider({ children }) {
     init();
   }, []);
 
-  const login = (userData, token) => {
-    setUser(userData);
-    localStorage.setItem("access_token", token);
-  };
+  function useLogin() {
+    const mqc = useContext(MainQuestContext);
+
+    async function login(userData, token) {
+      setUser(userData);
+      localStorage.setItem("access_token", token);
+
+      // Setup le nombre de niveaux de la quête principale
+      let llnData = await getLastLevelNumber();
+      if (llnData.success) {
+        mqc.dispatch({
+          type: "lastLevelNumber",
+          lastLevelNumber: llnData.lastLevelNumber,
+        });
+      } else {
+        window.alert(
+          "Le nombre de niveaux de la quête principale n'a pas pu être récupéré !",
+        );
+      }
+    }
+
+    return { login };
+  }
 
   const logout = () => {
     setUser(null);
@@ -51,7 +71,7 @@ export default function Provider({ children }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, logout }}>
+    <AuthContext.Provider value={{ user, loading, useLogin, logout }}>
       {children}
     </AuthContext.Provider>
   );

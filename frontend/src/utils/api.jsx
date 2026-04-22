@@ -68,6 +68,26 @@ export async function createUser(pUsername, pPassword) {
   }
 }
 
+export async function getLastLevelNumber(pUserData) {
+  // Obtenir le num. de niveau maximal
+  try {
+    const response = await fetch(`${API_URL}/${API_LEVEL_MAIN_QUEST}/`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+      },
+    });
+
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.detail);
+    }
+    return { success: true, lastLevelNumber: data.results.length };
+  } catch (error) {
+    console.log(error);
+    return { success: false };
+  }
+}
+
 /* TODO a utiliser plus tard... très important en prod !
 fetch(`${API_URL}/api/token/refresh/`, {
   method: "POST",

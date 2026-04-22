@@ -8,7 +8,8 @@ export default function Component() {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const { user, login, logout } = useAuth();
+  const { user, useLogin, logout } = useAuth();
+  const { login } = useLogin();
 
   const navigate = useNavigate();
 
