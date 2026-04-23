@@ -10,15 +10,12 @@ import { DIRECTION, NO_ID_LEVEL } from "../logic/constants.jsx";
 
 import { useContext } from "react";
 import { LevelEditContext } from "../context/LevelEditContext.jsx";
-import { LevelPlayContext } from "../context/LevelPlayContext.jsx";
 import { MainQuestContext } from "../context/MainQuestContext.jsx";
 
 import { useNavigate } from "react-router-dom";
-import { mainQuestReducer } from "../context/mainQuestReducer.jsx";
 
 export default function Component() {
   const editContext = useContext(LevelEditContext);
-  const playContext = useContext(LevelPlayContext);
   const questContext = useContext(MainQuestContext);
 
   const navigate = useNavigate();
@@ -51,6 +48,7 @@ export default function Component() {
   const {
     undo,
     moveBlocks,
+    restart,
     getBlockTypes,
     getCurrentBlockType,
     getMovesPlayed,
@@ -63,7 +61,7 @@ export default function Component() {
     <div className="panel mainComponent">
       {/* Les directions */}
 
-      <div className="directionsPanel0">
+      <div className="mainMovesPanel">
         <div className="directionsPanel">
           <div>
             <button onClick={() => moveBlocks(DIRECTION.U)}>Haut</button>
@@ -77,6 +75,8 @@ export default function Component() {
           </div>
         </div>
         <button onClick={() => undo()}>Annuler</button>
+        <button onClick={() => restart()}>Recommencer</button>
+
         <br />
       </div>
 

@@ -157,6 +157,8 @@ function startLevelFromGrid(
 
 export function useGameplay() {
   const playContext = useContext(LevelPlayContext);
+  const uce = useContext(LevelEditContext);
+
   const { state, dispatch } = playContext;
 
   // -------------------
@@ -290,6 +292,16 @@ export function useGameplay() {
     }
   }
 
+  function restart() {
+    startLevelFromGrid(
+      uce.state.gridF,
+      uce.state.gridM,
+      uce.state.movesLimit,
+      uce.state.movesInfinite,
+      dispatch,
+    );
+  }
+
   // ------------------
   // The win conditions
   function checkClearConditions() {
@@ -339,6 +351,7 @@ export function useGameplay() {
   return {
     moveBlocks,
     undo,
+    restart,
     getBlockTypes,
     getCurrentBlockType,
     getMovesPlayed,

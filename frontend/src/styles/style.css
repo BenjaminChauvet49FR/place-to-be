@@ -133,6 +133,17 @@ nav {
 	font-size:0.75em;
 	block-size: fit-content;
 }
+.mainMovesPanel {
+	display:flex;
+	flex-direction:row;
+	justify-content: center;
+	gap:20px;
+}
+.directionsPanel {
+	display:flex;
+	flex-direction:column;
+	align-items: center;
+}
 .buttonSelectionPlay {width: 2.5em;  } /*Note : cela force la largeur des composants englobants (blockTypePanel)*/
 .A {background-color:yellow; }
 .B {background-color:#FF8844; }
@@ -151,21 +162,6 @@ nav {
 /* ------------------ */
 /* panel (edition) */
 
-.directionsPanel0 {
-	display:flex;
-	flex-direction:row;
-	justify-content: center;
-}
-.directionsPanel {
-	display:flex;
-	flex-direction:column;
-	align-items: center;
-}
-.verticalLayout {
-	display:flex;
-	flex-direction:column;
-	align-items: center;
-}
 .blockTypePanel0 {
 	display:flex;
 	flex-direction:row;
