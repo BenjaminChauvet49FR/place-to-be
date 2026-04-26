@@ -6,11 +6,14 @@ import {
   DO_NOT_CHANGE,
   BLOCK_TYPES_LIST,
 } from "../logic/constants.jsx";
+import { deleteLevel, loadAllLevels } from "../utils/api.jsx";
+import { saveLevel, loadLevelFromID_FREE } from "../logic/saveLoad.jsx";
+
+import { useAuth } from "../context/AuthContext.jsx";
+
 import "../styles/style.css";
 import { useNavigate } from "react-router-dom";
-import * as saveLoad from "../logic/saveLoad";
 import { paths } from "../utils/paths.jsx";
-import { loadAndSaveALLLevels } from "../logic/encodingBascule.jsx";
 
 export default function Component({ state, dispatch }) {
   function captionItemSelected(pSpace, pBlock) {
@@ -47,10 +50,9 @@ export default function Component({ state, dispatch }) {
   }
 
   const navigate = useNavigate();
-  function deleteLevel() {
+  function handleDeleteLevel() {
     if (window.confirm("Etes-vous certain de vouloir supprimer ce niveau ?")) {
-      saveLoad
-        .deleteLevel(state.levelID)
+      deleteLevel(state.levelID)
         .then(() => {
           alert("Niveau correctement supprimé.");
           navigate(paths.levelListForEditor());
@@ -62,13 +64,12 @@ export default function Component({ state, dispatch }) {
     }
   }
 
-  function saveLevel() {
+  function handleSaveLevel() {
     if (
       state.levelID === 0 ||
       window.confirm("Etes-vous certain de vouloir sauver ce niveau ?")
     ) {
-      saveLoad
-        .saveLevel(state, dispatch)
+      saveLevel(state, dispatch)
         .then(() => {
           alert("Niveau correctement sauvegardé.");
         })
@@ -79,7 +80,7 @@ export default function Component({ state, dispatch }) {
     }
   }
 
-  function playtestLevel() {
+  function handlePlaytestLevel() {
     navigate(paths.editLevelPlaying());
   }
 
@@ -96,6 +97,32 @@ export default function Component({ state, dispatch }) {
   }
 
   // =================================
+
+  function handleLoadAndSaveALLLevels(pState, pDispatch) {
+    loadAllLevels()
+      .then((JSONResponse) => {
+        console.log(JSONResponse);
+        if (
+          window.confirm(
+            "Vous êtes sur le point de charger puis sauvegarder TOUS les niveaux ! (au nombre de " +
+              JSONResponse.length +
+              ") : confirmer ?",
+          )
+        ) {
+          JSONResponse.forEach((entry) => {
+            loadLevelFromID_FREE(entry, pDispatch); // from entry to dispatch
+            saveLevel(pState, pDispatch);
+          });
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+
+  // =================================
+
+  const { user } = useAuth();
 
   return (
     <div className="mainComponent panel">
@@ -158,22 +185,26 @@ export default function Component({ state, dispatch }) {
           } // Credits : https://stackoverflow.com/questions/68473280/how-to-do-onchange-with-react-numeric-input
           value={state.levelName}
         />
-        <button onClick={() => saveLevel()}>Sauver niveau</button>
-        <button className="delete" onClick={() => deleteLevel()}>
+        <button onClick={() => handleSaveLevel()}>Sauver niveau</button>
+        <button className="delete" onClick={() => handleDeleteLevel()}>
           Effacer niveau
         </button>
       </div>
       <div>
-        <button onClick={() => playtestLevel()}>Tester niveau</button>
+        <button onClick={() => handlePlaytestLevel()}>Tester niveau</button>
       </div>
-      <div>
-        <button
-          className="danger"
-          onClick={() => loadAndSaveALLLevels(state, dispatch)}
-        >
-          Charger et enregistrer TOUS les niveaux
-        </button>
-      </div>
+      {user.permissions.includes(
+        "authentication.change_encoding_all_levels",
+      ) && (
+        <div>
+          <button
+            className="danger"
+            onClick={() => handleLoadAndSaveALLLevels(state, dispatch)}
+          >
+            Charger et enregistrer TOUS les niveaux
+          </button>
+        </div>
+      )}
     </div>
   );
 }

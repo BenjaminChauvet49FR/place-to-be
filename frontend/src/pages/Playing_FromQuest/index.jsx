@@ -1,11 +1,13 @@
 import { useContext, useEffect } from "react";
-import { LevelEditContext } from "../../context/LevelEditContext.jsx";
 import { useParams, useNavigate } from "react-router-dom";
 import { loadMainLevelFromNUMBER_CONNECTED } from "../../logic/saveLoad.jsx";
-import Error404 from "../../logic/Errors.js";
-import Playing from "../../components/Playing.jsx";
-import { paths } from "../../utils/paths.jsx";
+
 import { MainQuestContext } from "../../context/MainQuestContext.jsx";
+import { LevelEditContext } from "../../context/LevelEditContext.jsx";
+import Playing from "../../components/Playing.jsx";
+
+import { paths } from "../../utils/paths.jsx";
+import { Error404 } from "../../utils/api.jsx";
 
 export default function Page() {
   const navigate = useNavigate();

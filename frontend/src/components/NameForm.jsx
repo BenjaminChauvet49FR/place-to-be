@@ -22,7 +22,10 @@ export default function Component() {
 
     if (result.success) {
       // Mettre à jour le contexte global Auth
-      login({ username: name }, result.data.access);
+      login(
+        { username: name, permissions: result.data.user.permissions },
+        result.data.access,
+      );
     } else if (
       result.error.includes(
         "No active account found with the given credentials",

@@ -3,7 +3,8 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
-from .serializers import RegisterSerializer
+from .serializers import RegisterSerializer, MyTokenObtainPairSerializer
+from rest_framework_simplejwt.views import TokenObtainPairView
 from .jwt import get_tokens
 
 
@@ -14,6 +15,7 @@ def me(request): # Note : la "requête" est un token...
     return Response({
         "id": user.id,
         "username": user.username,
+        "permissions" : user.get_all_permissions()
     })
 
 @api_view(["POST"])
@@ -28,3 +30,7 @@ def register(request):
         return Response(tokens, status=201)
 
     return Response(serializer.errors, status=400)
+
+
+class MyTokenObtainPairView(TokenObtainPairView):
+    serializer_class = MyTokenObtainPairSerializer

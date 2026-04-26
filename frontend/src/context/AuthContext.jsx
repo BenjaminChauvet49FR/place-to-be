@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import { API_URL, getLastLevelNumber } from "../utils/api.jsx";
+import { getLastLevelNumber, connectFromRefresh } from "../utils/api.jsx";
 import { MainQuestContext } from "./MainQuestContext.jsx";
 
 const AuthContext = createContext(null);
@@ -8,33 +8,15 @@ export default function Provider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Vérifier par le biais du token (et d'un appel à l'API) si on est correctement connecté
+  // Vérifier si on est correctement connecté au démarrage de la page
   useEffect(() => {
     async function init() {
-      const token = localStorage.getItem("access_token");
-
-      if (!token) {
-        setLoading(false);
-        return;
+      const result = await connectFromRefresh();
+      if (result.success) {
+        setUser(result.data);
+      } else {
+        localStorage.removeItem("access_token");
       }
-
-      try {
-        const res = await fetch(`${API_URL}/api/me/`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        console.log("me status:", res.status);
-        if (res.ok) {
-          const data = await res.json();
-          setUser(data);
-        } else if (res.status === 401 || res.status === 403) {
-          localStorage.removeItem("access_token");
-        }
-      } catch (error) {
-        console.log(error);
-      }
-
       setLoading(false);
     }
 

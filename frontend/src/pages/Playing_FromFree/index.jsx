@@ -6,7 +6,7 @@ import { LevelEditContext } from "../../context/LevelEditContext";
 import Playing from "../../components/Playing.jsx";
 
 import { paths } from "../../utils/paths.jsx";
-import Error404 from "../../logic/Errors.js";
+import { Error404 } from "../../utils/api.jsx";
 
 export default function Page() {
   const uce = useContext(LevelEditContext);

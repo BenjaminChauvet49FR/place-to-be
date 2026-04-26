@@ -2,31 +2,27 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "../../styles/style.css";
 import { paths } from "../../utils/paths.jsx";
-import { API_URL, API_LEVELS_GENERAL_PUBLIC } from "../../utils/api.jsx";
+import { getLevelsFreePlay } from "../../utils/api.jsx";
 
 export default function Page() {
   const [loading, setLoading] = useState(false);
   const [levelListJSON, setLevelListJSON] = useState([]);
 
+  // Note : attention au double render !
   useEffect(() => {
-    // Note : attention au double render !
-    setLoading(true);
+    async function getLevels() {
+      setLoading(true);
+      const levelsData = await getLevelsFreePlay();
+      if (levelsData.success) {
+        setLevelListJSON(levelsData.levels);
+      } else {
+        window.alert("Echec du chargement des niveaux !"); // TODO une erreur plus détaillée !
+        setLevelListJSON([]);
+      }
+      setLoading(false);
+    }
 
-    fetch(`${API_URL}/${API_LEVELS_GENERAL_PUBLIC}/`, {
-      headers: {},
-    }).then((response) =>
-      response
-        .json()
-        .then((data) => {
-          //          console.log(data);
-          setLevelListJSON(data.results);
-        })
-        .catch((error) => {
-          console.log(error);
-          window.alert("Echec du chargement des niveaux !");
-        })
-        .finally(() => setLoading(false)),
-    );
+    getLevels();
   }, []);
 
   return (

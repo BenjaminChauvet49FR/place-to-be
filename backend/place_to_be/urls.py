@@ -19,7 +19,6 @@ from django.urls import path, include
 from level_management.views import *
 from authentication.views import *
 from rest_framework import routers
-from rest_framework_simplejwt.views import TokenObtainPairView 
 from rest_framework_simplejwt.views import TokenRefreshView 
 from django.http import JsonResponse
 
@@ -45,7 +44,7 @@ urlpatterns = [
     path('api/', include(router.urls)),  # Il faut bien penser à ajouter les urls du router dans la liste des urls disponibles.
     
     # Auth
-    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/me/', me, name='me'),
     path('api/ping/', ping, name='ping'),

@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "../../styles/style.css";
-import * as saveLoad from "../../logic/saveLoad";
+import { deleteLevel, reorderLevels } from "../../utils/api.jsx";
 import { paths } from "../../utils/paths.jsx";
-import { API_URL } from "../../utils/api.jsx";
+import { gerPersonnalLevels } from "../../utils/api.jsx";
 
 import { DndContext, closestCenter } from "@dnd-kit/core";
 
@@ -55,33 +55,26 @@ export default function Page() {
   const [loading, setLoading] = useState(false);
   const [levelListJSON, setLevelListJSON] = useState([]);
 
+  // Note : Attention au double render !
   useEffect(() => {
-    // Note : Attention au double render !
-    setLoading(true);
+    async function getLevels() {
+      setLoading(true);
+      const levelsData = await gerPersonnalLevels();
+      if (levelsData.success) {
+        setLevelListJSON(levelsData.levels);
+      } else {
+        window.alert("Echec du chargement des niveaux !"); // TODO une erreur plus détaillée !
+        setLevelListJSON([]);
+      }
+      setLoading(false);
+    }
 
-    fetch(`${API_URL}/api/myLevels/`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-      },
-    }).then((response) =>
-      response
-        .json()
-        .then((data) => {
-          //          console.log(data);
-          setLevelListJSON(data.results);
-        })
-        .catch((error) => {
-          console.log(error);
-          window.alert("Echec du chargement des niveaux !");
-        })
-        .finally(() => setLoading(false)),
-    );
+    getLevels();
   }, []);
 
-  function deleteLevel(pLevelId, pUpdateLevelList) {
+  function handleDelete(pLevelId, pUpdateLevelList) {
     if (window.confirm("Etes-vous certain de vouloir supprimer ce niveau ?")) {
-      saveLoad
-        .deleteLevel(pLevelId)
+      deleteLevel(pLevelId)
         .then(() => {
           pUpdateLevelList((prev) => prev.filter((l) => l.id !== pLevelId));
         })
@@ -110,19 +103,19 @@ export default function Page() {
   }
 
   // Bouton commencer, terminer, annuler
-  function startReorder() {
+  function handleStartReorder() {
     setDragMode(true);
     setFormerLevelsList(levelListJSON);
   }
 
-  function finishReorder() {
+  function handleFinishReorder() {
     console.log("Nouvel ordre :", levelListJSON);
     // POST vers Django !
-    saveLoad.reorderLevels(levelListJSON.map((level) => level.id));
+    reorderLevels(levelListJSON.map((level) => level.id));
     setDragMode(false);
   }
 
-  function cancelReorder() {
+  function handleCancelReorder() {
     setLevelListJSON(formerLevelsList.map((level) => level));
     setDragMode(false);
   }
@@ -151,8 +144,8 @@ export default function Page() {
             </SortableContext>
           </DndContext>
 
-          <button onClick={finishReorder}>Terminer</button>
-          <button onClick={cancelReorder}>Annuler</button>
+          <button onClick={handleFinishReorder}>Terminer</button>
+          <button onClick={handleCancelReorder}>Annuler</button>
         </>
       ) : (
         <div className="level_list">
@@ -163,7 +156,7 @@ export default function Page() {
               </Link>
               <span
                 className="delete"
-                onClick={() => deleteLevel(level.id, setLevelListJSON)}
+                onClick={() => handleDelete(level.id, setLevelListJSON)}
               >
                 [Effacer]
               </span>{" "}
@@ -176,7 +169,9 @@ export default function Page() {
           <div className="level_new">
             <Link to={paths.editLevelNew()}>(Nouveau)</Link>
           </div>
-          <button onClick={() => startReorder()}>Déplacer niveaux</button>{" "}
+          <button onClick={() => handleStartReorder()}>
+            Déplacer niveaux
+          </button>{" "}
         </>
       )}
     </div>

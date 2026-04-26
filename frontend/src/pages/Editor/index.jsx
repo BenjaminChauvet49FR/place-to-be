@@ -1,6 +1,6 @@
 import EditorField from "../../components/EditorField";
 import EditorPanel from "../../components/EditorPanel";
-import Error404 from "../../logic/Errors.js";
+import { Error404 } from "../../utils/api.jsx";
 import { useState, useEffect, useRef } from "react";
 import { loadLevelFromID_CONNECTED, loadNewLevel } from "../../logic/saveLoad";
 import { useParams, useNavigate } from "react-router-dom";

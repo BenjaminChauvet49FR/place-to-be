@@ -8,6 +8,8 @@ import {
 
 import { DIRECTION, NO_ID_LEVEL } from "../logic/constants.jsx";
 
+import { useAuth } from "../context/AuthContext.jsx";
+
 import { useContext } from "react";
 import { LevelEditContext } from "../context/LevelEditContext.jsx";
 import { MainQuestContext } from "../context/MainQuestContext.jsx";
@@ -56,6 +58,8 @@ export default function Component() {
     areMovesInfinite,
     setCurrentBlockType,
   } = useGameplay();
+
+  const { user } = useAuth();
 
   return (
     <div className="panel mainComponent">
@@ -155,6 +159,19 @@ export default function Component() {
         </div>
       ) : (
         <button className="error">NE DEVRAIT PAS APPARAITRE</button>
+      )}
+
+      {user.permissions.includes("authentication.cheat_level") && (
+        <div>
+          <button
+            className="danger"
+            onClick={() => {
+              /*TODO */
+            }}
+          >
+            Tricher
+          </button>
+        </div>
       )}
     </div>
   );
