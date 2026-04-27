@@ -31,10 +31,7 @@ export default function Page() {
       window.alert(
         "Bienvenue, " + name + ". Passez un bon moment parmi nous !",
       );
-      login(
-        { username: name, permissions: result.data.user.permissions },
-        result.data.access,
-      ); // Note : j'ai essayé sans cette ligne, et ça ne loguait pas.
+      login({ username: name, permissions: [] }, result.data.access); // Note : j'ai essayé sans cette ligne, et ça ne loguait pas.
       navigate(paths.home());
     } else if (result.error.includes("Failed to fetch")) {
       setError("Connexion au serveur non assurée !");
