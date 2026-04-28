@@ -161,7 +161,7 @@ export default function Component() {
         <button className="error">NE DEVRAIT PAS APPARAITRE</button>
       )}
 
-      {user.permissions.includes("authentication.cheat_level") && (
+      {user && user.permissions.includes("authentication.cheat_level") && (
         <div>
           <button
             className="danger"
