@@ -2,11 +2,7 @@ import { NO_ID_LEVEL } from "./constants.jsx";
 
 import * as encodeDecode from "./encodeDecode.jsx";
 
-import {
-  promiseSaveNewLevel,
-  promiseUpdateLevel,
-  promiseLoadLevel,
-} from "../utils/api.jsx";
+import { saveNewLevel, updateLevel, promiseLoadLevel } from "../utils/api.jsx";
 
 export const PREFIX_FOR_BASCULE_ENCODING = "TEST_ENCODING_PURPOSE_ONLY";
 export const BASCULE_ENCODING_DONE = false; // Only set it to true when encoding bascule has been made and you want to load ALL levels under new system, but you don't want to get rid of the old system yet. Then, to false again.
@@ -35,21 +31,20 @@ export async function loadMainLevelFromNUMBER_CONNECTED(pNUMBER, pDispatch) {
 
 async function loadLevelFromID_aux(pID_NB, pDispatch, pLevelFunction) {
   // pID_NB : ID or number
-  return promiseLoadLevel(pLevelFunction, pID_NB).then((levelData) => {
-    try {
-      loadLevelForEditor(levelData.data, levelData.name, pDispatch);
-    } catch (error) {
-      console.log(error);
-      let errorMsg;
-      if (pLevelFunction === LEVEL_FUNCTION.MAIN) {
-        errorMsg = "Impossible de charger le niveau d'id" + pID_NB;
-      } else {
-        errorMsg = "Impossible de charger le niveau de numéro " + pID_NB;
-      }
-      window.alert(errorMsg); // TODO distinguer ces messages d'erreur
-      throw error;
+  try {
+    const levelData = await promiseLoadLevel(pLevelFunction, pID_NB);
+    loadLevelForEditor(levelData.data, levelData.name, pDispatch);
+  } catch (error) {
+    console.log(error);
+    let errorMsg;
+    if (pLevelFunction === LEVEL_FUNCTION.MAIN) {
+      errorMsg = "Impossible de charger le niveau d'id" + pID_NB;
+    } else {
+      errorMsg = "Impossible de charger le niveau de numéro " + pID_NB;
     }
-  });
+    window.alert(errorMsg); // TODO distinguer ces messages d'erreur
+    throw error;
+  }
 }
 
 // Note : I put this in place as it will be useful whenever I decide to change the encoding system.
@@ -84,10 +79,9 @@ export async function saveLevel(pState, pDispatch) {
   const id = pState.levelID;
 
   if (id === NO_ID_LEVEL) {
-    return promiseSaveNewLevel(data, name).then(async (levelData) =>
-      pDispatch({ type: "levelID", levelID: levelData.id }),
-    );
+    const levelData = await saveNewLevel(data, name);
+    return pDispatch({ type: "levelID", levelID: levelData.id });
   } else {
-    return promiseUpdateLevel(data, name, id);
+    return updateLevel(data, name, id);
   }
 }

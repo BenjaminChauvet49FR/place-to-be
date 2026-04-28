@@ -69,14 +69,15 @@ export default function Component({ state, dispatch }) {
       state.levelID === 0 ||
       window.confirm("Etes-vous certain de vouloir sauver ce niveau ?")
     ) {
-      saveLevel(state, dispatch)
-        .then(() => {
+      try {
+        (async function () {
+          await saveLevel(state, dispatch);
           alert("Niveau correctement sauvegardé.");
-        })
-        .catch((error) => {
-          console.error(error);
-          alert("Echec de la sauvegarde du niveau !");
-        });
+        })();
+      } catch (error) {
+        console.error(error);
+        alert("Echec de la sauvegarde du niveau !");
+      }
     }
   }
 

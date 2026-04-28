@@ -20,6 +20,8 @@ def me(request): # Note : la "requête" est un token...
 
 @api_view(["POST"])
 def register(request):
+    print(request.data)
+
     serializer = RegisterSerializer(data=request.data)
     # print(request.data) Utile en debug
 
