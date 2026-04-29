@@ -126,7 +126,7 @@ export async function loadAllLevels() {
 // Créer un niveau (et l'enregistrer)
 export async function saveNewLevel(pData, pName) {
   const response = await api.post("/api/level/", {
-    data: pData,
+    lvData: pData,
     name: pName,
   });
   return response.data;
@@ -135,7 +135,7 @@ export async function saveNewLevel(pData, pName) {
 // Sauver un niveau existant
 export async function updateLevel(pData, pName, pID) {
   const response = await api.put("/api/level/" + pID + "/", {
-    data: pData,
+    lvData: pData,
     name: pName,
   });
   return response.data;

@@ -3,7 +3,7 @@ from django.conf import settings
 
 class Level(models.Model):
 
-    data = models.fields.CharField(max_length=400)
+    lvData = models.fields.CharField(max_length=400)
     name = models.fields.CharField(max_length=100, default='')
     position = models.PositiveIntegerField(default=0)
 

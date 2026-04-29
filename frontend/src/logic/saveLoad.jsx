@@ -33,7 +33,7 @@ async function loadLevelFromID_aux(pID_NB, pDispatch, pLevelFunction) {
   // pID_NB : ID or number
   try {
     const levelData = await promiseLoadLevel(pLevelFunction, pID_NB);
-    loadLevelForEditor(levelData.data, levelData.name, pDispatch);
+    loadLevelForEditor(levelData.lvData, levelData.name, pDispatch);
   } catch (error) {
     console.log(error);
     let errorMsg;
