@@ -145,7 +145,7 @@ export function encodedLevelData(pGridF, pGridM, pMovesInfinite, pMovesLimit) {
   // Scanning the topleft and bottomright squares
   for (y = 1; y < REAL_YLENGTH - 1; y++) {
     for (x = 1; x < REAL_XLENGTH - 1; x++) {
-      if (pGridF[y][x] !== SPACE.EMPTY) {
+      if (pGridF[y][x] !== SPACE.EMPTY || pGridM[y][x] !== BLOCK.NONE) {
         xFirst = Math.min(xFirst, x);
         yFirst = Math.min(yFirst, y);
         xLast = Math.max(xLast, x);
