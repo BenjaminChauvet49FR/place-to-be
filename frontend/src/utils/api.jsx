@@ -14,7 +14,7 @@ const API_LEVEL_MAIN_QUEST = "api/levelsMainQuest";
 // Connexion
 export async function connect(pUsername, pPassword) {
   try {
-    const res = await api.post("/api/token/", {
+    const res = await api.post("/api/login/", {
       username: pUsername,
       password: pPassword,
     });
@@ -23,7 +23,6 @@ export async function connect(pUsername, pPassword) {
 
     // Cas succès : stocker les tokens
     localStorage.setItem("access_token", data.access);
-    localStorage.setItem("refresh_token", data.refresh);
 
     return { success: true, data };
   } catch (error) {
@@ -32,7 +31,7 @@ export async function connect(pUsername, pPassword) {
 }
 
 // Test de presence basé sur le token
-export async function connectFromRefresh() {
+export async function connectFromF5() {
   try {
     const res = await api.get(`/api/me/`, {});
     if (res.statusText === "OK") {
@@ -55,9 +54,18 @@ export async function createUser(pUsername, pPassword) {
     if (response.statusText === "Created") {
       const data = await response.data;
       localStorage.setItem("access_token", data.access);
-      localStorage.setItem("refresh_token", data.refresh);
       return { success: true, data };
     }
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+}
+
+// Déconnexion
+export async function disconnect() {
+  try {
+    await api.post("/api/logout/");
+    return { success: true };
   } catch (error) {
     return { success: false, error: error.message };
   }

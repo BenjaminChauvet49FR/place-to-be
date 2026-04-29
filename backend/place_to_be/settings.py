@@ -29,6 +29,7 @@ SECRET_KEY = 'django-insecure-=tkb=+wbechvl_3rief21mou(k^+w8yh$*w7m4=%@)vs@-qy!_
 load_dotenv()
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DEBUG", "False") == "True"
+COOKIE_SECURE = not DEBUG
 
 ALLOWED_HOSTS = [
     "place-to-be.onrender.com",

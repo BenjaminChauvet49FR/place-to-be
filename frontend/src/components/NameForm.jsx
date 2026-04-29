@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { paths } from "../utils/paths.jsx";
-import { connect } from "../utils/api.jsx";
+import { connect, disconnect } from "../utils/api.jsx";
 import { useAuth } from "../context/AuthContext.jsx";
 
 export default function Component() {
@@ -23,7 +23,7 @@ export default function Component() {
     if (result.success) {
       // Mettre à jour le contexte global Auth
       login(
-        { username: name, permissions: result.data.user.permissions },
+        { username: name, permissions: result.data.permissions },
         result.data.access,
       );
     } else if (
@@ -41,6 +41,7 @@ export default function Component() {
   const handleSubmitDisconnect = async (event) => {
     event.preventDefault();
     setError(""); // reset erreur
+    await disconnect();
     // Mettre à jour le contexte global Auth
     logout();
     // Rediriger vers page d'accueil

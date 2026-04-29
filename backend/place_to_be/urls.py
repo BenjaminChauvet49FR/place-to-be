@@ -44,8 +44,9 @@ urlpatterns = [
     path('api/', include(router.urls)),  # Il faut bien penser à ajouter les urls du router dans la liste des urls disponibles.
     
     # Auth
-    path('api/token/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('api/login/', login_view, name='login'),
+    path('api/refresh/', refresh_cookie, name='refresh'),
+    path('api/logout/', logout_view, name='logout'),
     path('api/me/', me, name='me'),
     path('api/ping/', ping, name='ping'),
     path('api/register/', register, name='register'),

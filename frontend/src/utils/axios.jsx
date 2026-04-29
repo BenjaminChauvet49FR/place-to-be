@@ -13,23 +13,6 @@ const api = axios.create({
 });
 
 /* =======================================================
-   REQUEST INTERCEPTOR
-   Ajoute automatiquement le token access à chaque requête
-======================================================= */
-api.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem("access_token");
-
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-
-    return config;
-  },
-  (error) => Promise.reject(error),
-);
-
-/* =======================================================
    RESPONSE INTERCEPTOR
    Si 401 => tente refresh => rejoue requête originale
 ======================================================= */
@@ -45,7 +28,7 @@ api.interceptors.response.use(
     }
 
     // Si refresh lui-même échoue, on arrête
-    if (originalRequest.url.includes("/api/token/refresh/")) {
+    if (originalRequest.url.includes("/api/refresh/")) {
       return Promise.reject(error);
     }
 
@@ -54,25 +37,7 @@ api.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
-        /*
-          Appel refresh token
-          Le refresh token est envoyé automatiquement
-          via cookie grâce à withCredentials:true
-        */
-        /*const refreshResponse = await api.post("/api/token/refresh/");
-
-        const newAccess = refreshResponse.data.access;
-
-        // On remplace ancien access token
-        localStorage.setItem("access_token", newAccess);
-        
-        originalRequest.headers.Authorization = `Bearer ${newAccess}`;
-        */
-        const refresh = localStorage.getItem("refresh_token");
-
-        const res = await api.post("/api/token/refresh/", {
-          refresh: refresh,
-        });
+        const res = await api.post("/api/refresh/"); // Note : adieu le stockage local pour refresh. En outre, le cookie part automatiquement si withCredentials = true.
 
         localStorage.setItem("access_token", res.data.access);
 
@@ -92,5 +57,20 @@ api.interceptors.response.use(
     return Promise.reject(error);
   },
 );
+
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem("access_token");
+
+  const excluded =
+    config.url.includes("/api/refresh/") ||
+    config.url.includes("/api/login/") ||
+    config.url.includes("/api/register/");
+
+  if (token && !excluded) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+
+  return config;
+});
 
 export default api;

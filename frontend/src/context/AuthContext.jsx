@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import { getLastLevelNumber, connectFromRefresh } from "../utils/api.jsx";
+import { getLastLevelNumber, connectFromF5 } from "../utils/api.jsx";
 import { MainQuestContext } from "./MainQuestContext.jsx";
 
 const AuthContext = createContext(null);
@@ -11,7 +11,7 @@ export default function Provider({ children }) {
   // Vérifier si on est correctement connecté au démarrage de la page
   useEffect(() => {
     async function init() {
-      const result = await connectFromRefresh();
+      const result = await connectFromF5();
       if (result.success) {
         setUser(result.data);
       } else {
