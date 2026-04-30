@@ -73,7 +73,7 @@ def login_view(request):
         value=str(refresh),
         httponly=True,
         secure=settings.COOKIE_SECURE,   # True en prod HTTPS, False en local ; signifie que le cookie n'est envoyé qu'en HTTPS.
-        samesite="Lax"
+        samesite="None"
     )
 
     return response
