@@ -187,9 +187,11 @@ export default function Component({ state, dispatch }) {
           value={state.levelName}
         />
         <button onClick={() => handleSaveLevel()}>Sauver niveau</button>
-        <button className="delete" onClick={() => handleDeleteLevel()}>
-          Effacer niveau
-        </button>
+        {state.levelID > 0 && (
+          <button className="delete" onClick={() => handleDeleteLevel()}>
+            Effacer niveau
+          </button>
+        )}
       </div>
       <div>
         <button onClick={() => handlePlaytestLevel()}>Tester niveau</button>
