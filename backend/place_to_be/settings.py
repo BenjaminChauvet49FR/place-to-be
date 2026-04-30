@@ -110,7 +110,7 @@ CSRF_COOKIE_SAMESITE = "None"
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 CSRF_TRUSTED_ORIGINS = [
-    "https://ton-frontend.com",
+    "https://place-to-be.netlify.app"
 ]
 
 
