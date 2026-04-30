@@ -13,6 +13,7 @@
     "numeric-input-react": "^1.0.27",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
+    "react-native": "^0.85.2",
     "react-numeric-input": "^2.2.3",
     "react-router-dom": "^6.30.3",
     "react-scripts": "5.0.1",

@@ -39,7 +39,7 @@ export const BLOCK = {
 };
 export const BLOCK_INFO = {
   [BLOCK.NONE]: {
-    captionEditor: "aucun",
+    captionEditor: "space_empty",
     isRealBlock: false,
   },
   [BLOCK.A]: {
