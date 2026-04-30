@@ -83,31 +83,32 @@ export default function Component({ loadingPackage }) {
           {Array.from({ length: yLength }).map((_, y) => (
             <div key={y} className="spaceRow">
               {Array.from({ length: xLength }).map((_, x) => (
-                <div
-                  key={x}
-                  className={`space ${getClassName(x, y)}`}
-                  onClick={() => {
-                    if (canChangeSpace(x, y)) {
-                      if (state.currentSpace !== DO_NOT_CHANGE) {
-                        dispatch({
-                          type: "gridF",
-                          x: x,
-                          y: y,
-                          value: state.currentSpace,
-                        });
+                <div key={x} className="spaceBG">
+                  <div
+                    className={`space ${getClassName(x, y)}`}
+                    onClick={() => {
+                      if (canChangeSpace(x, y)) {
+                        if (state.currentSpace !== DO_NOT_CHANGE) {
+                          dispatch({
+                            type: "gridF",
+                            x: x,
+                            y: y,
+                            value: state.currentSpace,
+                          });
+                        }
+                        if (state.currentBlock !== DO_NOT_CHANGE) {
+                          dispatch({
+                            type: "gridM",
+                            x: x,
+                            y: y,
+                            value: state.currentBlock,
+                          });
+                        }
                       }
-                      if (state.currentBlock !== DO_NOT_CHANGE) {
-                        dispatch({
-                          type: "gridM",
-                          x: x,
-                          y: y,
-                          value: state.currentBlock,
-                        });
-                      }
-                    }
-                  }}
-                >
-                  <div className={classSuperposition(x, y)}></div>
+                    }}
+                  >
+                    <div className={classSuperposition(x, y)}></div>
+                  </div>
                 </div>
               ))}
             </div>

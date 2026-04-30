@@ -78,13 +78,15 @@ export default function Component() {
   }
 
   return (
-    <div className="playField mainComponent">
+    <div className="mainComponent">
       {Array.from({ length: yLength }).map((_, y) => (
         <div key={y} className="spaceRow">
           {Array.from({ length: xLength }).map((_, x) => (
-            <div key={x} className={`space ${getClassName(x, y)}`}>
-              {" "}
-              <div className={classSuperposition(x, y)}></div>
+            <div key={x} className="spaceBG">
+              <div className={`space ${getClassName(x, y)}`}>
+                {" "}
+                <div className={classSuperposition(x, y)}></div>
+              </div>
             </div>
           ))}
         </div>

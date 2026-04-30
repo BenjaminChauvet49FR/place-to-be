@@ -1,3 +1,7 @@
+body {
+	background-image: url("../images/arriere_plan_general.png");
+}
+
 /* menus generaux */
 
 nav {
@@ -48,37 +52,41 @@ nav {
 /* ------------------ */
 /* terrain (jeu et édition) */
 
-.space {
+.spaceBG {
 	width:20px;
 	height:20px;
+	background-image:url("../images/case_vide.png");
 }
 .spaceRow {
 	display:flex;
 	justify-content: center;
 }
-.space_empty {
-	background-color:white;
+/*.space_empty {
+}*/
+.space {
+	width: 100%; /*Note : la taille d'une case doit bien etre definie quelque part.*/
+  	height: 100%;
 }
 .space_wall {
 	background-color:grey;
 }
 .space_goalA {
-  background-image:url("../images/goal_A.png");
+  background-image:url("../images/cible_A.png");
 }
 .space_goalB {
-  background-image:url("../images/goal_B.png");
+  background-image:url("../images/cible_B.png");
 }
 .space_goalC {
-  background-image:url("../images/goal_C.png");
+  background-image:url("../images/cible_C.png");
 }
 .space_blockA {
-  background-image:url("../images/block_A.png");
+  background-image:url("../images/bloc_A.png");
 }
 .space_blockB {
-  background-image:url("../images/block_B.png");
+  background-image:url("../images/bloc_B.png");
 }
 .space_blockC {
-  background-image:url("../images/block_C.png");
+  background-image:url("../images/bloc_C.png");
 }
 .superposition {
   position:relative;
@@ -91,13 +99,13 @@ nav {
   background-image:url("../images/correct.png");
 }
 .wrong_A {
-  background-image:url("../images/wrong_A.png");
+  background-image:url("../images/mauvais_A.png");
 }
 .wrong_B {
-  background-image:url("../images/wrong_B.png");
+  background-image:url("../images/mauvais_B.png");
 }
 .wrong_C {
-  background-image:url("../images/wrong_C.png");
+  background-image:url("../images/mauvais_C.png");
 }
 
 /* ------------------ */
