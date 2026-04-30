@@ -105,6 +105,14 @@ SIMPLE_JWT = {
 
 WSGI_APPLICATION = 'place_to_be.wsgi.application'
 
+SESSION_COOKIE_SAMESITE = "None"
+CSRF_COOKIE_SAMESITE = "None"
+SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = True
+CSRF_TRUSTED_ORIGINS = [
+    "https://place-to-be.netlify.app"
+]
+
 
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
