@@ -39,7 +39,8 @@ export const BLOCK = {
 };
 export const BLOCK_INFO = {
   [BLOCK.NONE]: {
-    captionEditor: "space_empty",
+    captionEditor: "vide",
+    className: "space_blockA",
     isRealBlock: false,
   },
   [BLOCK.A]: {
