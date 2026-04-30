@@ -109,8 +109,8 @@ export default function Page() {
   }
 
   function handleFinishReorder() {
-    console.log("Nouvel ordre :", levelListJSON);
-    // POST vers Django !
+    // console.log("Nouvel ordre :", levelListJSON);
+    // Requete post par ici
     reorderLevels(levelListJSON.map((level) => level.id));
     setDragMode(false);
   }

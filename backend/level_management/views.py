@@ -112,6 +112,11 @@ def reorder(request):
     if set(allIDRequest) != expectedIDs:
         return HttpResponseForbidden()
 
+    # Si on tente de déplacer une liste vide... ne rien faire.
+    if len(allIDRequest) == 0:
+        return JsonResponse({"ok": True})
+
+
     allOrigPos = list(map(lambda lvl:lvl.position, qs))
     maxPos = max(allOrigPos)+1
 
