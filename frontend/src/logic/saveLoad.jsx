@@ -2,7 +2,12 @@ import { NO_ID_LEVEL } from "./constants.jsx";
 
 import * as encodeDecode from "./encodeDecode.jsx";
 
-import { saveNewLevel, updateLevel, promiseLoadLevel } from "../utils/api.jsx";
+import {
+  saveNewLevel,
+  updateLevel,
+  promiseLoadLevel,
+  Error404,
+} from "../utils/api.jsx";
 
 export const PREFIX_FOR_BASCULE_ENCODING = "TEST_ENCODING_PURPOSE_ONLY";
 export const BASCULE_ENCODING_DONE = false; // Only set it to true when encoding bascule has been made and you want to load ALL levels under new system, but you don't want to get rid of the old system yet. Then, to false again.
@@ -35,15 +40,17 @@ async function loadLevelFromID_aux(pID_NB, pDispatch, pLevelFunction) {
     const levelData = await promiseLoadLevel(pLevelFunction, pID_NB);
     loadLevelForEditor(levelData.lvData, levelData.name, pDispatch);
   } catch (error) {
-    console.log(error);
-    let errorMsg;
-    if (pLevelFunction === LEVEL_FUNCTION.MAIN) {
-      errorMsg = "Impossible de charger le niveau d'id" + pID_NB;
+    if (error instanceof Error404) {
+      throw error;
     } else {
-      errorMsg = "Impossible de charger le niveau de numéro " + pID_NB;
+      let errorMsg;
+      if (pLevelFunction === LEVEL_FUNCTION.MAIN) {
+        errorMsg = "Impossible de charger le niveau d'id" + pID_NB;
+      } else {
+        errorMsg = "Impossible de charger le niveau de numéro " + pID_NB;
+      }
+      throw error(errorMsg);
     }
-    window.alert(errorMsg); // TODO distinguer ces messages d'erreur
-    throw error;
   }
 }
 

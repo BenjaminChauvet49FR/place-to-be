@@ -34,7 +34,7 @@ export async function connect(pUsername, pPassword) {
 export async function connectFromF5() {
   try {
     const res = await api.get(`/api/me/`, {});
-    if (res.statusText === "OK") {
+    if (res.status === 200) {
       return { success: true, data: res.data };
     } else {
       return { success: false }; // TODO voir les logs à cet endroit la
@@ -51,7 +51,8 @@ export async function createUser(pUsername, pPassword) {
       username: pUsername,
       password: pPassword,
     });
-    if (response.statusText === "Created") {
+    if (response.status === 201) {
+      // TODO Rendre le cas d'erreur (user déjà créé) plus explicite
       const data = await response.data;
       localStorage.setItem("access_token", data.access);
       return { success: true, data };
@@ -92,7 +93,7 @@ export async function getMainQuestLevels() {
 async function getLevels_aux(pURL) {
   try {
     const response = await api.get(pURL, {});
-    if (response.statusText === "OK") {
+    if (response.status === 200) {
       const data = response.data;
       return { success: true, levels: data.results };
     } else {
@@ -109,7 +110,7 @@ export async function getLastLevelNumber() {
   try {
     const response = await api.get(`/${API_LEVEL_MAIN_QUEST}/`, {});
     const data = response.data;
-    if (response.statusText !== "OK") {
+    if (response.status !== 200) {
       throw new Error(data.detail);
     }
     return { success: true, lastLevelNumber: data.results.length };
@@ -122,7 +123,7 @@ export async function getLastLevelNumber() {
 // Obtenir TOUS les niveaux
 export async function loadAllLevels() {
   const response = await api.get(`/api/TODO/`); // TODO make an endpoint with absolutely all levels !
-  if (response.statusText !== "OK") {
+  if (response.status !== 200) {
     throw new Error("Impossible de récupérer la liste des niveaux !");
   }
   return response.json();
@@ -165,25 +166,33 @@ export async function promiseLoadLevel(pLevelType, pID_NB) {
   if (pLevelType === LEVEL_FUNCTION.MAIN) {
     url = `/${API_LEVEL_MAIN_QUEST}/${pID_NB}/`;
   }
-  const response = await api.get(url);
+  let response;
+  try {
+    response = await api.get(url);
+  } catch (error) {
+    console.log(error);
+    if (error.message.includes(" 404")) {
+      throw new Error404();
+    }
+  }
   return response.data;
 }
 
 // Effacer un niveau
 export async function deleteLevel(pID) {
-  const response = await api.delete(`${API_URL}/api/level/${pID}/`);
-  if (response.statusText !== "No Content") {
+  const response = await api.delete(`/api/level/${pID}/`);
+  if (response.status !== 204) {
     throw new Error("Impossible de supprimer le niveau");
   }
 }
 
 // Réordonner TOUS les niveaux
 export async function reorderLevels(pLevelList) {
-  const response = await api.post(`${API_URL}/api/reorder/`, {
+  const response = await api.post(`/api/reorder/`, {
     idList: pLevelList,
   });
 
-  if (response.statusText !== "OK") {
+  if (response.status !== 200) {
     throw new Error("Impossible de réordonner les niveaux !");
   }
 }

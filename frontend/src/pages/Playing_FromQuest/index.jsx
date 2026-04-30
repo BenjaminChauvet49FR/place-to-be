@@ -27,6 +27,8 @@ export default function Page() {
         if (e instanceof Error404) {
           navigate(paths.notReachableLevelQuest());
           // TODO : faire pareil avec un niveau "non débloqué"
+        } else {
+          window.alert(e.message);
         }
       }
     }

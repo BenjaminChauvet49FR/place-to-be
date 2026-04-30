@@ -21,8 +21,8 @@ export default function Page() {
       try {
         await loadLevelFromID_FREE(trueLevelId, uce.dispatch);
       } catch (e) {
-        if (typeof e == Error404) {
-          navigate.redirect(paths.notFoundLevel());
+        if (e instanceof Error404) {
+          navigate(paths.notFoundLevel());
         }
       }
     }

@@ -11,8 +11,6 @@ const StyledLink = styled(Link)`
   font-size: 18px;
 `;
 
-console.log("INDEX LOADED");
-
 export default function Component() {
   return (
     <nav>
