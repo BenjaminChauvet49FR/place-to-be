@@ -23,11 +23,12 @@ export default function Component() {
   const navigate = useNavigate();
 
   function backToEdition() {
-    editContext.dispatch({ type: "keepEditorState" });
     if (editContext.state.levelID === NO_ID_LEVEL) {
-      navigate(paths.editLevelNew());
+      navigate(paths.editLevelNew(), { state: { comeFromPlayTest: true } });
     } else {
-      navigate(paths.editLevel(editContext.state.levelID));
+      navigate(paths.editLevel(editContext.state.levelID), {
+        state: { comeFromPlayTest: true },
+      });
     }
   }
 

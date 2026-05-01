@@ -3,7 +3,7 @@ import EditorPanel from "../../components/EditorPanel";
 import { Error404 } from "../../utils/api.jsx";
 import { useState, useEffect, useRef } from "react";
 import { loadLevelFromID_CONNECTED, loadNewLevel } from "../../logic/saveLoad";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 
 import { useContext } from "react";
 import { LevelEditContext } from "../../context/LevelEditContext";
@@ -11,7 +11,7 @@ import { paths } from "../../utils/paths.jsx";
 
 // -----------------------
 
-export default function Page() {
+export default function Page({ comeFromPlayTest }) {
   const { levelId } = useParams(); // Remember : same name as in router mandatory, or else... undefined !
   let trueLevelId = 0;
   if (levelId !== "new") {
@@ -35,10 +35,11 @@ export default function Page() {
 
   const hasFetched = useRef(false);
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     async function init() {
-      if (!state.keepEditorState) {
+      if (!location.state?.comeFromPlayTest) {
         dispatch({ type: "levelID", levelID: trueLevelId });
 
         hasFetched.current = true;
@@ -59,12 +60,11 @@ export default function Page() {
           setLoading(false);
         }
       } else {
-        dispatch({ type: "noLongerKeepEditorState" });
         setLoading(false); // Note : isLoading is true by default
       }
     }
     init();
-  }, [dispatch, state.keepEditorState, trueLevelId, navigate]);
+  }, [dispatch, trueLevelId, navigate, location.state?.comeFromPlayTest]);
 
   return (
     <div>

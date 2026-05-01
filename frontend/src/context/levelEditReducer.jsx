@@ -61,16 +61,6 @@ export function levelEditReducer(pState, pAction) {
         ...pState,
         currentBlock: pAction.value,
       };
-    case "keepEditorState":
-      return {
-        ...pState,
-        keepEditorState: true,
-      };
-    case "noLongerKeepEditorState":
-      return {
-        ...pState,
-        keepEditorState: false,
-      };
 
     case "movesLimit":
       return {
@@ -146,7 +136,6 @@ export const initialState = {
   levelName: "",
   currentSpace: SPACE.EMPTY,
   currentBlock: BLOCK.NONE,
-  keepEditorState: false,
   movesLimit: NEW_ARRAY_MOVES_LIMIT(),
   movesInfinite: NEW_ARRAY_MOVES_INFINITE(),
 };
