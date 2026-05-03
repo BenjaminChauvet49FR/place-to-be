@@ -4,7 +4,7 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.decorators import api_view, permission_classes
 
-from .models import Level
+from .models import Level, LevelCompletion, CompletionStatus
 from .serializers import LevelSerializer
 from .permissions import IsOwner
 from authentication.models import User
@@ -148,3 +148,26 @@ def reorder(request):
 
     return JsonResponse({"ok": True})
 
+
+# Déclarer un niveau comme réussi avec un certain niveau de réussite
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def attestLevelSuccess(request):
+    user = request.user
+    if (not user):
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    level = Level.objects.get(creator__username__startswith="___BenjAdmin" , position = request.data["levelNumber"])
+    if (not level):
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    levelCompletion = LevelCompletion.objects.get_or_create(
+        user=user,
+        level=level,
+        defaults= {
+            "status":request.data["status"]
+        }
+    )
+    if (request.data["status"] == CompletionStatus.SUPER and levelCompletion.status == CompletionStatus.NORMAL):
+        levelCompletion.status = CompletionStatus.SUPER # TODO A VERIFIER
+        levelCompletion.save()
+    # print(ok)
+    return Response(status=status.HTTP_200_OK)

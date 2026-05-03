@@ -254,7 +254,7 @@ export function useGameplay() {
     // Fait un peu tôt MAIS le fait que "l'attente" (un window.alert ou un message d'API) soit juste avant le tout dernier déplacement n'est pas idiot en soi. Ca va me rappeler l'heurese époque de Django ;)
     if (!state.clear && movePerformed && checkClearConditions()) {
       window.alert("C'est gagné ;)");
-      dispatch({ type: "clear", clear: true });
+      dispatch({ type: "clear", clear: true }); // Note : cela déclenche l'appel à l'API quand on est dans la quête principale.
     }
   }
 
@@ -315,6 +315,16 @@ export function useGameplay() {
         return false;
       }
     }
+    for (let i = 0; i < state.blockTypesInfos.length; i++) {
+      if (
+        !state.blockTypesInfos[i].movesInfinite &&
+        state.blockTypesInfos[i].movesPlayed >
+          state.blockTypesInfos[i].movesLimit
+      ) {
+        return false;
+      }
+    }
+
     return true;
   }
 

@@ -27,3 +27,30 @@ class Level(models.Model):
         ]
 
         ordering = ["position", "id"]
+
+class CompletionStatus(models.TextChoices):
+    NORMAL = "normal", "Normal"
+    SUPER = "super", "Super"
+
+
+class LevelCompletion(models.Model):
+    status = models.CharField(
+        max_length=10,
+        choices=CompletionStatus.choices,
+        default=CompletionStatus.NORMAL
+    )
+
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="level_completions"
+    )
+
+    level = models.ForeignKey(
+        Level,
+        on_delete=models.CASCADE,
+        related_name="completions"
+    )
+
+    class Meta:
+        unique_together = ("user", "level")

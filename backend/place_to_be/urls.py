@@ -52,5 +52,8 @@ urlpatterns = [
     path('api/register/', register, name='register'),
    
     # Manipulations sur niveaux
-    path('api/reorder/', reorder, name='reorder')
+    path('api/reorder/', reorder, name='reorder'),
+
+    # Succès niveau
+    path('api/attestSuccess/', attestLevelSuccess, name='attest')    
 ]

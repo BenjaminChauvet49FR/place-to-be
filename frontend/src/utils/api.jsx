@@ -130,6 +130,17 @@ export async function loadAllLevels() {
 }
 
 // -------------------------
+// Réussite d'un niveau
+
+export async function attestMainQuestLevelSuccess(pLevelNumber) {
+  const response = await api.post(`/api/attestSuccess/`, {
+    levelNumber: pLevelNumber,
+    status: "NORMAL",
+  });
+  return response.data;
+}
+
+// -------------------------
 // Manipuler les niveaux
 
 // Créer un niveau (et l'enregistrer)
