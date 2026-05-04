@@ -5,14 +5,15 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.decorators import api_view, permission_classes
 
 from .models import Level, LevelCompletion, CompletionStatus
-from .serializers import LevelSerializer
+from .serializers import LevelSerializer, LevelMainQuestSerializer
 from .permissions import IsOwner
 from authentication.models import User
 
 from django.core import serializers
 from django.http import JsonResponse, HttpResponseForbidden    
 from django.db import transaction
-from django.db.models import Case, When, Value, IntegerField
+from django.db.models import Case, When, Value, IntegerField, Prefetch
+
 
  
 class OwnLevelViewset(ModelViewSet):
@@ -75,14 +76,19 @@ class LevelFromUsersViewset(ModelViewSet):
         return queryset
 
 class LevelFromMainQuestViewSet(ModelViewSet):
-    serializer_class = LevelSerializer
+    serializer_class = LevelMainQuestSerializer
     permission_classes = [IsAuthenticated]
     lookup_field = "position" # Cette ligne est TRES IMPORTANTE ! Elle permet de vérifier sur les positions et non les id. 
     
     def get_queryset(self):
-        queryset = Level.objects.filter(creator__username__startswith="___BenjAdmin")
-        # TODO modifier le modèle pour prendre en compte les niveaux atteints
-        return queryset
+        user = self.request.user
+
+        return Level.objects.filter(creator__username__startswith="___BenjAdmin").prefetch_related(
+            Prefetch(
+                "completions",
+                queryset=LevelCompletion.objects.filter(user=user)
+            )
+        )
 
 @api_view(['GET'])
 def idsGeneralPublic(request):
