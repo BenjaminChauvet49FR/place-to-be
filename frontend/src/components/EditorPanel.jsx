@@ -7,7 +7,11 @@ import {
   BLOCK_TYPES_LIST,
 } from "../logic/constants.jsx";
 import { deleteLevel, loadAllLevels } from "../utils/api.jsx";
-import { saveLevel, loadLevelFromID_FREE } from "../logic/saveLoad.jsx";
+import {
+  saveLevel,
+  saveLevelEnMasse,
+  loadLevelFromID_ABSOLUTELY_ALL,
+} from "../logic/saveLoad.jsx";
 
 import { useAuth } from "../context/AuthContext.jsx";
 
@@ -89,6 +93,11 @@ export default function Component({ state, dispatch }) {
     dispatch({ type: "movesLimit", index: pBlockId, value: pValue });
   }
 
+  function handleMovesSuperChange(pBlockId, pValue) {
+    dispatch({ type: "movesSuperLimit", index: pBlockId, value: pValue });
+    // Note : rien n'est fait si la super limite est supérieure à la limite ordinaire.
+  }
+
   function handleInfiniteMovesChange(pBlockId, pValue) {
     dispatch({
       type: "movesInfinite",
@@ -100,25 +109,34 @@ export default function Component({ state, dispatch }) {
   // =================================
 
   function handleLoadAndSaveALLLevels(pState, pDispatch) {
-    loadAllLevels()
-      .then((JSONResponse) => {
-        console.log(JSONResponse);
+    /*try {
+      (async function () {
+        const data = await loadAllLevels();
         if (
           window.confirm(
             "Vous êtes sur le point de charger puis sauvegarder TOUS les niveaux ! (au nombre de " +
-              JSONResponse.length +
+              data.length +
               ") : confirmer ?",
           )
         ) {
-          JSONResponse.forEach((entry) => {
-            loadLevelFromID_FREE(entry, pDispatch); // from entry to dispatch
-            saveLevel(pState, pDispatch);
+          data.forEach((entry) => {
+            (async function () {
+              await loadLevelFromID_ABSOLUTELY_ALL(entry.id, pDispatch); // from entry to dispatch
+              // Note : changer l'ID n'est pas naturellement fait dans les fonctions "loadLevel", je dois donc le rajouter ici
+              // Note : pour une raison que j'ignore, il est impossible de mettre l'ID du niveau en temps réel.
+              // pDispatch({action : "levelID", levelID : entry.id})
+              // Qu'à cela ne tienne, je force l'ID du niveau sauvegardé.
+              saveLevelEnMasse(pState, pDispatch, entry.id);
+            })();
           });
         }
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+      })();
+    } catch (error) {
+      console.error(error);
+    }*/
+    window.alert(
+      "Bouton hors service ! La bascule d'encodage doit être faite manuellement, niveau par niveau. C'est pénible, je sais, mais on n'a pas le choix car la dernière fois que j'ai essayé, ça a transformé tous les niveaux en un seul !",
+    );
   }
 
   // =================================
@@ -174,6 +192,17 @@ export default function Component({ state, dispatch }) {
               onChange={(e) =>
                 handleInfiniteMovesChange(type.id, e.target.checked)
               }
+            />
+            {"     "}
+
+            <span className={"littleHelp"}>Super limite : </span>
+            <input
+              className={`inputMoves ${type.cn}`}
+              min={0}
+              max={999}
+              type="number"
+              value={state.movesSuperLimit[type.id]}
+              onChange={(e) => handleMovesSuperChange(type.id, e.target.value)}
             />
           </div>
         ))}

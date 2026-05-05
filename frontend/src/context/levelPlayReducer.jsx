@@ -3,6 +3,7 @@ import {
   REAL_XLENGTH,
   REAL_YLENGTH,
   NO_ID_BLOCK,
+  CLEAR,
 } from "../logic/constants";
 
 export function levelPlayReducer(pState, pAction) {
@@ -143,5 +144,5 @@ export const initialState = {
   currentBlockTypeID: 0, // TODO add some constraint to make sure it is always between 0 and blockTypes.length
   moves: [],
   itemsInGrid: [],
-  clear: false,
+  clear: CLEAR.NO,
 };

@@ -18,6 +18,8 @@ const MASTER_STRING =
 const INFINITE_SYMBOL = "-";
 const EXTENSION_MARK = "+";
 const NUMBER_THAT_MEANS_INFINITE = -1;
+const SPLIT_TOKEN = ";";
+export const DUMMY_DATA = "99991;";
 
 /** For numbers 0 to 63 */
 function valToChar(pVal) {
@@ -37,6 +39,10 @@ function val127ToString(pVal) {
   }
 }
 
+function val4095toString(pVal) {
+  return valToChar(Math.floor(pVal / 64)) + valToChar(pVal % 64);
+}
+
 // pDecoder = item with a property "index"
 // pDecoder = {index : 0}
 // successive uses of stringToVal127("36+5", pDecoder) returns 3 (for "3"), 6 (for "6") and 69 (for "+5")
@@ -53,8 +59,89 @@ function stringToVal127OrInfinite(pString, pDecoder) {
   }
 }
 
+function stringToVal4095(pChar1, pChar2) {
+  return charToVal(pChar1) * 64 + charToVal(pChar2);
+}
+
 export function loadLevelForEditorPreviousSystem(pLevelData) {
   return loadLevelForEditorNewSystem(pLevelData);
+
+  /*let x, y;
+  let gridF = [];
+  let gridM = [];
+  let xFirst = charToVal(pLevelData.charAt(0));
+  let yFirst = charToVal(pLevelData.charAt(1));
+  let xLast = charToVal(pLevelData.charAt(2));
+  let yLast = charToVal(pLevelData.charAt(3));
+  let movesInfinite = NEW_ARRAY_MOVES_INFINITE();
+  let movesLimit = NEW_ARRAY_MOVES_LIMIT();
+  let movesSuperLimit = NEW_ARRAY_MOVES_LIMIT();
+
+  for (y = 0; y < REAL_YLENGTH; y++) {
+    gridF.push([]);
+    gridM.push([]);
+    for (x = 0; x < REAL_XLENGTH; x++) {
+      gridF[y].push(
+        x === 0 || x === REAL_XLENGTH - 1 || y === 0 || y === REAL_YLENGTH - 1
+          ? SPACE.WALL
+          : SPACE.EMPTY,
+      );
+      gridM[y].push(BLOCK.NONE);
+    }
+  }
+
+  let levelSize = (yLast - yFirst + 1) * (xLast - xFirst + 1);
+  let dataMain = pLevelData.substring(4, 4 + levelSize);
+  let dataPostGrid = pLevelData.substring(4 + levelSize);
+
+  let iData = 0;
+  let iDataBelow = 0;
+  let char;
+  let blockTypesMet = [];
+
+  for (y = yFirst; y <= yLast; y++) {
+    for (x = xFirst; x <= xLast; x++) {
+      char = dataMain.charAt(iData);
+      if (isEncodedBlock(char)) {
+        gridF[y][x] = dataPostGrid.charAt(iDataBelow);
+        gridM[y][x] = encodedBlockToBlock(char);
+        if (blockTypesMet.indexOf(gridM[y][x]) === -1) {
+          blockTypesMet.push(gridM[y][x]);
+        }
+        iDataBelow++;
+      } else {
+        gridF[y][x] = char;
+        gridM[y][x] = BLOCK.NONE;
+      }
+      iData++;
+    }
+  }
+  // Now, all the data "below items" should be clear, and we are set to iDataBelow. Let's cut the string !
+
+  dataPostGrid = dataPostGrid.substring(iDataBelow);
+  let decoder = { index: 0 };
+  let blockTypeMetIndex = 0;
+  let value;
+  let idBlock;
+  while (decoder.index < dataPostGrid.length) {
+    value = stringToVal127OrInfinite(dataPostGrid, decoder); // Decoder goes up by 1 or 2...
+    idBlock = BLOCK_INFO[blockTypesMet[blockTypeMetIndex]].id;
+    blockTypeMetIndex++; // ... and blockTypeMetIndex by 1.
+    movesInfinite[idBlock] = value === NUMBER_THAT_MEANS_INFINITE;
+    if (!movesInfinite[idBlock]) {
+      movesLimit[idBlock] = value;
+    }
+    movesSuperLimit[idBlock] = 99;
+  }
+
+  // Don't forget the "return" !
+  return {
+    gridF: gridF,
+    gridM: gridM,
+    movesInfinite: movesInfinite,
+    movesLimit: movesLimit,
+    movesSuperLimit: movesSuperLimit,
+  };*/
 }
 
 export function loadLevelForEditorNewSystem(pLevelData) {
@@ -68,6 +155,7 @@ export function loadLevelForEditorNewSystem(pLevelData) {
   let yLast = charToVal(pLevelData.charAt(3));
   let movesInfinite = NEW_ARRAY_MOVES_INFINITE();
   let movesLimit = NEW_ARRAY_MOVES_LIMIT();
+  let movesSuperLimit = NEW_ARRAY_MOVES_INFINITE();
 
   for (y = 0; y < REAL_YLENGTH; y++) {
     gridF.push([]);
@@ -110,18 +198,28 @@ export function loadLevelForEditorNewSystem(pLevelData) {
   }
   // Now, all the data "below items" should be clear, and we are set to iDataBelow. Let's cut the string !
   dataPostGrid = dataPostGrid.substring(iDataBelow);
+  let dataNormalLimit = dataPostGrid.split(SPLIT_TOKEN)[0];
+  let dataSuperLimit = dataPostGrid.split(SPLIT_TOKEN)[1];
   let decoder = { index: 0 };
   let blockTypeMetIndex = 0;
   let value;
   let idBlock;
-  while (decoder.index < dataPostGrid.length) {
-    value = stringToVal127OrInfinite(dataPostGrid, decoder); // Decoder goes up by 1 or 2...
+  while (decoder.index < dataNormalLimit.length) {
+    value = stringToVal127OrInfinite(dataNormalLimit, decoder); // Decoder goes up by 1 or 2...
     idBlock = BLOCK_INFO[blockTypesMet[blockTypeMetIndex]].id;
     blockTypeMetIndex++; // ... and blockTypeMetIndex by 1.
     movesInfinite[idBlock] = value === NUMBER_THAT_MEANS_INFINITE;
     if (!movesInfinite[idBlock]) {
       movesLimit[idBlock] = value;
     }
+  }
+  for (let i = 0; i < dataSuperLimit.length; i += 2) {
+    blockTypeMetIndex = i / 2;
+    idBlock = BLOCK_INFO[blockTypesMet[blockTypeMetIndex]].id;
+    movesSuperLimit[idBlock] = stringToVal4095(
+      dataSuperLimit.charAt(i),
+      dataSuperLimit.charAt(i + 1),
+    );
   }
 
   // Don't forget the "return" !
@@ -130,10 +228,17 @@ export function loadLevelForEditorNewSystem(pLevelData) {
     gridM: gridM,
     movesInfinite: movesInfinite,
     movesLimit: movesLimit,
+    movesSuperLimit: movesSuperLimit,
   };
 }
 
-export function encodedLevelData(pGridF, pGridM, pMovesInfinite, pMovesLimit) {
+export function encodedLevelData(
+  pGridF,
+  pGridM,
+  pMovesInfinite,
+  pMovesLimit,
+  pMovesSuperLimit,
+) {
   // Note : here, pState is read but not written... except for ID.
 
   let x, y;
@@ -168,6 +273,7 @@ export function encodedLevelData(pGridF, pGridM, pMovesInfinite, pMovesLimit) {
   let char = "";
   let dataMovesPerColour = "";
   let seenColours = []; // Ordre des couleurs par >>> premier bloc rencontré <<< en lisant la grille en par ordre de lecture
+  let dataSuperMovesPerColour = "";
   let id;
   for (y = yFirst; y <= yLast; y++) {
     for (x = xFirst; x <= xLast; x++) {
@@ -182,6 +288,7 @@ export function encodedLevelData(pGridF, pGridM, pMovesInfinite, pMovesLimit) {
           } else {
             dataMovesPerColour += val127ToString(pMovesLimit[id]);
           }
+          dataSuperMovesPerColour += val4095toString(pMovesSuperLimit[id]);
         }
       } else {
         char = pGridF[y][x];
@@ -189,5 +296,12 @@ export function encodedLevelData(pGridF, pGridM, pMovesInfinite, pMovesLimit) {
       dataMain += char;
     }
   }
-  return dataSize + dataMain + dataBelowItems + dataMovesPerColour;
+  return (
+    dataSize +
+    dataMain +
+    dataBelowItems +
+    dataMovesPerColour +
+    SPLIT_TOKEN +
+    dataSuperMovesPerColour
+  );
 }

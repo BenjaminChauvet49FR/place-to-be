@@ -1,9 +1,11 @@
 import { LEVEL_FUNCTION } from "../logic/saveLoad.jsx";
+import { CLEAR } from "../logic/constants.jsx";
 import api from "./axios.jsx";
 
 export const API_URL = process.env.REACT_APP_API_URL;
 const API_LEVELS_GENERAL_PUBLIC = "api/levelsGeneralPublic";
 const API_LEVEL_EDIT = "api/level";
+const API_LEVEL_ANY = "api/allLevelsAdmin";
 const API_LEVEL_MAIN_QUEST = "api/levelsMainQuest";
 
 // -------------------------
@@ -122,20 +124,20 @@ export async function getLastLevelNumber() {
 
 // Obtenir TOUS les niveaux
 export async function loadAllLevels() {
-  const response = await api.get(`/api/TODO/`); // TODO make an endpoint with absolutely all levels !
+  const response = await api.get(`/api/allLevelsAdmin/`);
   if (response.status !== 200) {
     throw new Error("Impossible de récupérer la liste des niveaux !");
   }
-  return response.json();
+  return response.data.results;
 }
 
 // -------------------------
 // Réussite d'un niveau
 
-export async function attestMainQuestLevelSuccess(pLevelNumber) {
+export async function attestMainQuestLevelSuccess(pLevelNumber, pClearStatus) {
   const response = await api.post(`/api/attestSuccess/`, {
     levelNumber: pLevelNumber,
-    status: "NORMAL",
+    status: pClearStatus === CLEAR.SUPER ? "SUPER" : "NORMAL",
   });
   return response.data;
 }
@@ -171,8 +173,11 @@ export class Error404 extends Error {
 // Charger un niveau
 export async function promiseLoadLevel(pLevelType, pID_NB) {
   let url = `/${API_LEVELS_GENERAL_PUBLIC}/${pID_NB}/`;
-  if (pLevelType === LEVEL_FUNCTION.GENERAL_CONNECTED) {
+  if (pLevelType === LEVEL_FUNCTION.GENERAL_EDITION) {
     url = `/${API_LEVEL_EDIT}/${pID_NB}/`;
+  }
+  if (pLevelType === LEVEL_FUNCTION.ANY) {
+    url = `/${API_LEVEL_ANY}/${pID_NB}/`;
   }
   if (pLevelType === LEVEL_FUNCTION.MAIN) {
     url = `/${API_LEVEL_MAIN_QUEST}/${pID_NB}/`;

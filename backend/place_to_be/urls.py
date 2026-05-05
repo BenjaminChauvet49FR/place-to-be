@@ -31,7 +31,7 @@ router.register('myLevels', OwnLevelViewset, basename='myLevels')
 router.register('levelsGeneralPublic', LevelFromUsersViewset, basename='levels')
 router.register('levelsMainQuest', LevelFromMainQuestViewSet, basename='levelsMQ')
 router.register('level', OwnLevelViewset, basename='level') 
-#router.register('level', OwnLevelViewset, basename='level') # TODO wanting a route for all levels and a route for detail is not so bad JE SAIS PLUS CE QUE JE VEUX DU COUP
+router.register('allLevelsAdmin', AllLevelsAdminViewset, basename='allLevels') # TODO wanting a route for all levels and a route for detail is not so bad
 
 def ping(request):
     return JsonResponse({"status": "ok"})

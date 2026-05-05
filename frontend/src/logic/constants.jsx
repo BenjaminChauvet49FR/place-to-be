@@ -115,7 +115,15 @@ export const NO_ID_LEVEL = 0;
 export const DO_NOT_CHANGE = -6; // Good for editor.
 
 // ----------------------------------------------------
-// Limits part
+// Winning part
+export const CLEAR = {
+  NO: 0,
+  PARTIAL: 1,
+  TOTAL: 2,
+};
+
+// ----------------------------------------------------
+// Field limits part
 export function canChangeSpace(pX, pY) {
   // limits for puttable blocks = 1-20 in X and 1-20 in Y ; 0 and 21 filled with walls
   return 0 < pX && pX < REAL_XLENGTH - 1 && 0 < pY && pY < REAL_YLENGTH - 1;

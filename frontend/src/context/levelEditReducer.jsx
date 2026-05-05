@@ -76,6 +76,13 @@ export function levelEditReducer(pState, pAction) {
           index === pAction.index ? pAction.value : value,
         ),
       };
+    case "movesSuperLimit":
+      return {
+        ...pState,
+        movesSuperLimit: pState.movesSuperLimit.map((value, index) =>
+          index === pAction.index ? pAction.value : value,
+        ),
+      };
 
     case "movesLimit_ALL":
       return {
@@ -86,6 +93,11 @@ export function levelEditReducer(pState, pAction) {
       return {
         ...pState,
         movesInfinite: pAction.movesInfinite,
+      };
+    case "movesSuperLimit_ALL":
+      return {
+        ...pState,
+        movesSuperLimit: pAction.movesSuperLimit,
       };
 
     default:
@@ -138,4 +150,5 @@ export const initialState = {
   currentBlock: BLOCK.NONE,
   movesLimit: NEW_ARRAY_MOVES_LIMIT(),
   movesInfinite: NEW_ARRAY_MOVES_INFINITE(),
+  movesSuperLimit: NEW_ARRAY_MOVES_LIMIT(),
 };

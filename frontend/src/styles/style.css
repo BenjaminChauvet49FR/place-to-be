@@ -56,7 +56,10 @@ nav {
 	width:20em;
 	border-style:outset
 }
-.level_list_mq > .completed {
+.level_list_mq > .totallyCompleted {
+	background-color: #ccffcc;
+}
+.level_list_mq > .partlyCompleted {
 	background-color: #ffff88;
 }
 .level_list_mq > .uncompleted {

@@ -6,6 +6,7 @@ import {
   REAL_XLENGTH,
   REAL_YLENGTH,
   BLOCK_INFO,
+  CLEAR,
 } from "./constants.jsx";
 
 import { useContext, useEffect } from "react";
@@ -34,6 +35,7 @@ export function useStartLevelFromGrid() {
       uce.state.gridM,
       uce.state.movesLimit,
       uce.state.movesInfinite,
+      uce.state.movesSuperLimit,
       ucp.dispatch,
     );
   }, [
@@ -41,6 +43,7 @@ export function useStartLevelFromGrid() {
     uce.state.gridM,
     uce.state.movesLimit,
     uce.state.movesInfinite,
+    uce.state.movesSuperLimit,
     ucp.dispatch,
   ]);
 }
@@ -50,6 +53,7 @@ function startLevelFromGrid(
   pGridMFromEditor,
   pMovesLimit,
   pMovesInfinite,
+  pMovesSuperLimit,
   pDispatchPlay,
 ) {
   const gridF = [];
@@ -61,7 +65,7 @@ function startLevelFromGrid(
   const before_columns = 0; //Math.floor(REAL_XLENGTH - rawLevel[1].length) / 2;
   const blockTypesInfos = [];
 
-  pDispatchPlay({ type: "clear", clear: false });
+  pDispatchPlay({ type: "clear", clear: CLEAR.NO });
 
   let y = 0;
   let x;
@@ -113,6 +117,7 @@ function startLevelFromGrid(
             index: blockTypes.length,
             movesPlayed: 0,
             movesLimit: pMovesLimit[BLOCK_INFO[blockType].id],
+            movesSuperLimit: pMovesSuperLimit[BLOCK_INFO[blockType].id],
             movesInfinite: pMovesInfinite[BLOCK_INFO[blockType].id],
           }; // Where element of "blockTypesInfos" are set
           blockTypes.push(blockType);
@@ -252,9 +257,11 @@ export function useGameplay() {
     });
 
     // Fait un peu tôt MAIS le fait que "l'attente" (un window.alert ou un message d'API) soit juste avant le tout dernier déplacement n'est pas idiot en soi. Ca va me rappeler l'heurese époque de Django ;)
-    if (!state.clear && movePerformed && checkClearConditions()) {
-      window.alert("C'est gagné ;)");
-      dispatch({ type: "clear", clear: true }); // Note : cela déclenche l'appel à l'API quand on est dans la quête principale.
+    if (movePerformed) {
+      let clearStatus = checkClearConditions();
+      if (state.clear < clearStatus) {
+        dispatch({ type: "clear", clear: clearStatus }); // Note : cela déclenche l'appel à l'API quand on est dans la quête principale.
+      }
     }
   }
 
@@ -298,6 +305,7 @@ export function useGameplay() {
       uce.state.gridM,
       uce.state.movesLimit,
       uce.state.movesInfinite,
+      uce.state.movesSuperLimit,
       dispatch,
     );
   }
@@ -312,20 +320,27 @@ export function useGameplay() {
       x = item.x;
       y = item.y;
       if (state.gridF[y][x] !== item.blockType) {
-        return false;
+        return CLEAR.NO;
       }
     }
+    let clearStatus = CLEAR.TOTAL;
     for (let i = 0; i < state.blockTypesInfos.length; i++) {
       if (
         !state.blockTypesInfos[i].movesInfinite &&
         state.blockTypesInfos[i].movesPlayed >
           state.blockTypesInfos[i].movesLimit
       ) {
-        return false;
+        return CLEAR.NO;
+      }
+      if (
+        state.blockTypesInfos[i].movesPlayed >
+        state.blockTypesInfos[i].movesSuperLimit
+      ) {
+        clearStatus = CLEAR.PARTIAL;
       }
     }
 
-    return true;
+    return clearStatus;
   }
 
   // -------------------

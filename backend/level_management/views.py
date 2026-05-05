@@ -1,7 +1,7 @@
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.permissions import IsAuthenticated, IsAdminUser, BasePermission
 from rest_framework.decorators import api_view, permission_classes
 
 from .models import Level, LevelCompletion, CompletionStatus
@@ -15,11 +15,15 @@ from django.db import transaction
 from django.db.models import Case, When, Value, IntegerField, Prefetch
 
 
- 
+
+class CanChangeEncodings(BasePermission):
+    def has_permission(self, request, view):
+        return request.user.has_perm("authentication.change_encoding_all_levels")
+
 class OwnLevelViewset(ModelViewSet):
  
     serializer_class = LevelSerializer
-    permission_classes = [IsAuthenticated, IsOwner] 
+    permission_classes = [IsAuthenticated, IsOwner | CanChangeEncodings] 
 
     def get_queryset(self):
         # Cas all : ne retourner que les niveaux créés par l'utilisateur connecté. Cas unique : le niveau si l'utilisateur est l'auteur.
@@ -95,12 +99,13 @@ def idsGeneralPublic(request):
     ids = list(Level.objects.exclude(creator__username__startswith="___BenjAdmin").values_list('id', flat=True))
     return Response(ids)
 
-'''class AllLevelAdminViewset(ModelViewSet):
+
+class AllLevelsAdminViewset(ModelViewSet):
     serializer_class = LevelSerializer
-    permission_classes = [IsAdminUser]
+    permission_classes = [CanChangeEncodings]
 
     def get_queryset(self):
-        return Level.objects.all()'''
+        return Level.objects.all()
 
 # Donne à tous les niveaux de l'utilisateur une position (à partir de 1) selon l'ordre des ID fourni dans le corps de la requête
 @api_view(['POST'])

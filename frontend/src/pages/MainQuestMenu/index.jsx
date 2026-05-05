@@ -37,7 +37,13 @@ export default function Page() {
           <div
             key={`O${key}`}
             role="listitem"
-            className={level.completionStatus ? "completed" : "uncompleted"}
+            className={
+              !level.completionStatus
+                ? "uncompleted"
+                : level.completionStatus === "SUPER"
+                  ? "totallyCompleted"
+                  : "partlyCompleted"
+            }
           >
             <span>{level.position} - </span>
             <Link to={paths.playLevelQuest(level.position)}>

@@ -1,6 +1,6 @@
 import { useContext, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { loadLevelFromID_FREE } from "../../logic/saveLoad.jsx";
+import { loadLevelFromID_FREEPLAY } from "../../logic/saveLoad.jsx";
 
 import { LevelEditContext } from "../../context/LevelEditContext";
 import Playing from "../../components/Playing.jsx";
@@ -19,7 +19,7 @@ export default function Page() {
     const trueLevelId = parseInt(levelId, 10);
     async function init() {
       try {
-        await loadLevelFromID_FREE(trueLevelId, uce.dispatch);
+        await loadLevelFromID_FREEPLAY(trueLevelId, uce.dispatch);
       } catch (e) {
         if (e instanceof Error404) {
           navigate(paths.notFoundLevel());

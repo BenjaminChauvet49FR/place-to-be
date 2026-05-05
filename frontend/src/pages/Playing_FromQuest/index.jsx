@@ -7,6 +7,8 @@ import { LevelEditContext } from "../../context/LevelEditContext.jsx";
 import { LevelPlayContext } from "../../context/LevelPlayContext.jsx";
 import Playing from "../../components/Playing.jsx";
 
+import { CLEAR } from "../../logic/constants.jsx";
+
 import { paths } from "../../utils/paths.jsx";
 import { attestMainQuestLevelSuccess, Error404 } from "../../utils/api.jsx";
 
@@ -40,8 +42,14 @@ export default function Page() {
   useEffect(() => {
     const trueLevelNb = parseInt(levelNumber, 10);
 
-    if (ucpState.clear) {
-      attestMainQuestLevelSuccess(trueLevelNb);
+    if (ucpState.clear !== CLEAR.NO) {
+      if (ucpState.clear === CLEAR.PARTIAL) {
+        window.alert("Niveau réussi partiellement");
+      }
+      if (ucpState.clear === CLEAR.TOTAL) {
+        window.alert("Niveau réussi totalement :)");
+      }
+      attestMainQuestLevelSuccess(trueLevelNb, ucpState.clear);
     }
   }, [ucpState.clear, levelNumber]); // Cf. "gameplay.jsx"
 
