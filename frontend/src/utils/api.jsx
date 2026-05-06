@@ -7,6 +7,7 @@ const API_LEVELS_GENERAL_PUBLIC = "api/levelsGeneralPublic";
 const API_LEVEL_EDIT = "api/level";
 const API_LEVEL_ANY = "api/allLevelsAdmin";
 const API_LEVEL_MAIN_QUEST = "api/levelsMainQuest";
+export const CLEAR_API = { NORMAL: "normal", SUPER: "super" };
 
 // -------------------------
 // Gestion des utilisateurs
@@ -134,10 +135,10 @@ export async function loadAllLevels() {
 // -------------------------
 // Réussite d'un niveau
 
-export async function attestMainQuestLevelSuccess(pLevelNumber, pClearStatus) {
+export async function attestLevelSuccess(pID, pClearStatus) {
   const response = await api.post(`/api/attestSuccess/`, {
-    levelNumber: pLevelNumber,
-    status: pClearStatus === CLEAR.SUPER ? "SUPER" : "NORMAL",
+    id: pID,
+    status: pClearStatus === CLEAR.TOTAL ? CLEAR_API.SUPER : CLEAR_API.NORMAL,
   });
   return response.data;
 }

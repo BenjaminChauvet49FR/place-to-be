@@ -6,11 +6,12 @@ import {
   amIInMainQuest,
 } from "../utils/paths.jsx";
 
-import { DIRECTION, NO_ID_LEVEL } from "../logic/constants.jsx";
+import { DIRECTION, NO_ID_LEVEL, CLEAR } from "../logic/constants.jsx";
 
 import { useAuth } from "../context/AuthContext.jsx";
+import { attestLevelSuccess } from "../utils/api.jsx";
 
-import { useContext } from "react";
+import { useState, useContext } from "react";
 import { LevelEditContext } from "../context/LevelEditContext.jsx";
 import { MainQuestContext } from "../context/MainQuestContext.jsx";
 
@@ -58,9 +59,38 @@ export default function Component() {
     getMovesLimit,
     areMovesInfinite,
     setCurrentBlockType,
+    checkClearConditions,
   } = useGameplay();
 
   const { user } = useAuth();
+
+  const [clearState, setClearState] = useState(CLEAR.NO);
+
+  function handleMoveBlocks(pDirection) {
+    let movePerformed = moveBlocks(pDirection);
+    if (movePerformed) {
+      // Fait un peu tôt MAIS le fait que "l'attente" (un window.alert ou un message d'API) soit juste avant le tout dernier déplacement n'est pas idiot en soi. Ca va me rappeler l'heurese époque de Django ;)
+
+      let newClearState = checkClearConditions();
+      if (clearState < newClearState) {
+        setClearState(newClearState);
+        let winningMessage = "";
+
+        if (newClearState === CLEAR.PARTIAL) {
+          winningMessage = "Niveau réussi partiellement";
+        }
+        if (newClearState === CLEAR.TOTAL) {
+          winningMessage = "Niveau réussi totalement :)";
+        }
+        if (!doIComeFromEditor() && user) {
+          attestLevelSuccess(editContext.state.levelID, newClearState);
+        } else {
+          winningMessage += " (non enregistré)";
+        }
+        window.alert(winningMessage);
+      }
+    }
+  }
 
   return (
     <div className="panel mainComponent">
@@ -69,14 +99,18 @@ export default function Component() {
       <div className="mainMovesPanel">
         <div className="directionsPanel">
           <div>
-            <button onClick={() => moveBlocks(DIRECTION.U)}>Haut</button>
+            <button onClick={() => handleMoveBlocks(DIRECTION.U)}>Haut</button>
           </div>
           <div>
-            <button onClick={() => moveBlocks(DIRECTION.L)}>Gauche</button>
-            <button onClick={() => moveBlocks(DIRECTION.R)}>Droite</button>
+            <button onClick={() => handleMoveBlocks(DIRECTION.L)}>
+              Gauche
+            </button>
+            <button onClick={() => handleMoveBlocks(DIRECTION.R)}>
+              Droite
+            </button>
           </div>
           <div>
-            <button onClick={() => moveBlocks(DIRECTION.D)}>Bas</button>
+            <button onClick={() => handleMoveBlocks(DIRECTION.D)}>Bas</button>
           </div>
         </div>
         <button onClick={() => undo()}>Annuler</button>

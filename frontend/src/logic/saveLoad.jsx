@@ -45,6 +45,7 @@ async function loadLevelFromID_aux(pID_NB, pDispatch, pLevelFunction) {
   try {
     const levelData = await promiseLoadLevel(pLevelFunction, pID_NB);
     loadLevelForEditor(levelData.lvData, levelData.name, pDispatch);
+    pDispatch({ type: "levelID", levelID: levelData.id }); // Note : sans cette ligne, pas de connaissance d'ID du niveau en gameplay !
   } catch (error) {
     if (error instanceof Error404) {
       throw error;

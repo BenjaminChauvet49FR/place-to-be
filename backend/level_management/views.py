@@ -167,7 +167,7 @@ def attestLevelSuccess(request):
     user = request.user
     if (not user):
         return Response(status=status.HTTP_204_NO_CONTENT)
-    level = Level.objects.get(creator__username__startswith="___BenjAdmin" , position = request.data["levelNumber"])
+    level = Level.objects.get(id = request.data["id"])
     if (not level):
         return Response(status=status.HTTP_404_NOT_FOUND)
     levelCompletion = LevelCompletion.objects.get_or_create(
@@ -177,8 +177,11 @@ def attestLevelSuccess(request):
             "status":request.data["status"]
         }
     )
-    if (request.data["status"] == CompletionStatus.SUPER and levelCompletion.status == CompletionStatus.NORMAL):
-        levelCompletion.status = CompletionStatus.SUPER # TODO A VERIFIER
-        levelCompletion.save()
-    # print(ok)
+    # Note : get_or_create ne renvoie PAS un objet https://stackoverflow.com/questions/1941212/how-to-use-get-or-create-in-django
+    # mais un tuple
+    if (request.data["status"] == CompletionStatus.SUPER and levelCompletion[0].status != CompletionStatus.SUPER):
+    #    print("Sauver ")
+        levelCompletion[0].status = CompletionStatus.SUPER
+        levelCompletion[0].save()
+    #print("ok")
     return Response(status=status.HTTP_200_OK)

@@ -256,13 +256,7 @@ export function useGameplay() {
       gridM: gridM,
     });
 
-    // Fait un peu tôt MAIS le fait que "l'attente" (un window.alert ou un message d'API) soit juste avant le tout dernier déplacement n'est pas idiot en soi. Ca va me rappeler l'heurese époque de Django ;)
-    if (movePerformed) {
-      let clearStatus = checkClearConditions();
-      if (state.clear < clearStatus) {
-        dispatch({ type: "clear", clear: clearStatus }); // Note : cela déclenche l'appel à l'API quand on est dans la quête principale.
-      }
-    }
+    return movePerformed;
   }
 
   function undo() {
@@ -324,17 +318,19 @@ export function useGameplay() {
       }
     }
     let clearStatus = CLEAR.TOTAL;
-    for (let i = 0; i < state.blockTypesInfos.length; i++) {
+    let blockType;
+    for (let i = 0; i < state.blockTypes.length; i++) {
+      blockType = state.blockTypes[i];
       if (
-        !state.blockTypesInfos[i].movesInfinite &&
-        state.blockTypesInfos[i].movesPlayed >
-          state.blockTypesInfos[i].movesLimit
+        !state.blockTypesInfos[blockType].movesInfinite &&
+        state.blockTypesInfos[blockType].movesPlayed >
+          state.blockTypesInfos[blockType].movesLimit
       ) {
         return CLEAR.NO;
       }
       if (
-        state.blockTypesInfos[i].movesPlayed >
-        state.blockTypesInfos[i].movesSuperLimit
+        state.blockTypesInfos[blockType].movesPlayed >
+        state.blockTypesInfos[blockType].movesSuperLimit
       ) {
         clearStatus = CLEAR.PARTIAL;
       }
@@ -377,6 +373,7 @@ export function useGameplay() {
     moveBlocks,
     undo,
     restart,
+    checkClearConditions,
     getBlockTypes,
     getCurrentBlockType,
     getMovesPlayed,
