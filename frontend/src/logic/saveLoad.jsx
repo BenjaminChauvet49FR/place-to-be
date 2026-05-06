@@ -31,10 +31,10 @@ export async function loadLevelFromID_FREEPLAY(pID, pDispatch) {
   await loadLevelFromID_aux(pID, pDispatch, LEVEL_FUNCTION.GENERAL_FREEPLAY);
 }
 
-export async function loadLevelFromID_ABSOLUTELY_ALL(pID, pDispatch) {
+/*export async function loadLevelFromID_ABSOLUTELY_ALL(pID, pDispatch) {
   await loadLevelFromID_aux(pID, pDispatch, LEVEL_FUNCTION.ANY);
   await pDispatch({ type: "levelID", levelID: pID }); // Note : changer l'ID n'est pas naturellement fait dans les fonctions "loadLevel", je dois donc le rajouter ici
-}
+}*/
 
 export async function loadMainLevelFromNUMBER_CONNECTED(pNUMBER, pDispatch) {
   await loadLevelFromID_aux(pNUMBER, pDispatch, LEVEL_FUNCTION.MAIN);
@@ -90,9 +90,9 @@ export async function saveLevel(pState, pDispatch) {
   return await saveLevel_aux(pState, pDispatch, pState.levelID);
 }
 
-export async function saveLevelEnMasse(pState, pDispatch, pEntryID) {
+/*export async function saveLevelEnMasse(pState, pDispatch, pEntryID) {
   return await saveLevel_aux(pState, pDispatch, pEntryID);
-}
+}*/
 
 async function saveLevel_aux(pState, pDispatch, pID) {
   const data = encodeDecode.encodedLevelData(
