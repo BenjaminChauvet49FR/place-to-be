@@ -10,7 +10,7 @@ import {
 } from "../utils/api.jsx";
 
 export const PREFIX_FOR_BASCULE_ENCODING = "TEST_ENCODING_PURPOSE_ONLY";
-const BASCULE_ENCODING_HAPPENING = false; // Vaut true si on est en train de basculer les niveaux de l'ancien encodage vers le nouveau
+const BASCULE_ENCODING_HAPPENING = true; // Vaut true si on est en train de basculer les niveaux de l'ancien encodage vers le nouveau
 
 export function loadNewLevel(pDispatch) {
   loadLevelForEditor(encodeDecode.DUMMY_DATA, "", pDispatch);

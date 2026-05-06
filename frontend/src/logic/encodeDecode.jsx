@@ -64,9 +64,9 @@ function stringToVal4095(pChar1, pChar2) {
 }
 
 export function loadLevelForEditorPreviousSystem(pLevelData) {
-  return loadLevelForEditorNewSystem(pLevelData);
+  //return loadLevelForEditorNewSystem(pLevelData);
 
-  /*let x, y;
+  let x, y;
   let gridF = [];
   let gridM = [];
   let xFirst = charToVal(pLevelData.charAt(0));
@@ -141,7 +141,7 @@ export function loadLevelForEditorPreviousSystem(pLevelData) {
     movesInfinite: movesInfinite,
     movesLimit: movesLimit,
     movesSuperLimit: movesSuperLimit,
-  };*/
+  };
 }
 
 export function loadLevelForEditorNewSystem(pLevelData) {
