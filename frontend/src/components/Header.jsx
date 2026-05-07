@@ -3,6 +3,7 @@ import styled from "styled-components";
 import "../styles/style.css";
 import { paths } from "../utils/paths.jsx";
 import NameForm from "./NameForm";
+import { useAuth } from "../context/AuthContext.jsx";
 
 const StyledLink = styled(Link)`
   padding: 15px;
@@ -12,6 +13,8 @@ const StyledLink = styled(Link)`
 `;
 
 export default function Component() {
+  const { amIAnAdmin } = useAuth();
+
   return (
     <nav>
       <StyledLink
@@ -27,6 +30,11 @@ export default function Component() {
         Editer
       </StyledLink>
       <StyledLink to={paths.newUser()}>Nouvel utilisateur</StyledLink>
+      {amIAnAdmin() && (
+        <StyledLink data-testid="link-editLevel" to={paths.adminOnly()}>
+          Admins
+        </StyledLink>
+      )}
       <NameForm></NameForm>
     </nav>
   );

@@ -2,6 +2,9 @@ export const paths = {
   home: () => `/`,
   newUser: () => `/newUser`,
 
+  // Spécial admin :
+  adminOnly: () => `/adminOnly`,
+
   // Distnction editLevelColon / editLevel :
   // Le premier sert dans le routeur, avec :levelId, pour indiquer une route. Le second sert pour rejoindre directement une page, via
 
@@ -41,4 +44,8 @@ export function amIInFreePlay() {
 
 export function amIInMainQuest() {
   return window.location.pathname.includes("quest");
+}
+
+export function amITryingToGoToAdmin() {
+  return window.location.pathname.includes("admin");
 }

@@ -18,6 +18,7 @@ import Header from "./components/Header.jsx";
 // misc
 import Lobby from "./pages/Lobby/index.jsx";
 import NewUser from "./pages/NewUser/index.jsx";
+import AdminOnly from "./pages/AdminOnly/index.jsx";
 // Jeu libre
 import PlayMenu from "./pages/PlayMenu/";
 import PlayingFromFree from "./pages/Playing_FromFree/index.jsx";
@@ -65,6 +66,7 @@ root.render(
                     path={paths.playLevelQuestRouter()}
                     element={<PlayingFromQuest />}
                   />
+                  <Route path={paths.adminOnly()} element={<AdminOnly />} />
                 </Route>
 
                 {/*Pages de niveaux non trouves / accessibles */}

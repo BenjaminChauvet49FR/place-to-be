@@ -52,8 +52,17 @@ export default function Provider({ children }) {
     localStorage.removeItem("access_token");
   };
 
+  const amIAnAdmin = () => {
+    return (
+      user &&
+      user.permissions.includes("authentication.change_encoding_all_levels")
+    );
+  };
+
   return (
-    <AuthContext.Provider value={{ user, loading, useLogin, logout }}>
+    <AuthContext.Provider
+      value={{ user, loading, useLogin, logout, amIAnAdmin }}
+    >
       {children}
     </AuthContext.Provider>
   );
