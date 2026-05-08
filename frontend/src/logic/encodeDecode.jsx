@@ -64,10 +64,12 @@ function stringToVal4095(pChar1, pChar2) {
 }
 
 export function loadLevelForEditorPreviousSystem(pLevelData) {
+  console.log("Ignorer le message 'nouveau systeme' qui suit !");
   return loadLevelForEditorNewSystem(pLevelData);
 }
 
 export function loadLevelForEditorNewSystem(pLevelData) {
+  console.log("NOUVEAU SYSTEME !");
   //return loadLevelForEditorPreviousSystem(pLevelData);
   let x, y;
   let gridF = [];

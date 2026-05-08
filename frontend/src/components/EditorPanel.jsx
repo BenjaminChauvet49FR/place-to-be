@@ -6,14 +6,8 @@ import {
   DO_NOT_CHANGE,
   BLOCK_TYPES_LIST,
 } from "../logic/constants.jsx";
-import { deleteLevel /*loadAllLevels*/ } from "../utils/api.jsx";
-import {
-  saveLevel,
-  //saveLevelEnMasse,
-  //loadLevelFromID_ABSOLUTELY_ALL,
-} from "../logic/saveLoad.jsx";
-
-import { useAuth } from "../context/AuthContext.jsx";
+import { deleteLevel } from "../utils/api.jsx";
+import { saveLevel } from "../logic/saveLoad.jsx";
 
 import "../styles/style.css";
 import { useNavigate } from "react-router-dom";
@@ -108,41 +102,6 @@ export default function Component({ state, dispatch }) {
 
   // =================================
 
-  function handleLoadAndSaveALLLevels(pState, pDispatch) {
-    /*try {
-      (async function () {
-        const data = await loadAllLevels();
-        if (
-          window.confirm(
-            "Vous êtes sur le point de charger puis sauvegarder TOUS les niveaux ! (au nombre de " +
-              data.length +
-              ") : confirmer ?",
-          )
-        ) {
-          data.forEach((entry) => {
-            (async function () {
-              await loadLevelFromID_ABSOLUTELY_ALL(entry.id, pDispatch); // from entry to dispatch
-              // Note : changer l'ID n'est pas naturellement fait dans les fonctions "loadLevel", je dois donc le rajouter ici
-              // Note : pour une raison que j'ignore, il est impossible de mettre l'ID du niveau en temps réel.
-              // pDispatch({action : "levelID", levelID : entry.id})
-              // Qu'à cela ne tienne, je force l'ID du niveau sauvegardé.
-              saveLevelEnMasse(pState, pDispatch, entry.id);
-            })();
-          });
-        }
-      })();
-    } catch (error) {
-      console.error(error);
-    }*/
-    window.alert(
-      "Bouton hors service ! La bascule d'encodage doit être faite manuellement, niveau par niveau. C'est pénible, je sais, mais on n'a pas le choix car la dernière fois que j'ai essayé, ça a transformé tous les niveaux en un seul !",
-    );
-  }
-
-  // =================================
-
-  const { user } = useAuth();
-
   return (
     <div className="mainComponent panel">
       <div>
@@ -225,18 +184,6 @@ export default function Component({ state, dispatch }) {
       <div>
         <button onClick={() => handlePlaytestLevel()}>Tester niveau</button>
       </div>
-      {user.permissions.includes(
-        "authentication.change_encoding_all_levels",
-      ) && (
-        <div>
-          <button
-            className="danger"
-            onClick={() => handleLoadAndSaveALLLevels(state, dispatch)}
-          >
-            Charger et enregistrer TOUS les niveaux
-          </button>
-        </div>
-      )}
     </div>
   );
 }

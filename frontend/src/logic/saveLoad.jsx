@@ -9,8 +9,8 @@ import {
   Error404,
 } from "../utils/api.jsx";
 
-export const PREFIX_FOR_BASCULE_ENCODING = "TEST_ENCODING_PURPOSE_ONLY";
 const BASCULE_ENCODING_HAPPENING = false; // Vaut true si on est en train de basculer les niveaux de l'ancien encodage vers le nouveau
+const PREFIX_FOR_NEW_ENCODING_SYSTEM = "*";
 
 export function loadNewLevel(pDispatch) {
   loadLevelForEditor(encodeDecode.DUMMY_DATA, "", pDispatch);
@@ -66,11 +66,25 @@ async function loadLevelFromID_aux(pID_NB, pDispatch, pLevelFunction) {
 // That's the best I had found. (after all, changing encoding already requires me to write into this file)
 function loadLevelForEditor(pLevelData, pName, pDispatch) {
   let loadedData;
-  if (pName.startsWith(PREFIX_FOR_BASCULE_ENCODING)) {
-    loadedData = encodeDecode.loadLevelForEditorNewSystem(pLevelData);
+
+  if (BASCULE_ENCODING_HAPPENING) {
+    if (pLevelData.startsWith(PREFIX_FOR_NEW_ENCODING_SYSTEM)) {
+      loadedData = encodeDecode.loadLevelForEditorNewSystem(
+        pLevelData.substring(1),
+      );
+    } else {
+      loadedData = encodeDecode.loadLevelForEditorPreviousSystem(pLevelData);
+    }
   } else {
-    loadedData = encodeDecode.loadLevelForEditorPreviousSystem(pLevelData);
+    if (pLevelData.startsWith(PREFIX_FOR_NEW_ENCODING_SYSTEM)) {
+      loadedData = encodeDecode.loadLevelForEditorNewSystem(
+        pLevelData.substring(1),
+      );
+    } else {
+      loadedData = encodeDecode.loadLevelForEditorNewSystem(pLevelData);
+    }
   }
+
   pDispatch({ type: "gridF_ALL", gridF: loadedData.gridF });
   pDispatch({ type: "gridM_ALL", gridM: loadedData.gridM });
   pDispatch({
@@ -95,26 +109,28 @@ export async function saveLevel(pState, pDispatch) {
 }*/
 
 async function saveLevel_aux(pState, pDispatch, pID) {
-  const data = encodeDecode.encodedLevelData(
+  //const { user, amIAnAdmin } = useAuth(); Note : interdit hors react hook ou composant ! Dommage...
+
+  let data = encodeDecode.encodedLevelData(
     pState.gridF,
     pState.gridM,
     pState.movesInfinite,
     pState.movesLimit,
     pState.movesSuperLimit,
   );
+
   let name = pState.levelName;
-  //const id = pForcedID ? pForcedID : pState.levelID; note : remplaçait pID avant, mais pour une certaine raison quand j'updatais l'ID via dispatch ça ne mettait pas à jour state.id, ce qui était gênant pour la bascule d'encodage où je cherchais à re-sauvegarder tous les niveaux !
-  // Voilà pourquoi j'ai forcé l'ID à l'exérieur
+
   if (BASCULE_ENCODING_HAPPENING) {
-    if (!name.startsWith(PREFIX_FOR_BASCULE_ENCODING)) {
-      name = PREFIX_FOR_BASCULE_ENCODING + name;
-    }
-    console.log("Post encodage : " + pState.levelName + " - " + pState.levelID);
+    data = PREFIX_FOR_NEW_ENCODING_SYSTEM + data;
+  }
+  console.log(process.env.REACT_APP_API_URL);
+  console.log(process.env);
+  if (process.env.REACT_APP_DEBUG === "true") {
+    console.log(
+      "Post encodage : nom " + pState.levelName + " - id " + pState.levelID,
+    );
     console.log(data);
-  } else {
-    if (name.startsWith(PREFIX_FOR_BASCULE_ENCODING)) {
-      name = name.substring(PREFIX_FOR_BASCULE_ENCODING.length);
-    }
   }
 
   if (pID === NO_ID_LEVEL) {
