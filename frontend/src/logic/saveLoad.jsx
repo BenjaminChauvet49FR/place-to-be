@@ -9,7 +9,7 @@ import {
   Error404,
 } from "../utils/api.jsx";
 
-const BASCULE_ENCODING_HAPPENING = false; // Vaut true si on est en train de basculer les niveaux de l'ancien encodage vers le nouveau
+const BASCULE_ENCODING_HAPPENING = true; // Vaut true si on est en train de basculer les niveaux de l'ancien encodage vers le nouveau
 const PREFIX_FOR_NEW_ENCODING_SYSTEM = "*";
 
 export function loadNewLevel(pDispatch) {
@@ -133,6 +133,7 @@ async function saveLevel_aux(pState, pDispatch, pID) {
     console.log(data);
   }
 
+  console.log(data);
   if (pID === NO_ID_LEVEL) {
     const levelData = await saveNewLevel(data, name);
     return pDispatch({ type: "levelID", levelID: levelData.id });
