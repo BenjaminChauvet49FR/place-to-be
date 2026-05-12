@@ -36,7 +36,7 @@ export async function loadLevelFromID_FREEPLAY(pID, pDispatch) {
   await pDispatch({ type: "levelID", levelID: pID }); // Note : changer l'ID n'est pas naturellement fait dans les fonctions "loadLevel", je dois donc le rajouter ici
 }*/
 
-export async function loadMainLevelFromNUMBER_CONNECTED(pNUMBER, pDispatch) {
+export async function loadLevelFromNUMBERInMain_CONNECTED(pNUMBER, pDispatch) {
   await loadLevelFromID_aux(pNUMBER, pDispatch, LEVEL_FUNCTION.MAIN);
 }
 

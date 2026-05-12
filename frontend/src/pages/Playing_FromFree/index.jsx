@@ -20,9 +20,16 @@ export default function Page() {
     async function init() {
       try {
         await loadLevelFromID_FREEPLAY(trueLevelId, uce.dispatch);
-      } catch (e) {
-        if (e instanceof Error404) {
+      } catch (error) {
+        if (error instanceof Error404) {
           navigate(paths.notFoundLevel());
+        } else {
+          window.alert(
+            "Impossible de charger le niveau d'id " +
+              trueLevelId +
+              " ! (données corrompues ?)\n\n" +
+              error.message,
+          );
         }
       }
     }

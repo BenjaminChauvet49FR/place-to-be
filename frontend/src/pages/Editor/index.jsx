@@ -48,9 +48,16 @@ export default function Page({ comeFromPlayTest }) {
         if (trueLevelId > 0) {
           try {
             await loadLevelFromID_CONNECTED(trueLevelId, dispatch);
-          } catch (e) {
-            if (e instanceof Error404) {
+          } catch (error) {
+            if (error instanceof Error404) {
               navigate(paths.notFoundLevel());
+            } else {
+              window.alert(
+                "Impossible de charger le niveau d'id " +
+                  trueLevelId +
+                  " ! (données corrompues ?)\n\n" +
+                  error.message,
+              );
             }
           } finally {
             setLoading(false);

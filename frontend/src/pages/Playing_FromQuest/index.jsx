@@ -1,6 +1,6 @@
 import { useContext, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { loadMainLevelFromNUMBER_CONNECTED } from "../../logic/saveLoad.jsx";
+import { loadLevelFromNUMBERInMain_CONNECTED } from "../../logic/saveLoad.jsx";
 
 import { MainQuestContext } from "../../context/MainQuestContext.jsx";
 import { LevelEditContext } from "../../context/LevelEditContext.jsx";
@@ -21,14 +21,19 @@ export default function Page() {
     const trueLevelNb = parseInt(levelNumber, 10);
     async function init() {
       try {
-        await loadMainLevelFromNUMBER_CONNECTED(trueLevelNb, uceDispatch);
+        await loadLevelFromNUMBERInMain_CONNECTED(trueLevelNb, uceDispatch);
         ucqDispatch({ type: "number", number: trueLevelNb });
-      } catch (e) {
-        if (e instanceof Error404) {
+      } catch (error) {
+        if (error instanceof Error404) {
           navigate(paths.notReachableLevelQuest());
           // TODO : faire pareil avec un niveau "non débloqué"
         } else {
-          window.alert(e.message);
+          window.alert(
+            "Impossible de charger le niveau de numéro " +
+              levelNumber +
+              " ! (données corrompues ?)\n\n" +
+              error.message,
+          );
         }
       }
     }
