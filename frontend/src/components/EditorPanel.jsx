@@ -7,9 +7,12 @@ import {
   BLOCK_TYPES_LIST,
 } from "../logic/constants.jsx";
 import { deleteLevel } from "../utils/api.jsx";
-import { saveLevel } from "../logic/saveLoad.jsx";
+import { saveLevel, loadLevelForEditorWithData } from "../logic/saveLoad.jsx";
 
+import { useAuth } from "../context/AuthContext.jsx";
 import "../styles/style.css";
+
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { paths } from "../utils/paths.jsx";
 
@@ -100,7 +103,21 @@ export default function Component({ state, dispatch }) {
     });
   }
 
+  function handleLoadFromData() {
+    try {
+      loadLevelForEditorWithData(dataLevel, dispatch);
+    } catch (error) {
+      window.alert(
+        "Impossible de charger le niveau ! Veuillez partir immédiatement ! \n\n" +
+          error.message,
+      );
+    }
+  }
+
   // =================================
+
+  const { amIAnAdmin } = useAuth();
+  const [dataLevel, setDataLevel] = useState("");
 
   return (
     <div className="mainComponent panel">
@@ -184,6 +201,16 @@ export default function Component({ state, dispatch }) {
       <div>
         <button onClick={() => handlePlaytestLevel()}>Tester niveau</button>
       </div>
+      {amIAnAdmin() && (
+        <div>
+          Charger un niveau d'après ses données{" "}
+          <input
+            type="text"
+            onChange={(e) => setDataLevel(e.target.value)}
+          ></input>
+          <button onClick={() => handleLoadFromData()}>Charger</button>
+        </div>
+      )}
     </div>
   );
 }

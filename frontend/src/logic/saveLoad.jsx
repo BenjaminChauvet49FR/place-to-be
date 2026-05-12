@@ -61,10 +61,15 @@ async function loadLevelFromID_aux(pID_NB, pDispatch, pLevelFunction) {
   }
 }
 
-// Note : I put this in place as it will be useful whenever I decide to change the encoding system.
-// Once the "new loading system" is deemed stable, I rename it into "old system" and leave the "new system" empty.
-// That's the best I had found. (after all, changing encoding already requires me to write into this file)
+// Appelé par les principales fonctions qui ont récupéré les données en ligne
 function loadLevelForEditor(pLevelData, pName, pDispatch) {
+  loadLevelForEditorWithData(pLevelData, pDispatch);
+  pDispatch({ type: "levelName", levelName: pName });
+}
+
+// Appelé par les fonctions de chargement, mais aussi par le chargement par insertion manuelle de données (d'où l'export)
+// Gros risque d'erreur !
+export function loadLevelForEditorWithData(pLevelData, pDispatch) {
   let loadedData;
 
   if (BASCULE_ENCODING_HAPPENING) {
@@ -96,8 +101,6 @@ function loadLevelForEditor(pLevelData, pName, pDispatch) {
     type: "movesSuperLimit_ALL",
     movesSuperLimit: loadedData.movesSuperLimit,
   });
-
-  pDispatch({ type: "levelName", levelName: pName });
 }
 
 export async function saveLevel(pState, pDispatch) {
