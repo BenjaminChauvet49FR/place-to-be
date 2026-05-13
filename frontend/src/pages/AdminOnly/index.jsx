@@ -15,9 +15,9 @@ function handleEncodeAll(pDataLevels) {
       console.log(newData);
       await saveLevelADMIN(newData, level.name, level.id);
     }
+    window.location.reload();
   }
   go();
-  window.location.reload();
 }
 
 export default function Page() {
