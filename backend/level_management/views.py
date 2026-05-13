@@ -5,7 +5,7 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser, BasePermiss
 from rest_framework.decorators import api_view, permission_classes
 
 from .models import Level, LevelCompletion, CompletionStatus
-from .serializers import LevelSerializer, LevelMainQuestSerializer
+from .serializers import LevelSerializer, LevelMainQuestSerializer, LevelWithAuthorSerializer
 from .permissions import IsOwner
 from authentication.models import User
 
@@ -101,11 +101,11 @@ def idsGeneralPublic(request):
 
 
 class AllLevelsAdminViewset(ModelViewSet):
-    serializer_class = LevelSerializer
+    serializer_class = LevelWithAuthorSerializer
     permission_classes = [CanChangeEncodings]
 
     def get_queryset(self):
-        return Level.objects.all()
+        return Level.objects.all().order_by("creator__username","position")
 
 # Donne à tous les niveaux de l'utilisateur une position (à partir de 1) selon l'ordre des ID fourni dans le corps de la requête
 @api_view(['POST'])
