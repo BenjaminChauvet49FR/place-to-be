@@ -17,7 +17,7 @@ function handleEncodeAll(pDataLevels) {
     }
   }
   go();
-  //window.location.reload();
+  window.location.reload();
 }
 
 export default function Page() {

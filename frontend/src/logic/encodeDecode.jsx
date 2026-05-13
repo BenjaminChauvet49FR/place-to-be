@@ -5,47 +5,34 @@ import {
   REAL_YLENGTH,
   SPACE,
   BLOCK,
-  BLOCK_INFO,
-  isEncodedBlock,
-  encodedBlockToBlock,
   BLOCK_TYPES_LIST,
 } from "./constants.jsx";
 
 // Note : we assume all parameters passed are fine in the use of enconding and decoding functions
-const OLD_MASTER_STRING =
-  "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz&$";
-const NEW_MASTER_STRING =
+const MASTER_STRING =
   "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ&$";
 const MASTER_STRING_TYPES = "ABCDEF";
 
 const INFINITE_SYMBOL = "-";
-const EXTENSION_MARK = "+";
 const NUMBER_THAT_MEANS_INFINITE = -1;
 const SPLIT_TOKEN = ";";
 export const DUMMY_DATA = "99991;";
 
 /** For numbers 0 to 63 */
 function valToChar(pVal) {
-  return NEW_MASTER_STRING.charAt(pVal);
+  return MASTER_STRING.charAt(pVal);
 }
 
-function newCharToVal(pChar) {
-  return NEW_MASTER_STRING.indexOf(pChar);
-}
-
-function oldCharToVal(pChar) {
-  return OLD_MASTER_STRING.indexOf(pChar);
+function charToVal(pChar) {
+  return MASTER_STRING.indexOf(pChar);
 }
 
 /** For numbers 0 to 1023 */
 function valToBase32Str(pVal) {
   if (pVal <= 31) {
-    return NEW_MASTER_STRING[pVal];
+    return MASTER_STRING[pVal];
   } else {
-    return (
-      NEW_MASTER_STRING[31 + Math.floor(pVal / 32)] +
-      NEW_MASTER_STRING[pVal % 32]
-    );
+    return MASTER_STRING[31 + Math.floor(pVal / 32)] + MASTER_STRING[pVal % 32];
   }
   // 31 v ; 32-63 w0-wv ; 64-95 x0-xv ...
 }
@@ -53,13 +40,13 @@ function valToBase32Str(pVal) {
 // See below ; pDecoder = {index : ...}
 function stringBase32ToVal(pString, pDecoder) {
   let char = pString.charAt(pDecoder.index);
-  let answer = newCharToVal(char);
+  let answer = charToVal(char);
   if (answer >= 32) {
     pDecoder.index++;
     answer -= 31;
     answer *= 32;
     char = pString.charAt(pDecoder.index);
-    let answer2 = newCharToVal(char);
+    let answer2 = charToVal(char);
     if (answer2 >= 0 && answer2 <= 31) {
       pDecoder.index++;
       return answer + answer2;
@@ -72,111 +59,8 @@ function stringBase32ToVal(pString, pDecoder) {
   }
 }
 
-// pDecoder = item with a property "index"
-// pDecoder = {index : 0}
-// successive uses of stringToVal127("36+5", pDecoder) returns 3 (for "3"), 6 (for "6") and 69 (for "+5")
-function stringToVal127OrInfinite(pString, pDecoder) {
-  if (pString.charAt(pDecoder.index) === EXTENSION_MARK) {
-    pDecoder.index += 2;
-    return 64 + oldCharToVal(pString.charAt(pDecoder.index - 1));
-  } else if (pString.charAt(pDecoder.index) === INFINITE_SYMBOL) {
-    pDecoder.index++;
-    return NUMBER_THAT_MEANS_INFINITE;
-  } else {
-    pDecoder.index++;
-    return oldCharToVal(pString.charAt(pDecoder.index - 1));
-  }
-}
-
-function stringToVal4095(pChar1, pChar2) {
-  return oldCharToVal(pChar1) * 64 + oldCharToVal(pChar2);
-}
-
 export function loadLevelForEditorPreviousSystem(pLevelData) {
-  let x, y;
-  let gridF = [];
-  let gridM = [];
-  let xFirst = oldCharToVal(pLevelData.charAt(0));
-  let yFirst = oldCharToVal(pLevelData.charAt(1));
-  let xLast = oldCharToVal(pLevelData.charAt(2));
-  let yLast = oldCharToVal(pLevelData.charAt(3));
-  let movesInfinite = NEW_ARRAY_MOVES_INFINITE();
-  let movesLimit = NEW_ARRAY_MOVES_LIMIT();
-  let movesSuperLimit = NEW_ARRAY_MOVES_LIMIT();
-
-  for (y = 0; y < REAL_YLENGTH; y++) {
-    gridF.push([]);
-    gridM.push([]);
-    for (x = 0; x < REAL_XLENGTH; x++) {
-      gridF[y].push(
-        x === 0 || x === REAL_XLENGTH - 1 || y === 0 || y === REAL_YLENGTH - 1
-          ? SPACE.WALL
-          : SPACE.EMPTY,
-      );
-      gridM[y].push(BLOCK.NONE);
-    }
-  }
-
-  let levelSize = (yLast - yFirst + 1) * (xLast - xFirst + 1);
-  let dataMain = pLevelData.substring(4, 4 + levelSize);
-  let dataPostGrid = pLevelData.substring(4 + levelSize);
-
-  let iData = 0;
-  let iDataBelow = 0;
-  let char;
-  let blockTypesMet = [];
-
-  for (y = yFirst; y <= yLast; y++) {
-    for (x = xFirst; x <= xLast; x++) {
-      char = dataMain.charAt(iData);
-      if (isEncodedBlock(char)) {
-        gridF[y][x] = dataPostGrid.charAt(iDataBelow);
-        gridM[y][x] = encodedBlockToBlock(char);
-        if (blockTypesMet.indexOf(gridM[y][x]) === -1) {
-          blockTypesMet.push(gridM[y][x]);
-        }
-        iDataBelow++;
-      } else {
-        gridF[y][x] = char;
-        gridM[y][x] = BLOCK.NONE;
-      }
-      iData++;
-    }
-  }
-  // Now, all the data "below items" should be clear, and we are set to iDataBelow. Let's cut the string !
-  dataPostGrid = dataPostGrid.substring(iDataBelow);
-  let dataNormalLimit = dataPostGrid.split(SPLIT_TOKEN)[0];
-  let dataSuperLimit = dataPostGrid.split(SPLIT_TOKEN)[1];
-  let decoder = { index: 0 };
-  let blockTypeMetIndex = 0;
-  let value;
-  let idBlock;
-  while (decoder.index < dataNormalLimit.length) {
-    value = stringToVal127OrInfinite(dataNormalLimit, decoder); // Decoder goes up by 1 or 2...
-    idBlock = BLOCK_INFO[blockTypesMet[blockTypeMetIndex]].id;
-    blockTypeMetIndex++; // ... and blockTypeMetIndex by 1.
-    movesInfinite[idBlock] = value === NUMBER_THAT_MEANS_INFINITE;
-    if (!movesInfinite[idBlock]) {
-      movesLimit[idBlock] = value;
-    }
-  }
-  for (let i = 0; i < dataSuperLimit.length; i += 2) {
-    blockTypeMetIndex = i / 2;
-    idBlock = BLOCK_INFO[blockTypesMet[blockTypeMetIndex]].id;
-    movesSuperLimit[idBlock] = stringToVal4095(
-      dataSuperLimit.charAt(i),
-      dataSuperLimit.charAt(i + 1),
-    );
-  }
-
-  // Don't forget the "return" !
-  return {
-    gridF: gridF,
-    gridM: gridM,
-    movesInfinite: movesInfinite,
-    movesLimit: movesLimit,
-    movesSuperLimit: movesSuperLimit,
-  };
+  return loadLevelForEditorNewSystem(pLevelData);
 }
 
 const POSSIBLE_ERRORS = {
@@ -194,10 +78,10 @@ export function loadLevelForEditorNewSystem(pLevelData) {
     let x, y;
     let gridF = [];
     let gridM = [];
-    let xFirst = newCharToVal(pLevelData.charAt(0));
-    let yFirst = newCharToVal(pLevelData.charAt(1));
-    let xLast = newCharToVal(pLevelData.charAt(2));
-    let yLast = newCharToVal(pLevelData.charAt(3));
+    let xFirst = charToVal(pLevelData.charAt(0));
+    let yFirst = charToVal(pLevelData.charAt(1));
+    let xLast = charToVal(pLevelData.charAt(2));
+    let yLast = charToVal(pLevelData.charAt(3));
 
     errorLevel = POSSIBLE_ERRORS.BIT;
     let beWall = false;
