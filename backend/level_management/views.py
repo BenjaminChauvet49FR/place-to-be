@@ -107,6 +107,22 @@ class AllLevelsAdminViewset(ModelViewSet):
     def get_queryset(self):
         return Level.objects.all().order_by("creator__username","position")
 
+@api_view(['PUT'])
+@permission_classes([CanChangeEncodings])
+def changeByAdmin(request):
+    print("-----CORE !")
+    print(request.data["lvData"])
+    level = Level.objects.filter(id=request.data["id"])[0]
+    print("-----CORE2 !")
+
+    level.lvData = request.data["lvData"]
+    print("-----")
+    print (level.name)
+    level.save()
+    return JsonResponse({"ok": True})
+
+
+
 # Donne à tous les niveaux de l'utilisateur une position (à partir de 1) selon l'ordre des ID fourni dans le corps de la requête
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])

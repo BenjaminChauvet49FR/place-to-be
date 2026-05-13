@@ -1,5 +1,24 @@
 import { loadAllLevels } from "../../utils/api";
 import { useEffect, useState } from "react";
+import { convertOldDataToNew, saveLevelADMIN } from "../../logic/saveLoad";
+
+function handleEncodeAll(pDataLevels) {
+  async function go() {
+    let newData;
+    let level;
+    for (var i = 0; i < pDataLevels.length; i++) {
+      level = pDataLevels[i];
+      console.log("----");
+      console.log(level.lvData);
+      console.log("CONVERSION !");
+      newData = convertOldDataToNew(level.lvData);
+      console.log(newData);
+      await saveLevelADMIN(newData, level.name, level.id);
+    }
+  }
+  go();
+  //window.location.reload();
+}
 
 export default function Page() {
   const [loading, setLoading] = useState(); // Note : j'avais voulu tout faire sans useState... ça marche pas ;)
@@ -34,6 +53,9 @@ export default function Page() {
           </tbody>
         </table>
       )}
+      <button onClick={() => handleEncodeAll(dataLevels, setDataLevels)}>
+        Changer l'encodage de TOUS les niveaux
+      </button>
     </div>
   );
 }

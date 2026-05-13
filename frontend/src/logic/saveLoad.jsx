@@ -5,6 +5,7 @@ import * as encodeDecode from "./encodeDecode.jsx";
 import {
   saveNewLevel,
   updateLevel,
+  updateLevelByAdmin,
   promiseLoadLevel,
   Error404,
 } from "../utils/api.jsx";
@@ -107,10 +108,6 @@ export async function saveLevel(pState, pDispatch) {
   return await saveLevel_aux(pState, pDispatch, pState.levelID);
 }
 
-/*export async function saveLevelEnMasse(pState, pDispatch, pEntryID) {
-  return await saveLevel_aux(pState, pDispatch, pEntryID);
-}*/
-
 async function saveLevel_aux(pState, pDispatch, pID) {
   //const { user, amIAnAdmin } = useAuth(); Note : interdit hors react hook ou composant ! Dommage...
 
@@ -143,4 +140,25 @@ async function saveLevel_aux(pState, pDispatch, pID) {
   } else {
     return updateLevel(data, name, pID);
   }
+}
+
+export async function saveLevelADMIN(pData, pName, pID) {
+  return updateLevelByAdmin(pData, pName, pID);
+}
+
+export function convertOldDataToNew(pOldSysStr) {
+  if (pOldSysStr.startsWith(PREFIX_FOR_NEW_ENCODING_SYSTEM)) {
+    return pOldSysStr;
+  }
+  let loadedData = encodeDecode.loadLevelForEditorPreviousSystem(pOldSysStr);
+  return (
+    PREFIX_FOR_NEW_ENCODING_SYSTEM +
+    encodeDecode.encodedLevelData(
+      loadedData.gridF,
+      loadedData.gridM,
+      loadedData.movesInfinite,
+      loadedData.movesLimit,
+      loadedData.movesSuperLimit,
+    )
+  );
 }

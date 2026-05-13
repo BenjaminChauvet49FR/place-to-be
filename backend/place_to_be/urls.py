@@ -33,6 +33,7 @@ router.register('levelsMainQuest', LevelFromMainQuestViewSet, basename='levelsMQ
 router.register('level', OwnLevelViewset, basename='level') 
 router.register('allLevelsAdmin', AllLevelsAdminViewset, basename='allLevels') # TODO wanting a route for all levels and a route for detail is not so bad
 
+
 def ping(request):
     return JsonResponse({"status": "ok"})
 
@@ -55,5 +56,10 @@ urlpatterns = [
     path('api/reorder/', reorder, name='reorder'),
 
     # Succès niveau
-    path('api/attestSuccess/', attestLevelSuccess, name='attest')    
+    path('api/attestSuccess/', attestLevelSuccess, name='attest'), 
+
+    # Devrait utiliser le routeur mais... pas réussi !
+    # Changement d'un niveau par l'admin
+    path('api/levelChangeByAdmin/', changeByAdmin, name='changeByAdmin'),
+
 ]

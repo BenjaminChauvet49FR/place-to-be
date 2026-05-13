@@ -164,6 +164,16 @@ export async function updateLevel(pData, pName, pID) {
   return response.data;
 }
 
+// Sauver un niveau existant SANS EN CHANGER L'AUTEUR (privilège d'admin)
+export async function updateLevelByAdmin(pData, pName, pID) {
+  const response = await api.put("/api/levelChangeByAdmin/", {
+    lvData: pData,
+    name: pName,
+    id: pID,
+  });
+  return response.data;
+}
+
 export class Error404 extends Error {
   constructor(message) {
     super(message); // appelle le constructeur de Error
