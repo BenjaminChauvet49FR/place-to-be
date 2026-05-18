@@ -106,6 +106,15 @@ nav {
 .space_blockC {
   background-image:url("../images/bloc_C.png");
 }
+.space_block_steelA {
+  background-image:url("../images/blocAcier_A.png");
+}
+.space_block_steelB {
+  background-image:url("../images/blocAcier_B.png");
+}
+.space_block_steelC {
+  background-image:url("../images/blocAcier_C.png");
+}
 .superposition {
   position:relative;
   left:3px;

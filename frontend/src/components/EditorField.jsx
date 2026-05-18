@@ -1,13 +1,14 @@
 import {
-  SPACE,
   BLOCK,
+  BLOCK_DISPLAY_INFO,
   DO_NOT_CHANGE,
-  SPACE_INFO,
-  BLOCK_INFO,
+  SPACE_DISPLAY_INFO,
   SUPERPOSITION_CORRECT,
   SUPERPOSITION_NONE,
   SUPERPOSITION_WRONG,
   canChangeSpace,
+  blockFamilyFromStr,
+  spaceFamilyFromStr,
 } from "../logic/constants.jsx";
 import "../styles/style.css";
 import { useContext } from "react";
@@ -20,54 +21,23 @@ export default function Component({ loadingPackage }) {
 
   function getClassName(pX, pY) {
     if (state.gridM[pY][pX] !== BLOCK.NONE) {
-      switch (state.gridM[pY][pX]) {
-        case BLOCK.A:
-        case BLOCK.B:
-        case BLOCK.C:
-          return BLOCK_INFO[state.gridM[pY][pX]].className;
-        default:
-          console.log("Grille mobile");
-          console.log(pX + "," + pY);
-          console.log(state.gridM);
-          window.alert(
-            "Attention, erreur de className, cf. EditorPanel ! (EditorField) " +
-              state.gridF[pY][pX] +
-              "," +
-              state.gridM[pY][pX],
-          );
-          return 1 / 0;
-      }
+      return BLOCK_DISPLAY_INFO[state.gridM[pY][pX]].className;
     } else {
-      switch (state.gridF[pY][pX]) {
-        case SPACE.GOAL_A:
-        case SPACE.GOAL_B:
-        case SPACE.GOAL_C:
-        case SPACE.WALL:
-        case SPACE.EMPTY:
-          return SPACE_INFO[state.gridF[pY][pX]].className;
-        default:
-          console.log("Grille fixe");
-          console.log(pX + "," + pY);
-          console.log(state.gridF);
-          window.alert(
-            "Attention, erreur de className, cf. EditorPanel ! (EditorField) " +
-              state.gridF[pY][pX] +
-              "," +
-              state.gridM[pY][pX],
-          );
-          return 1 / 0;
-      }
+      return SPACE_DISPLAY_INFO[state.gridF[pY][pX]].className;
     }
   }
 
   function classSuperposition(pX, pY) {
     if (
-      state.gridF[pY][pX] === SPACE.EMPTY ||
-      state.gridM[pY][pX] === BLOCK.NONE
+      spaceFamilyFromStr(state.gridF[pY][pX] === -1) ||
+      blockFamilyFromStr(state.gridM[pY][pX] === -1)
     ) {
       return SUPERPOSITION_NONE;
     }
-    if (state.gridF[pY][pX] === state.gridM[pY][pX]) {
+    if (
+      spaceFamilyFromStr(state.gridF[pY][pX]) ===
+      blockFamilyFromStr(state.gridM[pY][pX])
+    ) {
       return SUPERPOSITION_CORRECT;
     } else {
       return SUPERPOSITION_WRONG(state.gridF[pY][pX]);

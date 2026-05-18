@@ -1,10 +1,10 @@
 import {
   SPACE,
-  SPACE_INFO,
+  SPACE_DISPLAY_INFO,
   BLOCK,
-  BLOCK_INFO,
+  BLOCK_DISPLAY_INFO,
   DO_NOT_CHANGE,
-  BLOCK_TYPES_LIST,
+  BLOCK_FAMILIES,
 } from "../logic/constants.jsx";
 import { deleteLevel } from "../utils/api.jsx";
 import { saveLevel, loadLevelForEditorWithData } from "../logic/saveLoad.jsx";
@@ -21,9 +21,13 @@ export default function Component({ state, dispatch }) {
     //console.log("captionItemSelected : " + pSpace + pBlock); (great for debug)
     return (
       "case " +
-      (pSpace !== DO_NOT_CHANGE ? SPACE_INFO[pSpace].captionEditor : ".") +
+      (pSpace !== DO_NOT_CHANGE
+        ? SPACE_DISPLAY_INFO[pSpace].captionEditor
+        : ".") +
       "/ bloc " +
-      (pBlock !== DO_NOT_CHANGE ? BLOCK_INFO[pBlock].captionEditor : ".")
+      (pBlock !== DO_NOT_CHANGE
+        ? BLOCK_DISPLAY_INFO[pBlock].captionEditor
+        : ".")
     );
   }
 
@@ -132,30 +136,37 @@ export default function Component({ state, dispatch }) {
         <button onClick={() => selectBlock(BLOCK.NONE)}>Aucun bloc</button>
       </div>
       <div>
-        {BLOCK_TYPES_LIST.map((type) => (
-          <div key={type.cn}>
+        {BLOCK_FAMILIES.map((family) => (
+          <div key={family.id}>
             <button
-              className={`buttonSelection${type.cn}Light`}
-              onClick={() => selectSpace(type.goal)}
+              className={`buttonSelection${family.letter}Light`}
+              onClick={() => selectSpace(family.target)}
             >
-              Cible {type.goal}
+              Cible {family.letter}
+            </button>
+            Blocs :
+            <button
+              className={`buttonSelection${family.letter}`}
+              onClick={() => selectBlock(family.normal)}
+            >
+              Normal {family.letter}
             </button>
             <button
-              className={`buttonSelection${type.cn}`}
-              onClick={() => selectBlock(type.block)}
+              className={`buttonSelection${family.letter}`}
+              onClick={() => selectBlock(family.steel)}
             >
-              Bloc {type.block}
+              Acier {family.letter}
             </button>
             {"               "}
             <span className={"littleHelp"}>{"   "}Coups limites :</span>
             {"  "}
             <input
-              className={`inputMoves ${type.cn}`}
-              onChange={(e) => handleMovesChange(type.id, e.target.value)}
+              className={`inputMoves ${family.letter}`}
+              onChange={(e) => handleMovesChange(family.id, e.target.value)}
               disabled={
-                state.movesInfinite[type.id] ? "disabled" : ""
+                state.movesInfinite[family.id] ? "disabled" : ""
               } /** Credits : https://stackoverflow.com/questions/36773671/deactivate-input-in-react-with-a-button-click */
-              value={state.movesLimit[type.id]}
+              value={state.movesLimit[family.id]}
               min={0}
               max={99}
               type="number"
@@ -164,21 +175,22 @@ export default function Component({ state, dispatch }) {
             <span className={"littleHelp"}>Coups infinis : </span>
             <input
               type="checkbox"
-              checked={state.movesInfinite[type.id]}
+              checked={state.movesInfinite[family.id]}
               onChange={(e) =>
-                handleInfiniteMovesChange(type.id, e.target.checked)
+                handleInfiniteMovesChange(family.id, e.target.checked)
               }
             />
             {"     "}
-
             <span className={"littleHelp"}>Super limite : </span>
             <input
-              className={`inputMoves ${type.cn}`}
+              className={`inputMoves ${family.letter}`}
               min={0}
               max={999}
               type="number"
-              value={state.movesSuperLimit[type.id]}
-              onChange={(e) => handleMovesSuperChange(type.id, e.target.value)}
+              value={state.movesSuperLimit[family.id]}
+              onChange={(e) =>
+                handleMovesSuperChange(family.id, e.target.value)
+              }
             />
           </div>
         ))}

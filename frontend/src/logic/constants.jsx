@@ -9,7 +9,7 @@ export const SPACE = {
   GOAL_C: "C",
 };
 
-export const SPACE_INFO = {
+export const SPACE_DISPLAY_INFO = {
   [SPACE.EMPTY]: {
     captionEditor: "vide",
     className: "space_empty",
@@ -32,43 +32,90 @@ export const SPACE_INFO = {
   },
 };
 export const BLOCK = {
-  A: "A",
-  B: "B",
-  C: "C",
-  NONE: "X",
+  A_NORMAL: "A",
+  B_NORMAL: "B",
+  C_NORMAL: "C",
+  A_STEEL: "G",
+  B_STEEL: "H",
+  C_STEEL: "I",
+  NONE: "-",
 };
-export const BLOCK_INFO = {
+export const BLOCK_DISPLAY_INFO = {
   [BLOCK.NONE]: {
     captionEditor: "vide",
     className: "space_blockA",
-    isRealBlock: false,
+    isSteel: false,
   },
-  [BLOCK.A]: {
+  [BLOCK.A_NORMAL]: {
     captionEditor: "A",
     className: "space_blockA",
-    isRealBlock: true,
+    isSteel: false,
   },
-  [BLOCK.B]: {
+  [BLOCK.B_NORMAL]: {
     captionEditor: "B",
     className: "space_blockB",
-    isRealBlock: true,
+    isSteel: false,
   },
-  [BLOCK.C]: {
+  [BLOCK.C_NORMAL]: {
     captionEditor: "C",
     className: "space_blockC",
-    isRealBlock: true,
+    isSteel: false,
+  },
+  [BLOCK.A_STEEL]: {
+    captionEditor: "A",
+    className: "space_block_steelA",
+    isSteel: true,
+  },
+  [BLOCK.B_STEEL]: {
+    captionEditor: "B",
+    className: "space_block_steelB",
+    isSteel: true,
+  },
+  [BLOCK.C_STEEL]: {
+    captionEditor: "C",
+    className: "space_block_steelC",
+    isSteel: true,
   },
 };
 
-export const BLOCK_TYPES_LIST = [
+/*export const BLOCK_TYPES_LIST = [
   { goal: SPACE.GOAL_A, block: BLOCK.A, cn: "A", id: 0 },
   { goal: SPACE.GOAL_B, block: BLOCK.B, cn: "B", id: 1 },
   { goal: SPACE.GOAL_C, block: BLOCK.C, cn: "C", id: 2 },
-];
+];*/
 
-BLOCK_TYPES_LIST.forEach((block) => {
+export function blockFamilyFromStr(p_str) {
+  switch (p_str) {
+    case BLOCK.A_NORMAL:
+    case BLOCK.A_STEEL:
+      return 0;
+    case BLOCK.B_NORMAL:
+    case BLOCK.B_STEEL:
+      return 1;
+    case BLOCK.C_NORMAL:
+    case BLOCK.C_STEEL:
+      return 2;
+    default:
+      return -1;
+  }
+}
+
+export function spaceFamilyFromStr(p_str) {
+  switch (p_str) {
+    case SPACE.GOAL_A:
+      return 0;
+    case SPACE.GOAL_B:
+      return 1;
+    case SPACE.GOAL_C:
+      return 2;
+    default:
+      return -1;
+  }
+}
+
+/*BLOCK_TYPES_LIST.forEach((block) => {
   BLOCK_INFO[block.block].id = block.id;
-});
+});*/
 
 export function NEW_ARRAY_MOVES_INFINITE() {
   return new Array(10).fill(false);
@@ -76,6 +123,30 @@ export function NEW_ARRAY_MOVES_INFINITE() {
 export function NEW_ARRAY_MOVES_LIMIT() {
   return new Array(10).fill(0);
 }
+
+export const BLOCK_FAMILIES = [
+  {
+    id: 0,
+    letter: "A", // The letter that represents that family
+    target: SPACE.GOAL_A,
+    normal: BLOCK.A_NORMAL,
+    steel: BLOCK.A_STEEL,
+  },
+  {
+    id: 1,
+    letter: "B",
+    target: SPACE.GOAL_B,
+    normal: BLOCK.B_NORMAL,
+    steel: BLOCK.B_STEEL,
+  },
+  {
+    id: 2,
+    letter: "C",
+    target: SPACE.GOAL_C,
+    normal: BLOCK.C_NORMAL,
+    steel: BLOCK.C_STEEL,
+  },
+];
 
 // ----------------------------------------------------
 // Superposition part
@@ -112,7 +183,7 @@ export const REAL_XLENGTH = 22; // These are the xLength and the yLength of the 
 export const REAL_YLENGTH = 22; // ... but we add 2 spaces, one on each edge
 
 export const NO_ID_LEVEL = 0;
-export const DO_NOT_CHANGE = -6; // Good for editor.
+export const DO_NOT_CHANGE = " "; // Good for editor.
 
 // ----------------------------------------------------
 // Winning part
@@ -132,8 +203,11 @@ export function canChangeSpace(pX, pY) {
 // ====================================================
 // Save load part
 
-export const isBlock = (pChar) => BLOCK_INFO[pChar].isRealBlock;
-export const blockToEncodedBlock = (pChar) => pChar.toLowerCase();
+export function stringMeansBlock(pBlockStr) {
+  return !pBlockStr.startsWith("-");
+}
+
+/*export const blockToEncodedBlock = (pChar) => pChar.toLowerCase();
 export const encodedBlockToBlock = (pChar) => pChar.toUpperCase();
 
 const ENCODED_BLOCK_ARRAY = Object.values(BLOCK)
@@ -147,4 +221,4 @@ export function isEncodedBlock(pChar) {
     }
   }
   return false;
-}
+}*/

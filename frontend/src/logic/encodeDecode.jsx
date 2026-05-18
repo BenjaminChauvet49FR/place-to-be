@@ -5,13 +5,13 @@ import {
   REAL_YLENGTH,
   SPACE,
   BLOCK,
-  BLOCK_TYPES_LIST,
+  BLOCK_FAMILIES,
 } from "./constants.jsx";
 
 // Note : we assume all parameters passed are fine in the use of enconding and decoding functions
 const MASTER_STRING =
   "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ&$";
-const MASTER_STRING_TYPES = "ABCDEF";
+const MASTER_STRING_FAMILIES = "ABCDEF";
 
 const INFINITE_SYMBOL = "-";
 const NUMBER_THAT_MEANS_INFINITE = -1;
@@ -132,23 +132,23 @@ export function loadLevelForEditorNewSystem(pLevelData) {
     let movesInfinite = NEW_ARRAY_MOVES_INFINITE();
     let movesLimit = NEW_ARRAY_MOVES_LIMIT();
     let movesSuperLimit = NEW_ARRAY_MOVES_LIMIT();
-    let type = 0;
+    let family = 0;
     let count = 0;
     let xx, yy;
     while (decoder.index < pLevelData.length) {
-      // TYpe
-      type = MASTER_STRING_TYPES.indexOf(pLevelData.charAt(decoder.index));
-      if (type === -1 || movesSuperLimit[type] > 0 || movesLimit[type]) {
+      // Famille du bloc (A, B, C...)
+      family = MASTER_STRING_FAMILIES.indexOf(pLevelData.charAt(decoder.index));
+      if (family === -1 || movesSuperLimit[family] > 0 || movesLimit[family]) {
         throw new Error();
       } else {
         decoder.index++;
         // Limites coups
-        movesLimit[type] = stringBase32ToVal(pLevelData, decoder);
-        if (movesLimit[type] === NUMBER_THAT_MEANS_INFINITE) {
-          movesLimit[type] = 0;
-          movesInfinite[type] = true;
+        movesLimit[family] = stringBase32ToVal(pLevelData, decoder);
+        if (movesLimit[family] === NUMBER_THAT_MEANS_INFINITE) {
+          movesLimit[family] = 0;
+          movesInfinite[family] = true;
         }
-        movesSuperLimit[type] = stringBase32ToVal(pLevelData, decoder);
+        movesSuperLimit[family] = stringBase32ToVal(pLevelData, decoder);
         // Blocs
         xx = 0;
         yy = 0;
@@ -161,7 +161,7 @@ export function loadLevelForEditorNewSystem(pLevelData) {
           }
           x = xx + xFirst;
           y = yy + yFirst;
-          gridM[y][x] = BLOCK_TYPES_LIST[type].block;
+          gridM[y][x] = BLOCK_FAMILIES[family].normal;
         }
         decoder.index++;
         // Cibles
@@ -176,7 +176,7 @@ export function loadLevelForEditorNewSystem(pLevelData) {
           }
           x = xx + xFirst;
           y = yy + yFirst;
-          gridF[y][x] = BLOCK_TYPES_LIST[type].goal;
+          gridF[y][x] = BLOCK_FAMILIES[family].normal;
         }
         decoder.index++;
       }
@@ -279,7 +279,7 @@ export function encodedLevelData(
   }
   dataBinary += valToBase32Str(currentCount);
   // Pour chacune des 6 couleurs (A,B,C,D,E,F), faire une 'chaine couleur' ainsi :
-  // (type)(limite)(superlimite)(chaine blocs);(chaine cibles);
+  // (famille)(limite)(superlimite)(chaine blocs);(chaine cibles);
   // (chaine blocs) : Pour chaque bloc, donner la position (relative par rapport au point de départ du cadre)
   // (chaine cibles) : idem
   let dataColours = "";
@@ -287,22 +287,24 @@ export function encodedLevelData(
   let countSinceLast;
   let wantedBlock;
   let dataLim;
-  for (let type = 0; type < 6; type++) {
+  for (let family = 0; family < 6; family++) {
+    // TODO Attention au nombre 6 en dur.
     countSinceLast = 0;
     dataBlocksCurrent = "";
     dataTargetsCurrent = "";
 
-    wantedBlock = MASTER_STRING_TYPES[type];
+    wantedBlock = MASTER_STRING_FAMILIES[family];
     dataLim =
-      (pMovesInfinite[type]
+      (pMovesInfinite[family]
         ? INFINITE_SYMBOL
-        : valToBase32Str(pMovesLimit[type])) +
-      valToBase32Str(pMovesSuperLimit[type]);
+        : valToBase32Str(pMovesLimit[family])) +
+      valToBase32Str(pMovesSuperLimit[family]);
 
     // Blocs
     for (y = yFirst; y <= yLast; y++) {
       for (x = xFirst; x <= xLast; x++) {
         if (pGridM[y][x] === wantedBlock) {
+          // TODO Ce n'est pas exact ! Ici pGridM[y][x] vaut 'A''B''C'... mais peut valoir 'G'. Et "wantedBlock" devrait être "wantedFamilies".
           dataBlocksCurrent += valToBase32Str(countSinceLast);
           countSinceLast = 1;
         } else {
@@ -324,7 +326,7 @@ export function encodedLevelData(
     }
     if (dataBlocksCurrent.length > 0 || dataTargetsCurrent.length > 0) {
       dataColours +=
-        MASTER_STRING_TYPES[type] +
+        MASTER_STRING_FAMILIES[family] +
         dataLim +
         dataBlocksCurrent +
         SPLIT_TOKEN +
