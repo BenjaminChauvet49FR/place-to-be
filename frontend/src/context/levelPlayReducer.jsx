@@ -7,20 +7,20 @@ import {
 } from "../logic/constants";
 
 export function levelPlayReducer(pState, pAction) {
-  function blockTypePlayedChangeClosure(pChange) {
+  function blockFamilyPlayedChangeClosure(pChange) {
     let newInfos;
-    const answer = Object.entries(pState.blockTypesInfos).map(
-      ([blockType, infos]) => {
+    const answer = Object.entries(pState.blockFamiliesInfos).map(
+      ([blockFamily, infos]) => {
         newInfos =
-          pAction.blockType === blockType
+          pAction.blockFamily === parseInt(blockFamily, 10) // Yeah, it's "0" or something...
             ? { ...infos, movesPlayed: infos.movesPlayed + pChange }
             : infos;
-        return [blockType, newInfos];
+        return [blockFamily, newInfos];
       },
     );
     return {
       ...pState,
-      blockTypesInfos: Object.fromEntries(answer),
+      blockFamiliesInfos: Object.fromEntries(answer),
     };
   }
 
@@ -57,20 +57,20 @@ export function levelPlayReducer(pState, pAction) {
           row.map((_, x) => pAction.gridM[y][x]),
         ),
       };
-    case "blockTypes":
+    case "blockFamilies":
       return {
         ...pState,
-        blockTypes: pAction.blockTypes,
+        blockFamilies: pAction.blockFamilies,
       };
     case "levelName":
       return {
         ...pState,
         levelName: pAction.levelName,
       };
-    case "currentBlockTypeID":
+    case "currentBlockFamilyID":
       return {
         ...pState,
-        currentBlockTypeID: pAction.currentBlockTypeID,
+        currentBlockFamilyID: pAction.currentBlockFamilyID,
       };
     case "levelState":
       return {
@@ -79,20 +79,20 @@ export function levelPlayReducer(pState, pAction) {
         moves: pAction.moves,
         itemsInGrid: pAction.itemsInGrid,
       };
-    case "blockTypesInfos":
+    case "blockFamiliesInfos":
       return {
         ...pState,
-        blockTypesInfos: pAction.blockTypesInfos,
+        blockFamiliesInfos: pAction.blockFamiliesInfos,
       };
     case "clear":
       return {
         ...pState,
         clear: pAction.clear,
       };
-    case "blockTypePlayedPlus1":
-      return blockTypePlayedChangeClosure(1);
-    case "blockTypePlayedMinus1":
-      return blockTypePlayedChangeClosure(-1);
+    case "blockFamilyPlayedPlus1":
+      return blockFamilyPlayedChangeClosure(1);
+    case "blockFamilyPlayedMinus1":
+      return blockFamilyPlayedChangeClosure(-1);
 
     default:
       console.log(
@@ -138,10 +138,10 @@ function dummyGridM() {
 export const initialState = {
   gridF: dummyGridF(),
   gridM: dummyGridM(),
-  blockTypes: [],
-  blockTypesInfos: {}, // Contains : a list of items with key colours, and infos {index, movesPlayed} (see gameplay.jsx...)
+  blockFamilies: [],
+  blockFamiliesInfos: {}, // Contains : a list of items with key colours, and infos {index, movesPlayed} (see gameplay.jsx...)
   levelName: "",
-  currentBlockTypeID: 0, // TODO add some constraint to make sure it is always between 0 and blockTypes.length
+  currentBlockFamilyID: 0, // TODO add some constraint to make sure it is always between 0 and blockFamilies.length
   moves: [],
   itemsInGrid: [],
   clear: CLEAR.NO,

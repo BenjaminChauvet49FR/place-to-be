@@ -1,12 +1,14 @@
 import {
   SPACE,
-  SPACE_INFO,
-  BLOCK,
-  BLOCK_INFO,
+  SPACE_DISPLAY_INFO,
+  BLOCK_DISPLAY_INFO,
   NO_ID_BLOCK,
   SUPERPOSITION_CORRECT,
   SUPERPOSITION_NONE,
   SUPERPOSITION_WRONG,
+  blockFamilyFromStr,
+  BLOCK_PROPERTY,
+  BLOCK_FAMILIES,
 } from "../logic/constants.jsx";
 import "../styles/style.css";
 
@@ -28,7 +30,7 @@ export default function Component() {
         case SPACE.GOAL_C:
         case SPACE.WALL:
         case SPACE.EMPTY:
-          return SPACE_INFO[state.gridF[pY][pX]].className;
+          return SPACE_DISPLAY_INFO[state.gridF[pY][pX]].className;
         default:
           console.log("Grille fixe");
           console.log(pX + "," + pY);
@@ -42,24 +44,8 @@ export default function Component() {
           return 1 / 0;
       }
     } else {
-      let blocktype = itemsInGrid[state.gridM[pY][pX]].blockType;
-      switch (blocktype) {
-        case BLOCK.A:
-        case BLOCK.B:
-        case BLOCK.C:
-          return BLOCK_INFO[blocktype].className;
-        default:
-          console.log("Grille mobile");
-          console.log(pX + "," + pY);
-          console.log(state.gridF);
-          window.alert(
-            "Attention, erreur de className sur bloc présent ! (PlayField) " +
-              state.gridF[pY][pX] +
-              "," +
-              state.gridM[pY][pX],
-          );
-          return 1 / 0;
-      }
+      return BLOCK_DISPLAY_INFO[itemsInGrid[state.gridM[pY][pX]].block]
+        .className;
     }
   }
 
@@ -70,7 +56,10 @@ export default function Component() {
     ) {
       return SUPERPOSITION_NONE;
     }
-    if (state.gridF[pY][pX] === itemsInGrid[state.gridM[pY][pX]].blockType) {
+    if (
+      blockFamilyFromStr(state.gridF[pY][pX]) ===
+      itemsInGrid[state.gridM[pY][pX]].blockFamily
+    ) {
       return SUPERPOSITION_CORRECT;
     } else {
       return SUPERPOSITION_WRONG(state.gridF[pY][pX]);

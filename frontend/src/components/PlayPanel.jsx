@@ -6,7 +6,12 @@ import {
   amIInMainQuest,
 } from "../utils/paths.jsx";
 
-import { DIRECTION, NO_ID_LEVEL, CLEAR } from "../logic/constants.jsx";
+import {
+  DIRECTION,
+  NO_ID_LEVEL,
+  CLEAR,
+  BLOCK_FAMILIES,
+} from "../logic/constants.jsx";
 
 import { useAuth } from "../context/AuthContext.jsx";
 import { attestLevelSuccess } from "../utils/api.jsx";
@@ -53,12 +58,12 @@ export default function Component() {
     undo,
     moveBlocks,
     restart,
-    getBlockTypes,
-    getCurrentBlockType,
+    getBlockFamilies,
+    getCurrentBlockFamily,
     getMovesPlayed,
     getMovesLimit,
     areMovesInfinite,
-    setCurrentBlockType,
+    setCurrentBlockFamily,
     checkClearConditions,
   } = useGameplay();
 
@@ -121,32 +126,32 @@ export default function Component() {
 
       {/* Les types de blocs (+ le nombre de coups joués) */}
       <div className="blockTypePanel0">
-        {getBlockTypes().map((blockType) => (
+        {getBlockFamilies().map((blockFamily) => (
           <div
-            key={blockType}
-            className={`blockTypePanel${getCurrentBlockType() === blockType ? " selected" : " not-selected"}`}
+            key={blockFamily}
+            className={`blockTypePanel${getCurrentBlockFamily() === blockFamily ? " selected" : " not-selected"}`}
           >
-            {areMovesInfinite(blockType) ? (
+            {areMovesInfinite(blockFamily) ? (
               <div className="moveDisplay infiniteMoves">
-                {getMovesPlayed(blockType)}
+                {getMovesPlayed(blockFamily)}
               </div>
             ) : (
               <div
                 className={
-                  (getMovesPlayed(blockType) > getMovesLimit(blockType) &&
+                  (getMovesPlayed(blockFamily) > getMovesLimit(blockFamily) &&
                     "moveDisplay tooManyMoves") ||
                   "moveDisplay"
                 }
               >
-                {getMovesPlayed(blockType)}/{getMovesLimit(blockType)}
+                {getMovesPlayed(blockFamily)}/{getMovesLimit(blockFamily)}
               </div>
             )}
 
             <button
-              className={`buttonSelectionPlay ${blockType}`}
-              onClick={() => setCurrentBlockType(blockType)}
+              className={`buttonSelectionPlay ${BLOCK_FAMILIES[blockFamily].letter}`}
+              onClick={() => setCurrentBlockFamily(blockFamily)}
             >
-              {blockType}
+              {BLOCK_FAMILIES[blockFamily].letter}
             </button>
           </div>
         ))}

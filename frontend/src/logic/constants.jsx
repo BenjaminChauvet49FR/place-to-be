@@ -40,6 +40,7 @@ export const BLOCK = {
   C_STEEL: "I",
   NONE: "-",
 };
+
 export const BLOCK_DISPLAY_INFO = {
   [BLOCK.NONE]: {
     captionEditor: "vide",
@@ -98,6 +99,14 @@ export function blockFamilyFromStr(p_str) {
     default:
       return -1;
   }
+}
+
+export function isSteelFromStr(p_str) {
+  return (
+    p_str === BLOCK.A_STEEL ||
+    p_str === BLOCK.B_STEEL ||
+    p_str === BLOCK.C_STEEL
+  );
 }
 
 export function spaceFamilyFromStr(p_str) {

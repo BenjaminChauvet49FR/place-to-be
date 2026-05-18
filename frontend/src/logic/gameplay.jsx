@@ -1,12 +1,14 @@
 import {
   MOVES,
-  BLOCK,
   NO_ID_BLOCK,
   SPACE,
   REAL_XLENGTH,
   REAL_YLENGTH,
-  BLOCK_INFO,
   CLEAR,
+  stringMeansBlock,
+  blockFamilyFromStr,
+  spaceFamilyFromStr,
+  isSteelFromStr,
 } from "./constants.jsx";
 
 import { useContext, useEffect } from "react";
@@ -15,10 +17,6 @@ import { LevelEditContext } from "../context/LevelEditContext.jsx";
 
 // ===================
 // Logic to charge a level
-
-function isBlock(pChar) {
-  return pChar === BLOCK.A || pChar === BLOCK.B || pChar === BLOCK.C;
-}
 
 function defaultRowFill(pRowF, pRowM) {
   pRowF.push(SPACE.EMPTY);
@@ -59,11 +57,11 @@ function startLevelFromGrid(
   const gridF = [];
   const gridM = [];
   const itemsInGrid = [];
-  let id, blockType;
-  const blockTypes = [];
+  let id, blockFamily;
+  const blockFamilies = [];
   const before_rows = 0; //Math.floor(REAL_YLENGTH - rawLevel.length) / 2;
   const before_columns = 0; //Math.floor(REAL_XLENGTH - rawLevel[1].length) / 2;
-  const blockTypesInfos = [];
+  const blockFamiliesInfos = [];
 
   pDispatchPlay({ type: "clear", clear: CLEAR.NO });
 
@@ -91,13 +89,15 @@ function startLevelFromGrid(
     for (; x < before_columns + pGridFFromEditor[y - yRef].length; x++) {
       gridF[y].push(pGridFFromEditor[y - yRef][x - xRef]);
       gridM[y].push(NO_ID_BLOCK);
-      if (isBlock(pGridMFromEditor[y][x])) {
-        blockType = pGridMFromEditor[y][x];
+      if (stringMeansBlock(pGridMFromEditor[y][x])) {
+        blockFamily = blockFamilyFromStr(pGridMFromEditor[y][x]);
         gridF[y][x] = pGridFFromEditor[y][x];
         id = itemsInGrid.length;
 
         itemsInGrid.push({
-          blockType: blockType,
+          blockFamily: blockFamily,
+          block: pGridMFromEditor[y][x],
+          isSteel: isSteelFromStr(pGridMFromEditor[y][x]),
           x: x,
           y: y,
           id: id,
@@ -107,20 +107,20 @@ function startLevelFromGrid(
 
         // Is it a block type not yet seen in this level ?
         let i = 0;
-        for (i = 0; i < blockTypes.length; i++) {
-          if (blockTypes[i] === blockType) {
+        for (i = 0; i < blockFamilies.length; i++) {
+          if (blockFamilies[i] === blockFamily) {
             break;
           }
         }
-        if (i === blockTypes.length) {
-          blockTypesInfos[blockType] = {
-            index: blockTypes.length,
+        if (i === blockFamilies.length) {
+          blockFamiliesInfos[blockFamily] = {
+            index: blockFamilies.length,
             movesPlayed: 0,
-            movesLimit: pMovesLimit[BLOCK_INFO[blockType].id],
-            movesSuperLimit: pMovesSuperLimit[BLOCK_INFO[blockType].id],
-            movesInfinite: pMovesInfinite[BLOCK_INFO[blockType].id],
-          }; // Where element of "blockTypesInfos" are set
-          blockTypes.push(blockType);
+            movesLimit: pMovesLimit[blockFamily],
+            movesSuperLimit: pMovesSuperLimit[blockFamily],
+            movesInfinite: pMovesInfinite[blockFamily],
+          }; // Where element of "blockFamiliesInfos" are set
+          blockFamilies.push(blockFamily);
         }
       }
     }
@@ -144,16 +144,16 @@ function startLevelFromGrid(
     gridM: gridM,
   });
   pDispatchPlay({
-    type: "currentBlockTypeID",
-    currentBlockTypeID: 0,
+    type: "currentBlockFamilyID",
+    currentBlockFamilyID: 0,
   });
   pDispatchPlay({
-    type: "blockTypes",
-    blockTypes: blockTypes,
+    type: "blockFamilies",
+    blockFamilies: blockFamilies,
   });
   pDispatchPlay({
-    type: "blockTypesInfos",
-    blockTypesInfos: blockTypesInfos,
+    type: "blockFamiliesInfos",
+    blockFamiliesInfos: blockFamiliesInfos,
   });
 }
 
@@ -175,7 +175,7 @@ export function useGameplay() {
 
     let itemsInGrid = state.itemsInGrid;
     let moves = state.moves;
-    let currentBlockType = state.blockTypes[state.currentBlockTypeID];
+    let currentBlockFamily = state.blockFamilies[state.currentBlockFamilyID];
 
     let x, y, x2, y2, x3, y3;
     let item;
@@ -186,7 +186,7 @@ export function useGameplay() {
     moves.push({ direction: pDirection, newPosBlocks: [] });
 
     itemsInGrid.forEach((itemInGrid) => {
-      if (itemInGrid.blockType === currentBlockType) {
+      if (itemInGrid.blockFamily === currentBlockFamily) {
         x = itemInGrid.x;
         y = itemInGrid.y;
         x2 = x + MOVES[pDirection].dx;
@@ -203,8 +203,8 @@ export function useGameplay() {
           yBeh = y - MOVES[pDirection].dy;
           while (noSameBlockBehind && gridM[yBeh][xBeh] !== NO_ID_BLOCK) {
             noSameBlockBehind =
-              state.itemsInGrid[gridM[yBeh][xBeh]].blockType !==
-              currentBlockType;
+              state.itemsInGrid[gridM[yBeh][xBeh]].blockFamily !==
+              currentBlockFamily;
             xBeh -= MOVES[pDirection].dx;
             yBeh -= MOVES[pDirection].dy;
           }
@@ -245,8 +245,11 @@ export function useGameplay() {
         gridM[npb.yLeft][npb.xLeft] = NO_ID_BLOCK;
         gridM[npb.yDest][npb.xDest] = npb.id;
       });
-      moves[moves.length - 1].blockType = currentBlockType;
-      dispatch({ type: "blockTypePlayedPlus1", blockType: currentBlockType });
+      moves[moves.length - 1].blockFamily = currentBlockFamily;
+      dispatch({
+        type: "blockFamilyPlayedPlus1",
+        blockFamily: currentBlockFamily,
+      });
       movePerformed = true;
     }
     dispatch({
@@ -281,8 +284,8 @@ export function useGameplay() {
       }
 
       dispatch({
-        type: "blockTypePlayedMinus1",
-        blockType: moveToUndo.blockType,
+        type: "blockFamilyPlayedMinus1",
+        blockFamily: moveToUndo.blockFamily,
       });
       dispatch({
         type: "levelState",
@@ -313,24 +316,24 @@ export function useGameplay() {
       item = state.itemsInGrid[i];
       x = item.x;
       y = item.y;
-      if (state.gridF[y][x] !== item.blockType) {
+      if (spaceFamilyFromStr(state.gridF[y][x]) !== item.blockFamily) {
         return CLEAR.NO;
       }
     }
     let clearStatus = CLEAR.TOTAL;
-    let blockType;
-    for (let i = 0; i < state.blockTypes.length; i++) {
-      blockType = state.blockTypes[i];
+    let blockFamily;
+    for (let i = 0; i < state.blockFamilies.length; i++) {
+      blockFamily = state.blockFamilies[i];
       if (
-        !state.blockTypesInfos[blockType].movesInfinite &&
-        state.blockTypesInfos[blockType].movesPlayed >
-          state.blockTypesInfos[blockType].movesLimit
+        !state.blockFamiliesInfos[blockFamily].movesInfinite &&
+        state.blockFamiliesInfos[blockFamily].movesPlayed >
+          state.blockFamiliesInfos[blockFamily].movesLimit
       ) {
         return CLEAR.NO;
       }
       if (
-        state.blockTypesInfos[blockType].movesPlayed >
-        state.blockTypesInfos[blockType].movesSuperLimit
+        state.blockFamiliesInfos[blockFamily].movesPlayed >
+        state.blockFamiliesInfos[blockFamily].movesSuperLimit
       ) {
         clearStatus = CLEAR.PARTIAL;
       }
@@ -342,31 +345,31 @@ export function useGameplay() {
   // -------------------
   // The informations
 
-  function getBlockTypes() {
-    return state.blockTypes;
+  function getBlockFamilies() {
+    return state.blockFamilies;
   }
 
-  function setCurrentBlockType(pBlockType) {
+  function setCurrentBlockFamily(pblockFamily) {
     dispatch({
-      type: "currentBlockTypeID",
-      currentBlockTypeID: state.blockTypesInfos[pBlockType].index,
+      type: "currentBlockFamilyID",
+      currentBlockFamilyID: state.blockFamiliesInfos[pblockFamily].index,
     });
   }
 
-  function getCurrentBlockType() {
-    return state.blockTypes[state.currentBlockTypeID];
+  function getCurrentBlockFamily() {
+    return state.blockFamilies[state.currentBlockFamilyID];
   }
 
-  function getMovesPlayed(pBlockType) {
-    return state.blockTypesInfos[pBlockType].movesPlayed;
+  function getMovesPlayed(pblockFamily) {
+    return state.blockFamiliesInfos[pblockFamily].movesPlayed;
   }
 
-  function getMovesLimit(pBlockType) {
-    return state.blockTypesInfos[pBlockType].movesLimit;
+  function getMovesLimit(pblockFamily) {
+    return state.blockFamiliesInfos[pblockFamily].movesLimit;
   }
 
-  function areMovesInfinite(pBlockType) {
-    return state.blockTypesInfos[pBlockType].movesInfinite;
+  function areMovesInfinite(pblockFamily) {
+    return state.blockFamiliesInfos[pblockFamily].movesInfinite;
   }
 
   return {
@@ -374,11 +377,11 @@ export function useGameplay() {
     undo,
     restart,
     checkClearConditions,
-    getBlockTypes,
-    getCurrentBlockType,
+    getBlockFamilies,
+    getCurrentBlockFamily,
     getMovesPlayed,
     getMovesLimit,
     areMovesInfinite,
-    setCurrentBlockType,
+    setCurrentBlockFamily,
   };
 }
