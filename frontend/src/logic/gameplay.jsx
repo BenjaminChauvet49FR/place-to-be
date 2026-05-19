@@ -169,6 +169,14 @@ export function useGameplay() {
   // -------------------
   // The moves
 
+  // Supposes that px,py is a block. (id defined)
+  function steelInSpace(px, py) {
+    return state.itemsInGrid[state.gridM[py][px]].isSteel;
+  }
+  function familyInSpace(px, py) {
+    return state.itemsInGrid[state.gridM[py][px]].blockFamily;
+  }
+
   function moveBlocks(pDirection) {
     let gridM = state.gridM;
     let gridF = state.gridF;
@@ -191,12 +199,22 @@ export function useGameplay() {
         y = itemInGrid.y;
         x2 = x + MOVES[pDirection].dx;
         y2 = y + MOVES[pDirection].dy;
-        while (gridF[y2][x2] !== SPACE.WALL && gridM[y2][x2] !== NO_ID_BLOCK) {
+
+        while (
+          gridM[y2][x2] !== NO_ID_BLOCK &&
+          (familyInSpace(x2, y2) === currentBlockFamily ||
+            !steelInSpace(x2, y2))
+        ) {
           x2 += MOVES[pDirection].dx;
           y2 += MOVES[pDirection].dy;
         }
-        // Right now, either gridF[y2][x2] is uncrossable or gridM[y2][x2] has no blocks. Let's assume it's the second.
-        if (gridF[y2][x2] !== SPACE.WALL) {
+        // Right now, either gridF[y2][x2] is uncrossable (wall / steel of a different colour / ?) or gridM[y2][x2] has no blocks. Let's assume it's the second, which means we can push all the blocks.
+        if (
+          gridF[y2][x2] !== SPACE.WALL &&
+          (gridM[y2][x2] === NO_ID_BLOCK ||
+            familyInSpace(x2, y2) === currentBlockFamily ||
+            !steelInSpace(x2, y2))
+        ) {
           // We need an extra check to make sure there is no block of the same type behind that is ready to push !
           noSameBlockBehind = true;
           xBeh = x - MOVES[pDirection].dx;
