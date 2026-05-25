@@ -216,10 +216,16 @@ export function useGameplay() {
             !steelInSpace(x2, y2))
         ) {
           // We need an extra check to make sure there is no block of the same type behind that is ready to push !
+          // Note : a steel from another type interrupts the chain !
           noSameBlockBehind = true;
           xBeh = x - MOVES[pDirection].dx;
           yBeh = y - MOVES[pDirection].dy;
-          while (noSameBlockBehind && gridM[yBeh][xBeh] !== NO_ID_BLOCK) {
+          while (
+            noSameBlockBehind &&
+            gridM[yBeh][xBeh] !== NO_ID_BLOCK &&
+            (familyInSpace(xBeh, yBeh) === currentBlockFamily ||
+              !steelInSpace(xBeh, yBeh))
+          ) {
             noSameBlockBehind =
               state.itemsInGrid[gridM[yBeh][xBeh]].blockFamily !==
               currentBlockFamily;
