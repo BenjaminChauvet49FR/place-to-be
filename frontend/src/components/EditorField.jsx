@@ -29,8 +29,8 @@ export default function Component({ loadingPackage }) {
 
   function classSuperposition(pX, pY) {
     if (
-      spaceFamilyFromStr(state.gridF[pY][pX] === -1) ||
-      blockFamilyFromStr(state.gridM[pY][pX] === -1)
+      spaceFamilyFromStr(state.gridF[pY][pX]) === -1 ||
+      blockFamilyFromStr(state.gridM[pY][pX]) === -1
     ) {
       return SUPERPOSITION_NONE;
     }
