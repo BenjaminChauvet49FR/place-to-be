@@ -34,7 +34,8 @@ COOKIE_SECURE = not DEBUG
 ALLOWED_HOSTS = [
     "place-to-be.onrender.com",
     "localhost",
-    "127.0.0.1"
+    "127.0.0.1",
+    "212.227.31.181"
 ]
 
 
