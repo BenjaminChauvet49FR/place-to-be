@@ -41,6 +41,13 @@ export const BLOCK = {
   NONE: "-",
 };
 
+// Note : seuls & et $ font partie de la "masterchain" côté encodage.
+// ; et - sont pris pour d'autres choses
+export const TYPE = {
+  STEEL: "#",
+  TARGETS: "@",
+};
+
 export const BLOCK_DISPLAY_INFO = {
   [BLOCK.NONE]: {
     captionEditor: "vide",

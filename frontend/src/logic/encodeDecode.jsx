@@ -5,7 +5,10 @@ import {
   REAL_YLENGTH,
   SPACE,
   BLOCK,
+  TYPE,
   BLOCK_FAMILIES,
+  blockFamilyFromStr,
+  isSteelFromStr,
 } from "./constants.jsx";
 
 // Note : we assume all parameters passed are fine in the use of enconding and decoding functions
@@ -59,10 +62,6 @@ function stringBase32ToVal(pString, pDecoder) {
   }
 }
 
-export function loadLevelForEditorPreviousSystem(pLevelData) {
-  return loadLevelForEditorNewSystem(pLevelData);
-}
-
 const POSSIBLE_ERRORS = {
   WINDOW: 0,
   BIT: 1,
@@ -70,7 +69,11 @@ const POSSIBLE_ERRORS = {
   COLOURS: 3,
 };
 
-export function loadLevelForEditorNewSystem(pLevelData) {
+const INDEX_OF_STEEL = 1;
+const INDEX_OF_NONE = 0;
+const INDEX_OF_TARGETS = 2;
+
+export function loadLevelForEditorPreviousSystem(pLevelData) {
   let errorLevel = POSSIBLE_ERRORS.WINDOW;
   let decoder = { index: 5 };
 
@@ -225,6 +228,187 @@ export function loadLevelForEditorNewSystem(pLevelData) {
   }
 }
 
+export function loadLevelForEditorNewSystem(pLevelData) {
+  let errorLevel = POSSIBLE_ERRORS.WINDOW;
+  let decoder = { index: 5 };
+
+  try {
+    let x, y;
+    let gridF = [];
+    let gridM = [];
+    let xFirst = charToVal(pLevelData.charAt(0));
+    let yFirst = charToVal(pLevelData.charAt(1));
+    let xLast = charToVal(pLevelData.charAt(2));
+    let yLast = charToVal(pLevelData.charAt(3));
+
+    errorLevel = POSSIBLE_ERRORS.BIT;
+    let beWall = false;
+    if (pLevelData.charAt(4) === "0") {
+      beWall = false;
+    } else if (pLevelData.charAt(4) === "1") {
+      beWall = true;
+    } else {
+      throw new Error();
+    }
+    errorLevel = POSSIBLE_ERRORS.BINARY;
+
+    // Grille vide
+    for (y = 0; y < REAL_YLENGTH; y++) {
+      gridF.push([]);
+      gridM.push([]);
+      for (x = 0; x < REAL_XLENGTH; x++) {
+        gridF[y].push(
+          x === 0 || x === REAL_XLENGTH - 1 || y === 0 || y === REAL_YLENGTH - 1
+            ? SPACE.WALL
+            : SPACE.EMPTY,
+        );
+        gridM[y].push(BLOCK.NONE);
+      }
+    }
+    // Murs / vide
+    let countLeft = stringBase32ToVal(pLevelData, decoder);
+    for (y = yFirst; y <= yLast; y++) {
+      for (x = xFirst; x <= xLast; x++) {
+        if (countLeft === 0) {
+          countLeft = stringBase32ToVal(pLevelData, decoder); // decoder.index should go up by 1 or 2...
+          beWall = !beWall;
+        }
+        gridF[y][x] = beWall ? SPACE.WALL : SPACE.EMPTY;
+        countLeft--;
+      }
+    }
+    if (countLeft > 0) {
+      console.log(
+        "Attention : incohérence dans les données binaires ! ..." +
+          pLevelData.substring(
+            decoder.index - 5,
+            Math.min(pLevelData.length, decoder.index + 6),
+          ),
+      );
+    }
+
+    // Chaque famille !
+    errorLevel = POSSIBLE_ERRORS.COLOURS;
+    let movesInfinite = NEW_ARRAY_MOVES_INFINITE();
+    let movesLimit = NEW_ARRAY_MOVES_LIMIT();
+    let movesSuperLimit = NEW_ARRAY_MOVES_LIMIT();
+    let family = 0;
+    let count = 0;
+    let xx, yy;
+    let relevantGrid, relevantElement;
+    while (decoder.index < pLevelData.length) {
+      // Famille du bloc (A, B, C...)
+      family = MASTER_STRING_FAMILIES.indexOf(pLevelData.charAt(decoder.index));
+      if (family === -1 || movesSuperLimit[family] > 0 || movesLimit[family]) {
+        throw new Error();
+      } else {
+        decoder.index++;
+        // Limites coups
+        movesLimit[family] = stringBase32ToVal(pLevelData, decoder);
+        if (movesLimit[family] === NUMBER_THAT_MEANS_INFINITE) {
+          movesLimit[family] = 0;
+          movesInfinite[family] = true;
+        }
+        movesSuperLimit[family] = stringBase32ToVal(pLevelData, decoder);
+        // Blocs ordinaires
+        xx = 0;
+        yy = 0;
+        while (pLevelData.charAt(decoder.index) !== SPLIT_TOKEN) {
+          count = stringBase32ToVal(pLevelData, decoder);
+          xx += count;
+          while (xx >= xLast - xFirst + 1) {
+            xx -= xLast - xFirst + 1;
+            yy++;
+          }
+          x = xx + xFirst;
+          y = yy + yFirst;
+          gridM[y][x] = BLOCK_FAMILIES[family].normal;
+        }
+        decoder.index++;
+        // Blocs acier + cibles
+        while (true) {
+          if (decoder.index >= pLevelData.length) {
+            break;
+          }
+          switch (pLevelData.charAt(decoder.index)) {
+            case TYPE.STEEL:
+              relevantGrid = gridM;
+              relevantElement = BLOCK_FAMILIES[family].steel;
+              break;
+            case TYPE.TARGETS:
+              relevantGrid = gridF;
+              relevantElement = BLOCK_FAMILIES[family].target;
+              break;
+            default:
+              relevantGrid = null;
+              break;
+          }
+          if (relevantGrid === null) {
+            break;
+          } else {
+            decoder.index++;
+          }
+          xx = 0;
+          yy = 0;
+          while (pLevelData.charAt(decoder.index) !== SPLIT_TOKEN) {
+            count = stringBase32ToVal(pLevelData, decoder);
+            xx += count;
+            while (xx >= xLast - xFirst + 1) {
+              xx -= xLast - xFirst + 1;
+              yy++;
+            }
+            x = xx + xFirst;
+            y = yy + yFirst;
+            relevantGrid[y][x] = relevantElement;
+          }
+          decoder.index++;
+        }
+      }
+    }
+
+    return {
+      gridF: gridF,
+      gridM: gridM,
+      movesInfinite: movesInfinite,
+      movesLimit: movesLimit,
+      movesSuperLimit: movesSuperLimit,
+    };
+  } catch (error) {
+    if (!pLevelData || !pLevelData.length) {
+      throw new Error("Données inconnues ?");
+    }
+    if (errorLevel === POSSIBLE_ERRORS.WINDOW) {
+      throw new Error(
+        "Erreur dans le décodage de la fenêtre : " + pLevelData.substring(0, 5),
+      );
+    }
+    if (errorLevel === POSSIBLE_ERRORS.BIT) {
+      throw new Error(
+        "Erreur dans le décodage du bit de départ : " +
+          pLevelData.substring(0, 5),
+      );
+    }
+    if (errorLevel === POSSIBLE_ERRORS.BINARY) {
+      throw new Error(
+        "Erreur dans le décodage de la partie binaire : ..." +
+          pLevelData.substring(
+            decoder.index - 5,
+            Math.min(pLevelData.length, decoder.index + 6),
+          ),
+      );
+    }
+    if (errorLevel === POSSIBLE_ERRORS.COLOURS) {
+      throw new Error(
+        "Erreur dans le décodage de la partie des couleurs : ..." +
+          pLevelData.substring(
+            decoder.index - 5,
+            Math.min(pLevelData.length, decoder.index + 6),
+          ),
+      );
+    }
+  }
+}
+
 export function encodedLevelData(
   pGridF,
   pGridM,
@@ -283,56 +467,84 @@ export function encodedLevelData(
   // (chaine blocs) : Pour chaque bloc, donner la position (relative par rapport au point de départ du cadre)
   // (chaine cibles) : idem
   let dataColours = "";
-  let dataBlocksCurrent, dataTargetsCurrent;
-  let countSinceLast;
-  let wantedBlock;
-  let dataLim;
-  for (let family = 0; family < 6; family++) {
-    // TODO Attention au nombre 6 en dur.
-    countSinceLast = 0;
-    dataBlocksCurrent = "";
-    dataTargetsCurrent = "";
+  let blockFamily = 0;
+  let typeIndex;
+  let spacePosition;
+  let dataCurrentColourLetterLimit,
+    dataCurrentColourBlocks,
+    dataCurrentColourTargets;
 
-    wantedBlock = MASTER_STRING_FAMILIES[family];
-    dataLim =
+  let NB_FAMILIES = MASTER_STRING_FAMILIES.length;
+  let allFamiliesLastPositions = [];
+  let dataBlocksArray = [];
+
+  for (var i = 0; i < NB_FAMILIES; i++) {
+    allFamiliesLastPositions.push([0, 0, 0]);
+    dataBlocksArray.push(["", "", ""]);
+  }
+
+  // TOUS les Blocs et les cibles (et leurs chaînes)
+  for (y = yFirst; y <= yLast; y++) {
+    for (x = xFirst; x <= xLast; x++) {
+      blockFamily = blockFamilyFromStr(pGridM[y][x]);
+      if (blockFamily >= 0) {
+        typeIndex = isSteelFromStr(pGridM[y][x])
+          ? INDEX_OF_STEEL
+          : INDEX_OF_NONE;
+        spacePosition = (y - yFirst) * (xLast - xFirst + 1) + x - xFirst;
+        dataBlocksArray[blockFamily][typeIndex] += valToBase32Str(
+          spacePosition - allFamiliesLastPositions[blockFamily][typeIndex],
+        );
+        allFamiliesLastPositions[blockFamily][typeIndex] = spacePosition;
+      }
+
+      blockFamily = blockFamilyFromStr(pGridF[y][x]);
+      if (blockFamily >= 0) {
+        spacePosition = (y - yFirst) * (xLast - xFirst + 1) + x - xFirst;
+        dataBlocksArray[blockFamily][INDEX_OF_TARGETS] += valToBase32Str(
+          spacePosition -
+            allFamiliesLastPositions[blockFamily][INDEX_OF_TARGETS],
+        );
+        allFamiliesLastPositions[blockFamily][INDEX_OF_TARGETS] = spacePosition;
+      }
+    }
+  }
+  // Positionnement : une catégorie d'éléments aux positions indexées 0, 7, 13, 18 : 0765 ; une catégorie aux positions indexées 14, 15, 17, 28 : e12b ; le 1er numéro = position du 1er élément, les suivants = différences
+
+  for (let family = 0; family < 6; family++) {
+    // Lettre et limites
+    dataCurrentColourLetterLimit =
+      MASTER_STRING_FAMILIES[family] +
       (pMovesInfinite[family]
         ? INFINITE_SYMBOL
         : valToBase32Str(pMovesLimit[family])) +
       valToBase32Str(pMovesSuperLimit[family]);
-
-    // Blocs
-    for (y = yFirst; y <= yLast; y++) {
-      for (x = xFirst; x <= xLast; x++) {
-        if (pGridM[y][x] === wantedBlock) {
-          // TODO Ce n'est pas exact ! Ici pGridM[y][x] vaut 'A''B''C'... mais peut valoir 'G'. Et "wantedBlock" devrait être "wantedFamilies".
-          dataBlocksCurrent += valToBase32Str(countSinceLast);
-          countSinceLast = 1;
-        } else {
-          countSinceLast++;
-        }
-      }
+    // Blocs naturels (pas de délimiteur entre les limites et ça)
+    dataCurrentColourBlocks = "";
+    if (dataBlocksArray[family][INDEX_OF_NONE].length > 0) {
+      dataCurrentColourBlocks +=
+        dataBlocksArray[family][INDEX_OF_NONE] + SPLIT_TOKEN;
+    }
+    // Blocs d'acier (délimiteur ici)
+    if (dataBlocksArray[family][INDEX_OF_STEEL].length > 0) {
+      dataCurrentColourBlocks +=
+        TYPE.STEEL + dataBlocksArray[family][INDEX_OF_STEEL] + SPLIT_TOKEN;
+    }
+    if (dataCurrentColourBlocks.length === 0) {
+      continue;
     }
     // Cibles
-    countSinceLast = 0;
-    for (y = yFirst; y <= yLast; y++) {
-      for (x = xFirst; x <= xLast; x++) {
-        if (pGridF[y][x] === wantedBlock) {
-          dataTargetsCurrent += valToBase32Str(countSinceLast);
-          countSinceLast = 1;
-        } else {
-          countSinceLast++;
-        }
-      }
+    if (dataBlocksArray[family][INDEX_OF_TARGETS].length > 0) {
+      dataCurrentColourTargets =
+        TYPE.TARGETS + dataBlocksArray[family][INDEX_OF_TARGETS] + SPLIT_TOKEN;
+    } else {
+      dataCurrentColourTargets = "";
     }
-    if (dataBlocksCurrent.length > 0 || dataTargetsCurrent.length > 0) {
-      dataColours +=
-        MASTER_STRING_FAMILIES[family] +
-        dataLim +
-        dataBlocksCurrent +
-        SPLIT_TOKEN +
-        dataTargetsCurrent +
-        SPLIT_TOKEN;
-    }
+
+    dataColours +=
+      dataCurrentColourLetterLimit +
+      dataCurrentColourBlocks +
+      dataCurrentColourTargets;
   }
   return dataWindow + dataFirstBit + dataBinary + dataColours;
 }
