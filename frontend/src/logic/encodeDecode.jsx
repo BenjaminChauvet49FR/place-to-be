@@ -519,12 +519,10 @@ export function encodedLevelData(
         ? INFINITE_SYMBOL
         : valToBase32Str(pMovesLimit[family])) +
       valToBase32Str(pMovesSuperLimit[family]);
-    // Blocs naturels (pas de délimiteur entre les limites et ça)
-    dataCurrentColourBlocks = "";
-    if (dataBlocksArray[family][INDEX_OF_NONE].length > 0) {
-      dataCurrentColourBlocks +=
-        dataBlocksArray[family][INDEX_OF_NONE] + SPLIT_TOKEN;
-    }
+    // Blocs naturels (pas de délimiteur entre les limites et ça, en revanche le délimiteur est indispensable juste après, même si on a zéro bloc normal)
+    dataCurrentColourBlocks =
+      dataBlocksArray[family][INDEX_OF_NONE] + SPLIT_TOKEN;
+
     // Blocs d'acier (délimiteur ici)
     if (dataBlocksArray[family][INDEX_OF_STEEL].length > 0) {
       dataCurrentColourBlocks +=
