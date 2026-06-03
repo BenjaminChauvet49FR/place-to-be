@@ -528,7 +528,8 @@ export function encodedLevelData(
       dataCurrentColourBlocks +=
         TYPE.STEEL + dataBlocksArray[family][INDEX_OF_STEEL] + SPLIT_TOKEN;
     }
-    if (dataCurrentColourBlocks.length === 0) {
+    if (dataCurrentColourBlocks.length <= 1) {
+      // Note : 1 et non 0 en raison du délimiteur obligatoire après les blocs vides.
       continue;
     }
     // Cibles
