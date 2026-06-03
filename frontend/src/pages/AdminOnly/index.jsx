@@ -20,6 +20,29 @@ function handleEncodeAll(pDataLevels) {
   go();
 }
 
+function editName(pLevel) {
+  async function go() {
+    let newName = prompt("Nouveau nom du niveau :", pLevel.name);
+    if (newName !== null && newName !== "") {
+      await saveLevelADMIN(pLevel.lvData, newName, pLevel.id);
+    }
+  }
+  go();
+}
+
+function editData(pLevel) {
+  async function go() {
+    let newData = prompt(
+      "Nouvelles données du niveau (stockées telles quelles, y compris les caractères comme * - attention aux corruptions) :",
+      pLevel.lvData,
+    );
+    if (newData !== null && newData !== "") {
+      await saveLevelADMIN(newData, pLevel.name, pLevel.id);
+    }
+  }
+  go();
+}
+
 export default function Page() {
   const [loading, setLoading] = useState(); // Note : j'avais voulu tout faire sans useState... ça marche pas ;)
   const [dataLevels, setDataLevels] = useState([]);
@@ -48,6 +71,10 @@ export default function Page() {
                 <td>{lvl.name}</td>
                 <td>|</td>
                 <td>{lvl.lvData}</td>
+                <td>
+                  <button onClick={() => editName(lvl)}>Editer nom</button>
+                  <button onClick={() => editData(lvl)}>Editer données</button>
+                </td>
               </tr>
             ))}
           </tbody>
